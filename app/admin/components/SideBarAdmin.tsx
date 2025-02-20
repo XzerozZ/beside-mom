@@ -13,7 +13,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
-  const [activeMenu, setActiveMenu] = useState(1);
+  const [activeMenu, setActiveMenu] = useState(selectedItem);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const profileImageUrl =
     "https://th.bing.com/th/id/OIP.GKAbRpYzDlJa139WC8xPtwHaIC?rs=1&pid=ImgDetMain";
@@ -27,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
   ];
 
   return (
-    <div className="w-64 bg-white shadow-md h-screen">
+    <div className="w-64 bg-white  h-screen">
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex flex-row items-center">
@@ -48,24 +48,24 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
           <div key={item.id} className="w-full">
             <button
               onClick={() => {
-                setActiveMenu(item.id);
+                setActiveMenu(item.id.toString());
                 onItemSelect(item.id.toString());
 
                 if (item.id !== 1) {
                   setIsDropdownOpen(false);
                 }
               }}
-              className={`w-full h-full py-4 text-left flex flex-row items-center ${
-                activeMenu === item.id
+              className={`w-full h-12 my- text-left flex flex-row items-center ${
+                activeMenu === item.id.toString()
                   ? "text-primary5 font-bold"
                   : "text-neutral05"
-              } hover:bg-gray-100 transition-colors ${
-                activeMenu === item.id ? "bg-blue-50" : ""
-              }`}
+              } hover:bg-gray-100 transition-colors`}
             >
               <div
-                className={`w-1 h-10 ${
-                  activeMenu === item.id ? "bg-primary5" : "bg-transparent"
+                className={`w-1 h-full ${
+                  activeMenu === item.id.toString()
+                    ? "bg-primary5"
+                    : "bg-transparent"
                 }`}
               ></div>
 
@@ -73,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                 <div className="ml-3">
                   <svg
                     className={`w-6 h-6 transition-all ${
-                      activeMenu === item.id
+                      activeMenu === item.id.toString()
                         ? "text-[#B36868]"
                         : "text-neutral04"
                     }`}
@@ -92,7 +92,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                 <div className="ml-3">
                   <svg
                     className={`w-6 h-6 transition-all ${
-                      activeMenu === item.id
+                      activeMenu === item.id.toString()
                         ? "text-[#B36868]"
                         : "text-neutral04"
                     }`}
@@ -126,7 +126,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                 <div className="ml-3">
                   <svg
                     className={`w-6 h-6 transition-all ${
-                      activeMenu === item.id
+                      activeMenu === item.id.toString()
                         ? "text-[#B36868]"
                         : "text-neutral04"
                     }`}
@@ -145,7 +145,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                 <div className="ml-3">
                   <svg
                     className={`w-6 h-6 transition-all ${
-                      activeMenu === item.id
+                      activeMenu === item.id.toString()
                         ? "text-[#B36868]"
                         : "text-neutral04"
                     }`}
@@ -164,7 +164,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                 <div className="ml-3">
                   <svg
                     className={`w-6 h-6 transition-all ${
-                      activeMenu === item.id
+                      activeMenu === item.id.toString()
                         ? "text-[#B36868]"
                         : "text-neutral04"
                     }`}
@@ -191,7 +191,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                 <div className="ml-auto mr-4">
                   <svg
                     className={`w-6 h-6 transition-all ${
-                      activeMenu === item.id
+                      activeMenu === item.id.toString()
                         ? "text-[#B36868]"
                         : "text-neutral04"
                     } transform ${isDropdownOpen ? "rotate-180" : ""}`}
@@ -213,7 +213,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                 </div>
               )}
             </button>
-            {item.id === 1 && isDropdownOpen && activeMenu === 1 && (
+            {item.id === 1 && isDropdownOpen && activeMenu === "1" && (
               <div className="bg-gray-50 pl-12">
                 <div
                   className="py-2 hover:bg-gray-100 text-primary5 font-bold cursor-pointer"
@@ -236,7 +236,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
             onClick={() => {
               /* Add logout logic here */
             }}
-            className="flex items-center w-full px-6 py-4 text-neutral05 hover:bg-gray-100 transition-colors"
+            className="flex items-center w-64 px-6 py-4 text-neutral05 hover:bg-gray-100 transition-colors"
           >
             <svg
               width="21"
@@ -246,8 +246,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M5.5 1.66675C4.83696 1.66675 4.20107 1.93014 3.73223 2.39898C3.26339 2.86782 3 3.50371 3 4.16675V15.8334C3 16.4965 3.26339 17.1323 3.73223 17.6012C4.20107 18.07 4.83696 18.3334 5.5 18.3334H10.5C11.163 18.3334 11.7989 18.07 12.2678 17.6012C12.7366 17.1323 13 16.4965 13 15.8334V4.16675C13 3.50371 12.7366 2.86782 12.2678 2.39898C11.7989 1.93014 11.163 1.66675 10.5 1.66675H5.5ZM14.0775 6.07758C14.2338 5.92136 14.4457 5.83359 14.6667 5.83359C14.8876 5.83359 15.0996 5.92136 15.2558 6.07758L18.5892 9.41091C18.7454 9.56719 18.8332 9.77911 18.8332 10.0001C18.8332 10.2211 18.7454 10.433 18.5892 10.5892L15.2558 13.9226C15.0987 14.0744 14.8882 14.1584 14.6697 14.1565C14.4512 14.1546 14.2422 14.0669 14.0877 13.9124C13.9331 13.7579 13.8455 13.5489 13.8436 13.3304C13.8417 13.1119 13.9257 12.9014 14.0775 12.7442L15.9883 10.8334H8.83333C8.61232 10.8334 8.40036 10.7456 8.24408 10.5893C8.0878 10.4331 8 10.2211 8 10.0001C8 9.77907 8.0878 9.56711 8.24408 9.41083C8.40036 9.25455 8.61232 9.16675 8.83333 9.16675H15.9883L14.0775 7.25591C13.9213 7.09964 13.8335 6.88772 13.8335 6.66675C13.8335 6.44578 13.9213 6.23385 14.0775 6.07758Z"
                 fill="#999999"
               />

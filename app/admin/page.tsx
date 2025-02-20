@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "../components/SideBarAdmin";
-import AllMomInfoPage from "../components/allmominfopage";
+import Sidebar from "./components/SideBarAdmin";
+import AllMomInfoPage from "./mominfo/page";
+import ContactNurseInfo from "./nurse-contact/page";
 export default function AdminPage() {
   const [selectedItem, setSelectedItem] = useState("1"); // Default selected item
 
@@ -17,7 +18,7 @@ export default function AdminPage() {
       case "4":
         return <div className="text-black">Content 4</div>;
       case "5":
-        return <div className="text-black">Content 5</div>;
+        return <ContactNurseInfo />;
       case "6":
         return <div className="text-black">Content 6</div>;
       case "7":
