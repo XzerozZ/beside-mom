@@ -10,7 +10,7 @@ const page = () => {
   return (
     <div className="bg-[#FFF4F4] flex justify-center h-screen items-center max-xl:bg-white">
       <div
-        className="w-[1312px]  h-[896px] rounded-[40px] flex flex-row  max-xl:hidden"
+        className="w-[1312px]  rounded-[40px] flex flex-row  max-xl:hidden"
         style={{ boxShadow: "0px 18px 33.6px rgba(0, 0, 0, 0.13)" }}
       >
         <div className="bg-[#FFEBEC] w-1/2 rounded-l-[40px] flex flex-col justify-center ">
@@ -22,6 +22,7 @@ const page = () => {
             width={656}
             height={749}
             alt="Picture of the author"
+            className="rounded-l-[40px]"
           ></Image>
         </div>
         <div className="w-1/2 bg-[#FFFFFF] rounded-r-[40px] justify-center flex flex-col ">

@@ -13,7 +13,7 @@ const home = () => {
           className="bg-cover bg-center h-screen flex justify-center items-center max-xl:bg-[url('/home2.png')] max-sm:!bg-none max-sm:items-start max-sm:mt-[40px]"
           style={{ backgroundImage: "url('/home.png')" }}
         >
-          <div className="w-[1312px]  h-[896px] rounded-[40px] flex flex-col  gap-[24px] max-xl:w-[770px] max-sm:w-[324px]">
+          <div className="w-[1312px] xl:mt-[-90px] md:mt-[-150px] rounded-[40px] flex flex-col  gap-[24px] max-xl:w-[770px] max-sm:w-[324px]">
             <div className="flex gap-[24px]">
               <h1 className="text-[#4D4D4D] text-[36px] font-bold max-xl:text-[24px] ">
                 Beside Mom การคลอดลูกก่อนกำหนด
@@ -38,25 +38,31 @@ const home = () => {
               </h3>
               <h3>เพื่อลดความเสี่ยงในการเจ็บครรภ์คลอดก่อนกำหนด</h3>
             </div>
-            <div className="w-[240px] mt-[12px]">
+            <div className="w-[240px] mt-[12px] max-xl:hidden">
               <ButtonComponents2
                 title="เริ่มต้นกรอกข้อมูลทารก"
                 textSize="text-[20px]"
+              />
+            </div>
+            <div className="w-[240px] mt-[12px] xl:hidden">
+              <ButtonComponents2
+                title="เริ่มต้นกรอกข้อมูลทารก"
+                textSize="text-[16px]"
               />
             </div>
             <div className="mt-[24px] flex flex-row gap-[29px]">
               <div className="flex flex-row gap-[12px]">
                 <div className="w-[21px]  rounded-[4px] bg-[#B36868]"></div>
                 <div className="h-[67px]">
-                  <h2 className="text-[32px] font-bold ">20 K</h2>
-                  <h3 className="text-[20px]">User</h3>
+                  <h2 className="xl:text-[32px] text-[24px] font-bold ">20 K</h2>
+                  <h3 className="xl:text-[20px] text-[16px]">User</h3>
                 </div>
               </div>
               <div className="flex flex-row gap-[12px]">
                 <div className="w-[21px] rounded-[4px] bg-[#FF9494]"></div>
                 <div>
-                  <h2 className="text-[32px] font-bold">20 K</h2>
-                  <h3 className="text-[20px]">Download</h3>
+                  <h2 className="xl:text-[32px] text-[24px] font-bold ">20 K</h2>
+                  <h3 className="xl:text-[20px] text-[16px]">Download</h3>
                 </div>
               </div>
             </div>

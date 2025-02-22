@@ -5,7 +5,7 @@ import Image from "next/image";
 export const Card: FC<ButtonProps> = (props) => {
   const { title, textSize, onClick } = props;
   return (
-    <div className="shadow-[0_0_10px_#ccc] rounded-[16px]">
+    <div className="shadow-[0_0_10px_#ccc] rounded-[16px] ">
     <Image
       className="bg-black rounded-t-[16px]"
       src="/mom.jpg"

@@ -6,7 +6,7 @@ import { ButtonComponents } from "./button";
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = React.useState(false);
   return (
-    <nav className="bg-[#FFEBEC] flex justify-center fixed top-0 left-0 w-full z-50">
+    <nav className="bg-[#FFEBEC] flex justify-center fixed top-0 left-0 w-full z-999">
       <div className="flex flex-row justify-between h-[80px] w-[1312px]  items-center max-xl:w-[770px] max-sm:w-[324px]">
         <div className="flex flex-row gap-4 items-center">
           <Image src="/logo.png" width={48} height={48} alt="Logor"></Image>
@@ -51,7 +51,7 @@ const Navbar = () => {
               onClick={() => setShowDropdown(!showDropdown)}
             />
             {showDropdown && (
-              <div className="absolute right-0 top-5 mt-2  bg-[#FFF4F4] border border-gray-200 rounded-md shadow-lg h-[500px] w-[390px]">
+              <div className="absolute right-0 top-5 mt-2  bg-[#FFF4F4] border border-gray-200 rounded-md shadow-lg h-[500px] w-[390px] z-9999">
                 <div className="p-[32px] flex flex-col justify-between h-full">
                   <div className="flex flex-row justify-between ">
                     <h1 className="font-bold">โปรไฟล์</h1>
