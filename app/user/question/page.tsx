@@ -8,7 +8,7 @@ const page = () => {
         <header className="fixed top-0 left-0 w-full">
           <Navbar />
         </header>
-        <main className="mt-[160px] max-sm:mt-[112px]">
+        <main className="mt-[112px] max-sm:mt-[112px]">
          <div className="">
          <div className="flex flex-col items-center gap-[30px]">
             <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">

@@ -18,19 +18,19 @@ const Navbar = () => {
               <a href="/">ข้อมูลทารก</a>
             </li>
             <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-              <a href="/">เรื่องเราของคุณแม่</a>
+              <a href="/user/story">เรื่องเราของคุณแม่</a>
             </li>
             <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-              <a href="/">การดูแลทารก</a>
+              <a href="/user/care">การดูแลทารก</a>
             </li>
             <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-              <a href="/">คำถามที่พบบ่อย</a>
+              <a href="/user/question">คำถามที่พบบ่อย</a>
             </li>
             <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-              <a href="/">การตรวจตามนัด</a>
+              <a href="/user/calendar">การตรวจตามนัด</a>
             </li>
             <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-              <a href="/">ติดต่อพยาบาล</a>
+              <a href="/user/contact">ติดต่อพยาบาล</a>
             </li>
           </ul>
         </div>
@@ -110,12 +110,12 @@ const Navbar = () => {
           </div>
         </div>
         <div className="xl:hidden">
-        <Image
+       <a href="/user/profile"> <Image
             src="/hamburger.svg"
             width={27}
             height={16}
             alt="profile"
-          ></Image>
+          ></Image></a>
         </div>
       </div>
     </nav>
