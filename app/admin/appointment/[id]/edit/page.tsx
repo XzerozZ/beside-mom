@@ -62,7 +62,12 @@ export default function Babygraphs() {
               case "5":
                 router.push("/admin/nurse-contact");
                 break;
-              // Add other cases as needed
+              case "6":
+                router.push("/admin/babyinfo");
+                break;
+              case "7":
+                router.push("/admin/appointment");
+                break;
             }
           }
         }}
@@ -144,7 +149,7 @@ export default function Babygraphs() {
         >
           <Button
             variant="outlined"
-            onClick={() => router.push("/admin/mominfo")}
+            onClick={() => router.push("/admin/appointment")}
             sx={{ color: "#999999", borderColor: "#999999" }}
             className="w-40"
           >

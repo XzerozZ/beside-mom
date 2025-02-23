@@ -32,7 +32,10 @@ const AllMomInfoPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterBy, setFilterBy] = useState("all");
   const handleEdit = (id: string) => {
-    router.push(`/admin/edit/momInfo/${id}`);
+    router.push(`/admin/mominfo/${id}/edit`);
+  };
+  const handleClickMominfo = (id: string) => {
+    router.push(`/admin/mominfo/${id}`);
   };
 
   const [momData, setMomData] = useState<MomData[]>([
@@ -55,6 +58,11 @@ const AllMomInfoPage: React.FC = () => {
   const handleAddClick = () => {
     console.log("Add new mom");
   };
+
+  const handleAppointment = (id: string) => {
+    router.push(`/admin/mominfo/${id}/appointment`);
+  };
+
   type SortDirection = "asc" | "desc" | null;
 
   interface SortState {
@@ -86,16 +94,22 @@ const AllMomInfoPage: React.FC = () => {
         : -compareValue;
     });
   };
+  const filteredMom = getSortedData().filter(
+    (mom) =>
+      mom.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      mom.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      mom.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="flex bg-gray-100">
+    <div className="flex bg-white">
       <Sidebar
         onItemSelect={(id) => {
           if (id !== "1") {
             // Navigate to other pages based on sidebar selection
             switch (id) {
               case "2":
-                router.push("admin/momstories");
+                router.push("/admin/momstories");
                 break;
               case "3":
                 router.push("/admin/babycare");
@@ -106,7 +120,12 @@ const AllMomInfoPage: React.FC = () => {
               case "5":
                 router.push("/admin/nurse-contact");
                 break;
-              // Add other cases as needed
+              case "6":
+                router.push("/admin/babyinfo");
+                break;
+              case "7":
+                router.push("/admin/appointment");
+                break;
             }
           }
         }}
@@ -209,11 +228,29 @@ const AllMomInfoPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {getSortedData().map((mom) => (
+                {filteredMom.map((mom) => (
                   <TableRow key={mom.id}>
-                    <TableCell className="text-center">{mom.id}</TableCell>
-                    <TableCell className="text-center">{mom.email}</TableCell>
-                    <TableCell className="text-center">{mom.name}</TableCell>
+                    <TableCell
+                      className="text-center"
+                      onClick={() => handleClickMominfo(mom.id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {mom.id}
+                    </TableCell>
+                    <TableCell
+                      className="text-center"
+                      onClick={() => handleClickMominfo(mom.id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {mom.email}
+                    </TableCell>
+                    <TableCell
+                      className="text-center"
+                      onClick={() => handleClickMominfo(mom.id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {mom.name}
+                    </TableCell>
                     <TableCell>
                       <Box
                         sx={{ display: "flex", gap: 1 }}
@@ -288,7 +325,7 @@ const AllMomInfoPage: React.FC = () => {
                               </defs>
                             </svg>
                           }
-                          // onClick={() =>
+                          onClick={() => handleAppointment(mom.id)}
                         >
                           นัดหมาย
                         </Button>

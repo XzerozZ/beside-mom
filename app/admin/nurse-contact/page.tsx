@@ -27,7 +27,7 @@ const ContactNurseInfo: React.FC = () => {
   });
 
   return (
-    <div className="flex bg-gray-100">
+    <div className="flex bg-white ">
       <Sidebar
         onItemSelect={(id) => {
           switch (id) {
@@ -43,7 +43,12 @@ const ContactNurseInfo: React.FC = () => {
             case "4":
               router.push("/admin/faq");
               break;
-            // Add other cases as needed
+            case "6":
+              router.push("/admin/babyinfo");
+              break;
+            case "7":
+              router.push("/admin/appointment");
+              break;
           }
         }}
         selectedItem="5"
