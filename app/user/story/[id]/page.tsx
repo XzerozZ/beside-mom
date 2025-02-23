@@ -9,9 +9,9 @@ const page = () => {
 
   return (
     <div className="flex flex-col">
-      <header className="fixed top-0 left-0 w-full">
-        <Navbar />
-      </header>
+    <header className="fixed top-0 left-0 w-full z-50">
+      <Navbar />
+    </header>
       <main className="mt-[160px] max-sm:mt-[112px]">
         <div className="flex flex-col items-center gap-[30px]">
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px]">
@@ -20,16 +20,16 @@ const page = () => {
                 <h1 className="font-bold text-[20px] text-left ">
                   เรื่องเล่าของคุณแม่
                 </h1>
-                <div className="relative z-1">
+                <div className="relative z-0">
                   <div className="absolute top-0 left-0 w-full h-full bg-transparent pointer-events-none"></div>
-                  <iframe
-                    className="relative z-10 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px]"
+                  <video
+                    className="relative z-0 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px]"
                     width="100%"
-                    src="https://www.youtube.com/embed/OYPiXBIgvJ8?wmode=transparent"
-                    frameBorder="0"
-                    allow="autoplay; encrypted-media"
-                    allowFullScreen
-                  ></iframe>
+                    controls
+                  >
+                    <source src="/path/to/your/video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
                 <div className="flex flex-col gap-[16px] mt-[20px">
                   <h1 className="text-[20px] font-bold">
