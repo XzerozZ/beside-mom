@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -7,6 +8,7 @@ import {
   MenuItem,
   Box,
   InputAdornment,
+  Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 
@@ -27,6 +29,7 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
   onFilterChange,
   onAddClick,
 }) => {
+  const [showBox, setShowBox] = useState(false);
   const router = useRouter();
   const handleAddClick = () => {
     if (title === "ข้อมูลคุณแม่ทั้งหมด") {
@@ -38,7 +41,11 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
     if (title === "ข้อมูลเรื่องเล่าจากคุณแม่ทั้งหมด") {
       router.push("/admin/momstories/addmomstories");
     }
+    if (title === "ข้อมูลการดูแลทารก") {
+      setShowBox(!showBox);
+    }
   };
+
   return (
     <div className="flex justify-between">
       <div className="text-neutral05 font-bold ">{title}</div>
@@ -172,27 +179,82 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
               </MenuItem>
             </Select>
           ))}
-
-        <Button
-          variant="contained"
-          onClick={handleAddClick}
-          sx={{
-            backgroundColor: "#B36868",
-            "&:hover": { backgroundColor: "#965757" },
-          }}
-        >
-          {title === "ข้อมูลเรื่องเล่าจากคุณแม่ทั้งหมด"
-            ? "+ เพิ่มเรื่องเล่าจากคุณแม่"
-            : title === "ข้อมูลการดูแลทารก"
-            ? "+ เพิ่มข้อมูลการดูแลทารก"
-            : title === "ข้อมูลคำถามที่พบบ่อย"
-            ? "+ เพิ่มข้อมูลคำถามที่พบบ่อย"
-            : title === "ข้อมูลคุณแม่ทั้งหมด"
-            ? "+ เพิ่มข้อมูลคุณแม่"
-            : title === "การตรวจตามนัด"
-            ? "+ เพิ่มข้อมูล"
-            : ""}
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            onClick={handleAddClick}
+            sx={{
+              backgroundColor: "#B36868",
+              "&:hover": { backgroundColor: "#965757" },
+            }}
+          >
+            {title === "ข้อมูลเรื่องเล่าจากคุณแม่ทั้งหมด"
+              ? "+ เพิ่มเรื่องเล่าจากคุณแม่"
+              : title === "ข้อมูลการดูแลทารก"
+              ? "+ เพิ่มข้อมูลการดูแลทารก"
+              : title === "ข้อมูลคำถามที่พบบ่อย"
+              ? "+ เพิ่มข้อมูลคำถามที่พบบ่อย"
+              : title === "ข้อมูลคุณแม่ทั้งหมด"
+              ? "+ เพิ่มข้อมูลคุณแม่"
+              : title === "การตรวจตามนัด"
+              ? "+ เพิ่มข้อมูล"
+              : ""}
+          </Button>
+          {showBox && title === "ข้อมูลการดูแลทารก" && (
+            <Box
+              sx={{
+                position: "absolute",
+                marginTop: 2,
+                width: 183,
+                padding: 2,
+                borderRadius: 2,
+                border: "1px solid #ddd",
+                backgroundColor: "#fff",
+                boxShadow: 1,
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: "bold" }}
+                className="text-neutral05 text-xl"
+              >
+                เพิ่มข้อมูล
+              </Typography>
+              <Box
+                onClick={() => {
+                  router.push("/admin/babycare/addbabycareinfo/picture");
+                }}
+                sx={{
+                  marginTop: 1,
+                  padding: 1,
+                  borderRadius: 2,
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: "#FFC1C1",
+                  },
+                }}
+              >
+                <Typography className="text-black">ประเภทภาพ</Typography>
+              </Box>
+              <Box
+                onClick={() =>
+                  router.push("/admin/babycare/addbabycareinfo/video")
+                }
+                sx={{
+                  marginTop: 1,
+                  padding: 1,
+                  borderRadius: 2,
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: "#FFC1C1",
+                  },
+                }}
+              >
+                <Typography className="text-black">ประเภทวิดีโอ</Typography>
+              </Box>
+            </Box>
+          )}
+        </div>
       </Box>
     </div>
   );

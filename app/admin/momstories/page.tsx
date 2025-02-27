@@ -117,7 +117,7 @@ const MomstoryPage: React.FC = () => {
             onFilterChange={(value) => setFilterBy(value)}
             onAddClick={handleAddClick}
           />
-          <Grid container spacing={3} sx={{ mt: 3 }}>
+          <Grid container spacing={3}>
             {filteredData.map((item) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                 <Card>
