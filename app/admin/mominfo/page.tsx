@@ -60,7 +60,9 @@ const AllMomInfoPage: React.FC = () => {
   };
 
   const handleAppointment = (id: string) => {
-    router.push(`/admin/mominfo/${id}/appointment`);
+    // router.push(`/admin/mominfo/${id}/appointment`);
+    router.push(`/admin/appointment/${id}`);
+
   };
 
   type SortDirection = "asc" | "desc" | null;

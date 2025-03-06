@@ -144,7 +144,7 @@ export default function Babygraphs() {
           >
             <Button
               variant="outlined"
-              onClick={() => router.push("/admin/mominfo")}
+              onClick={() => router.push(`/admin/appointment/${id}`)}
               sx={{ color: "#999999", borderColor: "#999999" }}
               className="w-40"
             >

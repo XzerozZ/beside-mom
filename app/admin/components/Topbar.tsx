@@ -10,7 +10,7 @@ import {
   InputAdornment,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface TopBarSectionProps {
   title: string;
@@ -31,6 +31,7 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
 }) => {
   const [showBox, setShowBox] = useState(false);
   const router = useRouter();
+  const { id } = useParams();
   const handleAddClick = () => {
     if (title === "ข้อมูลคุณแม่ทั้งหมด") {
       router.push("/admin/mominfo/addmom");
@@ -43,6 +44,10 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
     }
     if (title === "ข้อมูลการดูแลทารก") {
       setShowBox(!showBox);
+    }
+    if (title === "การตรวจตามนัด") {
+    
+      router.push(`/admin/appointment/${id}/add`);
     }
   };
 

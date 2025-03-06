@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   FaRegCalendarAlt,
   FaClock,
@@ -27,8 +27,8 @@ import {
   CardContent,
   IconButton,
 } from "@mui/material";
-import TopBarSection from "../components/Topbar";
-import Sidebar from "../components/SideBarAdmin";
+import TopBarSection from "../../components/Topbar";
+import Sidebar from "../../components/SideBarAdmin";
 
 interface Appointment {
   id: number;
@@ -43,6 +43,7 @@ interface Appointment {
 
 const AppointmentsPage: React.FC = () => {
   const router = useRouter();
+  const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterBy, setFilterBy] = useState("all");
   const handleAddClick = () => {
@@ -185,7 +186,7 @@ const AppointmentsPage: React.FC = () => {
                         />
                       </svg>
                     }
-                    onClick={() => handleEdit(appointment.id)}
+                    onClick={() => handleEdit(Number(id))}
                   >
                     แก้ไข
                   </Button>
