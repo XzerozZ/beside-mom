@@ -238,7 +238,7 @@ export default function EditMomInfo() {
                   />
                   {/* Floating Button */}
                   <IconButton
-                    className="absolute bottom-2 right-2 bg-white shadow-md"
+                    className="absolute bottom-2 right-2 bg-red-100 shadow-md"
                     size="small"
                   >
                     <svg
@@ -247,6 +247,7 @@ export default function EditMomInfo() {
                       viewBox="0 0 32 32"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
+                      className=""
                     >
                       <path
                         d="M7.82666 23.7039L18.125 13.41L18.5898 13.8748L8.29779 24.1668H7.82666V23.7039ZM23.4915 8.04416C23.4914 8.04427 23.4913 8.04438 23.4912 8.0445L23.4915 8.04416Z"
