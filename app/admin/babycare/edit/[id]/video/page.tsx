@@ -72,12 +72,6 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
               case "5":
                 router.push("/admin/nurse-contact");
                 break;
-              case "6":
-                router.push("/admin/babyinfo");
-                break;
-              case "7":
-                router.push("/admin/appointment");
-                break;
             }
           }
         }}

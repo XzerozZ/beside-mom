@@ -142,12 +142,6 @@ export default function EditMomInfo() {
               case "5":
                 router.push("/admin/nurse-contact");
                 break;
-              case "6":
-                router.push("/admin/babyinfo");
-                break;
-              case "7":
-                router.push("/admin/appointment");
-                break;
             }
           }
         }}
@@ -392,30 +386,6 @@ export default function EditMomInfo() {
               multiline
               rows={3}
             />
-          </Box>
-          <Box sx={{ mt: 3 }}>
-            <Button
-              className="text-neutral05 w-full"
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                textTransform: "none",
-              }}
-            >
-              กราฟการเจริญเติบโต
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M10 17L15 12L10 7V17Z" fill="#999999" />
-              </svg>
-            </Button>
-            <div className="">
-              <div className="bg-neutral04 h-[1px] w-full"></div>
-            </div>
           </Box>
 
           <Box

@@ -186,48 +186,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                 )}
                 <span className="ml-2">{item.label}</span>
               </button>
-              {item.id === 1 && (
-                <div className="ml-auto mr-4 mt-3  cursor-pointer">
-                  <svg
-                    className={`w-6 h-6 transition-all ${
-                      activeMenu === item.id.toString()
-                        ? "text-[#B36868]"
-                        : "text-neutral04"
-                    } transform ${isDropdownOpen ? "rotate-180" : ""}`}
-                    viewBox="0 0 22 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    onClick={() => {
-                      setIsDropdownOpen(!isDropdownOpen);
-                    }}
-                  >
-                    <path
-                      d="M16 12.5L10.8333 7.5L5.66667 12.5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              )}
             </div>
-            {item.id === 1 && isDropdownOpen && (
-              <div className="bg-gray-50 pl-12">
-                <div
-                  className="py-2 hover:bg-gray-100 text-primary5 font-bold cursor-pointer"
-                  onClick={() => onItemSelect("6")}
-                >
-                  ข้อมูลทารก
-                </div>
-                <div
-                  className="py-2 hover:bg-gray-100  text-primary5 font-bold cursor-pointer"
-                  onClick={() => onItemSelect("7")}
-                >
-                  การตรวจตามนัด
-                </div>
-              </div>
-            )}
           </div>
         ))}
         <div className="absolute bottom-4 w-full">

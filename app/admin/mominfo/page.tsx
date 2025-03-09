@@ -62,7 +62,6 @@ const AllMomInfoPage: React.FC = () => {
   const handleAppointment = (id: string) => {
     // router.push(`/admin/mominfo/${id}/appointment`);
     router.push(`/admin/appointment/${id}`);
-
   };
 
   type SortDirection = "asc" | "desc" | null;
@@ -121,12 +120,6 @@ const AllMomInfoPage: React.FC = () => {
                 break;
               case "5":
                 router.push("/admin/nurse-contact");
-                break;
-              case "6":
-                router.push("/admin/babyinfo");
-                break;
-              case "7":
-                router.push("/admin/appointment");
                 break;
             }
           }
