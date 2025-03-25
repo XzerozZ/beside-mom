@@ -18,39 +18,14 @@ import {
   MenuItem,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
-
-interface MomInfo {
-  id: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-}
-
-interface BabyInfo {
-  id: string;
-  img: string;
-  firstName: string;
-  lastName: string;
-  nickname: string;
-  gender: string;
-  birthDate: string;
-  bloodType: string;
-  birthWeight: string;
-  birthHeight: string;
-  note: string;
-  growthData: GrowthData[];
-}
-interface GrowthData {
-  date: string;
-  weight: number;
-  height: number;
-}
+import { MomInfo, BabyInfo, GrowthData } from "@/app/admin/types";
 
 export default function MomInfoId() {
   const params = useParams();
   const router = useRouter();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
+    img: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -62,7 +37,8 @@ export default function MomInfoId() {
   useEffect(() => {
     const fetchData = async () => {
       const momdata = {
-        id: params.id as string,
+        id: params.id as string, // mock data
+        img: "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0",
         firstName: "ณัฐฐนิษา",
         lastName: "อัมพรชัยจรัส",
         email: "lovely@gmail.com",
@@ -152,7 +128,19 @@ export default function MomInfoId() {
               ข้อมูลคุณแม่
             </Typography>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={2.4}>
+                <div className="relative w-44 h-44">
+                  <img
+                    src={
+                      momInfo.img ||
+                      "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
+                    }
+                    alt="Profile"
+                    className="w-44 h-44 rounded-full overflow-hidden object-cover"
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
                 <FormLabel>ID</FormLabel>
                 <TextField
                   fullWidth
@@ -161,19 +149,7 @@ export default function MomInfoId() {
                   value={momInfo.id}
                   disabled // Usually ID should be read-only
                 />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <FormLabel>อีเมล</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="email"
-                  type="email"
-                  value={momInfo.email}
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
+
                 <FormLabel>ชื่อ</FormLabel>
                 <TextField
                   fullWidth
@@ -183,7 +159,17 @@ export default function MomInfoId() {
                   disabled
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
+                <FormLabel>อีเมล</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  name="email"
+                  type="email"
+                  value={momInfo.email}
+                  disabled
+                />
+
                 <FormLabel>นามสกุล</FormLabel>
                 <TextField
                   fullWidth

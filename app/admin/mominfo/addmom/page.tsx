@@ -21,51 +21,20 @@ import {
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 
-import AllMomInfoPage from "@/app/admin/mominfo/page";
-import ContactNurseInfo from "@/app/admin/nurse-contact/page";
-
-interface MomInfo {
-  id: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-}
-
-interface BabyInfo {
-  img: string;
-  firstName: string;
-  lastName: string;
-  nickname: string;
-  gender: string;
-  birthDate: string;
-  bloodType: string;
-  birthWeight: string;
-  birthHeight: string;
-  note: string;
-}
+import { MomInfo, BabyInfo } from "@/app/admin/types";
 
 export default function EditMomInfo() {
   // const params = useParams();
   const router = useRouter();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
+    img: "",
     firstName: "",
     lastName: "",
     email: "",
   });
 
-  const [babyInfo, setBabyInfo] = useState<BabyInfo>({
-    img: "",
-    firstName: "",
-    lastName: "",
-    nickname: "",
-    gender: "",
-    birthDate: "",
-    bloodType: "",
-    birthWeight: "",
-    birthHeight: "",
-    note: "",
-  });
+  const [babyInfo, setBabyInfo] = useState<BabyInfo[]>([]);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -153,7 +122,7 @@ export default function EditMomInfo() {
             gutterBottom
             className="mt-7 font-bold text-2x text-neutral05"
           >
-            แก้ไขข้อมูล
+            เพิ่มข้อมูลคุณแม่และทารก
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Typography
@@ -163,7 +132,38 @@ export default function EditMomInfo() {
               ข้อมูลคุณแม่
             </Typography>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={2.4} className="relative">
+                <div className="relative w-44 h-44">
+                  <img
+                    src={
+                      momInfo.img ||
+                      "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
+                    }
+                    alt="Profile"
+                    className="w-44 h-44 rounded-full overflow-hidden object-cover"
+                  />
+                  {/* Floating Button */}
+                  <IconButton
+                    className="absolute bottom-2 right-2 bg-red-100 shadow-md flex items-center justify-center aling-center"
+                    size="small"
+                  >
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7.82666 23.7039L18.125 13.41L18.5898 13.8748L8.29779 24.1668H7.82666V23.7039ZM23.4915 8.04416C23.4914 8.04427 23.4913 8.04438 23.4912 8.0445L23.4915 8.04416Z"
+                        stroke="#B36868"
+                        strokeWidth="5"
+                      />
+                    </svg>
+                  </IconButton>
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
                 <FormLabel>ID</FormLabel>
                 <TextField
                   fullWidth
@@ -174,20 +174,6 @@ export default function EditMomInfo() {
                   onChange={handleChangemMom}
                   disabled // Usually ID should be read-only
                 />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <FormLabel>อีเมล</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  // label="อีเมล"
-                  name="email"
-                  type="email"
-                  value={momInfo.email}
-                  onChange={handleChangemMom}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
                 <FormLabel>ชื่อ</FormLabel>
                 <TextField
                   fullWidth
@@ -198,7 +184,17 @@ export default function EditMomInfo() {
                   onChange={handleChangemMom}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
+                <FormLabel>อีเมล</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  // label="อีเมล"
+                  name="email"
+                  type="email"
+                  value={momInfo.email}
+                  onChange={handleChangemMom}
+                />
                 <FormLabel>นามสกุล</FormLabel>
                 <TextField
                   fullWidth
@@ -224,7 +220,7 @@ export default function EditMomInfo() {
                 <div className="relative w-44 h-44">
                   <img
                     src={
-                      babyInfo.img ||
+                      babyInfo[0]?.img ||
                       "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                     }
                     alt="Profile"
@@ -259,7 +255,7 @@ export default function EditMomInfo() {
                   size="small"
                   // label="ชื่อ"
                   name="firstName"
-                  value={babyInfo.firstName}
+                  value={babyInfo[0]?.firstName}
                   onChange={handleChangeBaby}
                 />
                 <FormLabel>ชื่อเล่น</FormLabel>
@@ -268,7 +264,7 @@ export default function EditMomInfo() {
                   size="small"
                   // label="ชื่อเล่น"
                   name="nickname"
-                  value={babyInfo.nickname}
+                  value={babyInfo[0]?.nickname}
                   onChange={handleChangeBaby}
                 />
               </Grid>
@@ -279,7 +275,7 @@ export default function EditMomInfo() {
                   size="small"
                   // label="นามสกุล"
                   name="lastName"
-                  value={babyInfo.lastName}
+                  value={babyInfo[0]?.lastName}
                   onChange={handleChangeBaby}
                 />
                 <FormLabel>วันเกิด</FormLabel>
@@ -288,7 +284,7 @@ export default function EditMomInfo() {
                   size="small"
                   // label="วันเกิด"
                   name="birthDate"
-                  value={babyInfo.birthDate}
+                  value={babyInfo[0]?.birthDate}
                   onChange={handleChangeBaby}
                   type="date"
                 />
@@ -303,7 +299,7 @@ export default function EditMomInfo() {
               <Grid item xs={12} sm={1.75}>
                 <RadioGroup
                   name="gender"
-                  value={babyInfo.gender}
+                  value={babyInfo[0]?.gender}
                   onChange={handleChangeBaby}
                 >
                   <FormControlLabel
@@ -340,7 +336,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="bloodType"
-                  value={babyInfo.bloodType}
+                  value={babyInfo[0]?.bloodType}
                   onChange={handleChangeBaby}
                 >
                   <MenuItem value="A">A</MenuItem>
@@ -359,7 +355,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="birthWeight"
-                  value={babyInfo.birthWeight}
+                  value={babyInfo[0]?.birthWeight}
                   onChange={handleChangeBaby}
                 />
               </Grid>
@@ -369,7 +365,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="birthHeight"
-                  value={babyInfo.birthHeight}
+                  value={babyInfo[0]?.birthHeight}
                   onChange={handleChangeBaby}
                 />
               </Grid>
@@ -381,7 +377,7 @@ export default function EditMomInfo() {
               fullWidth
               size="small"
               name="note"
-              value={babyInfo.note}
+              value={babyInfo[0]?.note}
               onChange={handleChangeBaby}
               multiline
               rows={3}

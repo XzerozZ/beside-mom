@@ -7,6 +7,8 @@ import {
   FaClock,
   FaMapMarkerAlt,
   FaNotesMedical,
+  FaUserMd,
+  FaBookMedical,
 } from "react-icons/fa";
 import {
   Container,
@@ -29,18 +31,7 @@ import {
 } from "@mui/material";
 import TopBarSection from "../../components/Topbar";
 import Sidebar from "../../components/SideBarAdmin";
-
-interface Appointment {
-  id: number;
-  topic: string;
-  day: string;
-  date: string;
-  number: string;
-  time: string;
-  location: string;
-  info: string;
-}
-
+import { Appointment } from "../../types";
 const AppointmentsPage: React.FC = () => {
   const router = useRouter();
   const { id } = useParams();
@@ -59,6 +50,9 @@ const AppointmentsPage: React.FC = () => {
       topic: "ตรวจแผลผ่าคลอด",
       date: "อังคารที่ 12 ธันวาคม 2566",
       day: "อังคาร",
+      doctor: "นพ. สมชาย ใจดี",
+      type: "ตรวจแผลผ่าคลอด",
+      status: "นัดแล้ว",
       number: "12",
       time: "01:00 PM",
       location: "ชั้น 6 อาคารกปร.",
@@ -69,6 +63,9 @@ const AppointmentsPage: React.FC = () => {
       topic: "ตรวจแผลผ่าคลอด",
       date: "ศุกร์ที่ 15 ธันวาคม 2566",
       day: "ศุกร์",
+      doctor: "นพ. สมชาย ใจดี",
+      type: "ตรวจแผลผ่าคลอด",
+      status: "สำเร็จ",
       number: "15",
       time: "01:00 PM",
       location: "ชั้น 6 อาคารกปร.",
@@ -79,7 +76,23 @@ const AppointmentsPage: React.FC = () => {
       topic: "ตรวจแผลผ่าคลอด",
       date: "พุธที่ 17 มกราคม 2567",
       day: "พุธ",
+      doctor: "นพ. สมชาย ใจดี",
+      type: "ตรวจแผลผ่าคลอด",
+      status: "ยกเลิก",
       number: "17",
+      time: "01:00 PM",
+      location: "ชั้น 6 อาคารกปร.",
+      info: "เจาะเลือดก่อนพบแพทย์",
+    },
+    {
+      id: 4,
+      topic: "ตรวจแผลผ่าคลอด",
+      date: "ศุกร์ที่ 22 มกราคม 2567",
+      day: "ศุกร์",
+      doctor: "นพ. สมชาย ใจดี",
+      type: "ตรวจแผลผ่าคลอด",
+      status: "เลื่อน",
+      number: "22",
       time: "01:00 PM",
       location: "ชั้น 6 อาคารกปร.",
       info: "เจาะเลือดก่อนพบแพทย์",
@@ -89,6 +102,8 @@ const AppointmentsPage: React.FC = () => {
     (appointment) =>
       appointment.topic.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      appointment.doctor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      appointment.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.day.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.info.toLowerCase().includes(searchTerm.toLowerCase())
@@ -144,7 +159,7 @@ const AppointmentsPage: React.FC = () => {
                 key={appointment.id}
                 className="border rounded-lg p-4 flex items-start justify-between shadow-sm"
               >
-                <div className="flex items-center w-full">
+                <div className="flex items-center w-">
                   <div className="text-primary5 p-4 rounded-lg text-center w-48">
                     <p className="font-semibold">{appointment.topic}</p>
                     <p className="text-lg py-4">{appointment.day}</p>
@@ -162,10 +177,47 @@ const AppointmentsPage: React.FC = () => {
                       <FaMapMarkerAlt /> {appointment.location}
                     </p>
                     <p className="flex items-center gap-2 text-gray-700">
+                      <FaUserMd />
+                      {appointment.doctor}
+                    </p>
+                    <p className="flex items-center gap-2 text-gray-700">
+                      <FaBookMedical /> {appointment.type}
+                    </p>
+
+                    <p className="flex items-center gap-2 text-gray-700">
                       <FaNotesMedical /> {appointment.info}
                     </p>
                   </div>
                 </div>
+                <div className="flex items-center">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-3 h-3 rounded-full ${
+                        appointment.status === "สำเร็จ"
+                          ? "bg-[#409261]"
+                          : appointment.status === "ยกเลิก"
+                          ? "bg-gray-400"
+                          : appointment.status === "เลื่อน"
+                          ? "bg-[#9494FF]"
+                          : "bg-primary5"
+                      }`}
+                    ></span>
+                    <p
+                      className={`${
+                        appointment.status === "สำเร็จ"
+                          ? "text-[#409261]"
+                          : appointment.status === "ยกเลิก"
+                          ? "text-gray-400"
+                          : appointment.status === "เลื่อน"
+                          ? "text-[#9494FF]"
+                          : "text-primary5"
+                      }`}
+                    >
+                      {appointment.status}
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex mt-6">
                   <Button
                     size="small"

@@ -24,11 +24,13 @@ import Sidebar from "@/app/admin/components/SideBarAdmin";
 export default function Babygraphs() {
   const router = useRouter();
   const { id } = useParams();
-  const [momInfo, setMomInfo] = useState({
+  const [appointmentmomInfo, setAppointmentmomInfo] = useState({
     subject: "",
     date: "",
     time: "",
     location: "",
+    doctor: "",
+    type: "",
     description: "",
   });
   // useEffect(() => {
@@ -37,8 +39,8 @@ export default function Babygraphs() {
   // }
   // }, [id]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMomInfo({
-      ...momInfo,
+    setAppointmentmomInfo({
+      ...appointmentmomInfo,
       [e.target.name]: e.target.value,
     });
   };
@@ -76,7 +78,7 @@ export default function Babygraphs() {
               size="small"
               name="subject"
               type="text"
-              value={momInfo.subject}
+              value={appointmentmomInfo.subject}
               onChange={handleChange}
             />
           </Box>
@@ -89,7 +91,7 @@ export default function Babygraphs() {
                   size="small"
                   name="date"
                   type="date"
-                  value={momInfo.date}
+                  value={appointmentmomInfo.date}
                   onChange={handleChange}
                 />
               </Grid>
@@ -100,7 +102,7 @@ export default function Babygraphs() {
                   size="small"
                   name="time"
                   type="time"
-                  value={momInfo.time}
+                  value={appointmentmomInfo.time}
                   onChange={handleChange}
                 />
               </Grid>
@@ -113,9 +115,46 @@ export default function Babygraphs() {
               size="small"
               name="location"
               type="text"
-              value={momInfo.location}
+              value={appointmentmomInfo.location}
               onChange={handleChange}
             />
+          </Box>
+          <Box className="mt-5">
+            <FormLabel>แพทย์</FormLabel>
+
+            <Select
+              fullWidth
+              size="small"
+              name="type"
+              value={appointmentmomInfo.doctor}
+              onChange={(e: SelectChangeEvent) =>
+                setAppointmentmomInfo({
+                  ...appointmentmomInfo,
+                  doctor: e.target.value,
+                })
+              }
+            >
+              <MenuItem value="1">นายแพทย์1</MenuItem>
+              <MenuItem value="2">นายแพทย์2</MenuItem>
+            </Select>
+          </Box>
+          <Box className="mt-5">
+            <FormLabel>ประเภท</FormLabel>
+            <Select
+              fullWidth
+              size="small"
+              name="type"
+              value={appointmentmomInfo.type}
+              onChange={(e: SelectChangeEvent) =>
+                setAppointmentmomInfo({
+                  ...appointmentmomInfo,
+                  type: e.target.value,
+                })
+              }
+            >
+              <MenuItem value="1">ประจำ</MenuItem>
+              <MenuItem value="2">ฉุกเฉิน</MenuItem>
+            </Select>
           </Box>
           <Box className="mt-5">
             <FormLabel>การเตรียมตัว</FormLabel>
@@ -124,7 +163,7 @@ export default function Babygraphs() {
               size="small"
               name="description"
               type="text"
-              value={momInfo.description}
+              value={appointmentmomInfo.description}
               onChange={handleChange}
             />
           </Box>
