@@ -119,6 +119,9 @@ const AllMomInfoPage: React.FC = () => {
                 router.push("/admin/faq");
                 break;
               case "5":
+                router.push("/admin/appointment");
+                break;
+              case "6":
                 router.push("/admin/nurse-contact");
                 break;
             }
@@ -131,9 +134,7 @@ const AllMomInfoPage: React.FC = () => {
           <TopBarSection
             title="ข้อมูลคุณแม่ทั้งหมด"
             searchTerm={searchTerm}
-            filterBy={filterBy}
             onSearchChange={(value) => setSearchTerm(value)}
-            onFilterChange={(value) => setFilterBy(value)}
             onAddClick={handleAddClick}
           />
 

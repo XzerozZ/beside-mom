@@ -99,6 +99,9 @@ const MomstoryPage: React.FC = () => {
                 router.push("/admin/faq");
                 break;
               case "5":
+                router.push("/admin/appointment");
+                break;
+              case "6":
                 router.push("/admin/nurse-contact");
                 break;
             }
@@ -111,9 +114,7 @@ const MomstoryPage: React.FC = () => {
           <TopBarSection
             title="ข้อมูลการดูแลทารก"
             searchTerm={searchTerm}
-            filterBy={filterBy}
             onSearchChange={(value) => setSearchTerm(value)}
-            onFilterChange={(value) => setFilterBy(value)}
             onAddClick={handleAddClick}
           />
           <Grid container spacing={3}>

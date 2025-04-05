@@ -118,7 +118,7 @@ const AppointmentsPage: React.FC = () => {
     <div className="flex bg-white">
       <Sidebar
         onItemSelect={(id) => {
-          if (id !== "7") {
+          if (id !== "5") {
             // Navigate to other pages based on sidebar selection
             switch (id) {
               case "1":
@@ -134,10 +134,11 @@ const AppointmentsPage: React.FC = () => {
                 router.push("/admin/faq");
                 break;
               case "5":
-                router.push("/admin/nurse-contact");
+                router.push("/admin/appointment");
                 break;
               case "6":
-                router.push("/admin/babyinfo");
+                router.push("/admin/nurse-contact");
+                break;
             }
           }
         }}
@@ -148,11 +149,23 @@ const AppointmentsPage: React.FC = () => {
           <TopBarSection
             title="การตรวจตามนัด"
             searchTerm={searchTerm}
-            filterBy={filterBy}
             onSearchChange={(value) => setSearchTerm(value)}
-            onFilterChange={(value) => setFilterBy(value)}
             onAddClick={handleAddClick}
           />
+          <div className="w-full flex mt-4 mb-4 justify-end">
+            <Button
+              size="medium"
+              variant="contained"
+              sx={{
+                backgroundColor: "#B36868",
+                "&:hover": { backgroundColor: "#965757" },
+              }}
+
+              // onClick={() => handleDelete(data.id)}
+            >
+              ดูประวัตการนัด
+            </Button>
+          </div>
           <div className="mt-4 space-y-4">
             {filteredAppointments.map((appointment) => (
               <div

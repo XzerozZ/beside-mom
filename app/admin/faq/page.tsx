@@ -88,6 +88,9 @@ export default function Faq() {
                 router.push("/admin/babycare");
                 break;
               case "5":
+                router.push("/admin/appointment");
+                break;
+              case "6":
                 router.push("/admin/nurse-contact");
                 break;
             }
@@ -100,9 +103,7 @@ export default function Faq() {
           <TopBarSection
             title="ข้อมูลคำถามที่พบบ่อย"
             searchTerm={searchTerm}
-            filterBy={filterBy}
             onSearchChange={(value) => setSearchTerm(value)}
-            onFilterChange={(value) => setFilterBy(value)}
             onAddClick={handleAddClick}
           />
           <div>

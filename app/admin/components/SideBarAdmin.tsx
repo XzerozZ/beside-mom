@@ -2,7 +2,7 @@
 
 import { it } from "node:test";
 import { useState } from "react";
-
+import { FaRegCalendar, FaRegCalendarTimes } from "react-icons/fa";
 interface MenuItem {
   id: number;
   label: string;
@@ -24,7 +24,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
     { id: 2, label: "ข้อมูลเรื่องเล่าจากคุณแม่" },
     { id: 3, label: "ข้อมูลการดูแลทารก" },
     { id: 4, label: "ข้อมูลคำถามที่พบบ่อย" },
-    { id: 5, label: "ข้อมูลติดต่อกับพยาบาล" },
+    { id: 5, label: "ข้อมูลการตรวจตามนัด" },
+    { id: 6, label: "ข้อมูลติดต่อกับพยาบาล" },
   ];
 
   return (
@@ -159,6 +160,25 @@ const Sidebar: React.FC<SidebarProps> = ({ onItemSelect, selectedItem }) => {
                   </div>
                 )}
                 {item.id === 5 && (
+                  <div className="ml-3">
+                    <svg
+                      className={`w-6 h-6 transition-all ${
+                        activeMenu === item.id.toString()
+                          ? "text-[#B36868]"
+                          : "text-neutral04"
+                      }`}
+                      viewBox="0 0 16 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3.83333 10.667V9.00033H12.1667V10.667H3.83333ZM3.83333 14.0003V12.3337H9.66667V14.0003H3.83333ZM2.16667 17.3337C1.70833 17.3337 1.31611 17.1706 0.99 16.8445C0.663889 16.5184 0.500556 16.1259 0.5 15.667V4.00033C0.5 3.54199 0.663333 3.14977 0.99 2.82366C1.31667 2.49755 1.70889 2.33421 2.16667 2.33366H3V0.666992H4.66667V2.33366H11.3333V0.666992H13V2.33366H13.8333C14.2917 2.33366 14.6842 2.49699 15.0108 2.82366C15.3375 3.15033 15.5006 3.54255 15.5 4.00033V15.667C15.5 16.1253 15.3369 16.5178 15.0108 16.8445C14.6847 17.1712 14.2922 17.3342 13.8333 17.3337H2.16667ZM2.16667 15.667H13.8333V7.33366H2.16667V15.667Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                )}
+                {item.id === 6 && (
                   <div className="ml-3">
                     <svg
                       className={`w-6 h-6 transition-all ${

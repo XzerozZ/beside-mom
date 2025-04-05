@@ -76,6 +76,9 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
                 router.push("/admin/faq");
                 break;
               case "5":
+                router.push("/admin/appointment");
+                break;
+              case "6":
                 router.push("/admin/nurse-contact");
                 break;
             }

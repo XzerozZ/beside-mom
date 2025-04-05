@@ -15,18 +15,14 @@ import { useParams, useRouter } from "next/navigation";
 interface TopBarSectionProps {
   title: string;
   searchTerm: string;
-  filterBy: string;
   onSearchChange: (value: string) => void;
-  onFilterChange: (value: string) => void;
   onAddClick: () => void;
 }
 
 const TopBarSection: React.FC<TopBarSectionProps> = ({
   title,
   searchTerm,
-  filterBy,
   onSearchChange,
-  onFilterChange,
   onAddClick,
 }) => {
   const [showBox, setShowBox] = useState(false);
@@ -46,7 +42,6 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
       setShowBox(!showBox);
     }
     if (title === "การตรวจตามนัด") {
-    
       router.push(`/admin/appointment/${id}/add`);
     }
   };
@@ -101,89 +96,7 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
             },
           }}
         />
-        {title === "ข้อมูลเรื่องเล่าจากคุณแม่ทั้งหมด" ||
-          title === "ข้อมูลการดูแลทารก" ||
-          title === "ข้อมูลคำถามที่พบบ่อย" ||
-          (title === "การตรวจตามนัด" && (
-            <Select
-              value={filterBy}
-              onChange={(e) => onFilterChange(e.target.value)}
-              size="small"
-              IconComponent={() => (
-                <svg
-                  width="26"
-                  height="22"
-                  viewBox="5 0 26 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g filter="url(#filter0_d_630_2695)">
-                    <path
-                      d="M13 8.94629L17 13.0533L21 8.94629M13 4.94629L9 0.946289M9 0.946289L5 4.94329M9 0.946289V12.9463M17 0.946289V12.9463"
-                      stroke="#B36868"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      shapeRendering="crispEdges"
-                    />
-                  </g>
-                  <defs>
-                    <filter
-                      id="filter0_d_630_2695"
-                      x="0.5"
-                      y="0.446289"
-                      width="25"
-                      height="25"
-                      filterUnits="userSpaceOnUse"
-                      colorInterpolationFilters="sRGB"
-                    >
-                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                      <feColorMatrix
-                        in="SourceAlpha"
-                        type="matrix"
-                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-                        result="hardAlpha"
-                      />
-                      <feOffset dy="4" />
-                      <feGaussianBlur stdDeviation="2" />
-                      <feComposite in2="hardAlpha" operator="out" />
-                      <feColorMatrix
-                        type="matrix"
-                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-                      />
-                      <feBlend
-                        mode="normal"
-                        in2="BackgroundImageFix"
-                        result="effect1_dropShadow_630_2695"
-                      />
-                      <feBlend
-                        mode="normal"
-                        in="SourceGraphic"
-                        in2="effect1_dropShadow_630_2695"
-                        result="shape"
-                      />
-                    </filter>
-                  </defs>
-                </svg>
-              )}
-              sx={{
-                minWidth: 200,
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#B36868",
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#B36868",
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#B36868",
-                },
-              }}
-              className="text-primary5"
-            >
-              <MenuItem value="all" className="text-primary5">
-                จัดเรียงตาม
-              </MenuItem>
-            </Select>
-          ))}
+
         <div>
           <Button
             variant="contained"
