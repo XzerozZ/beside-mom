@@ -47,6 +47,7 @@ const AppointmentsPage: React.FC = () => {
   const appointments: Appointment[] = [
     {
       id: 1,
+      momname: "ณัฐฐ อัมพรชัยจรัส",
       topic: "ตรวจแผลผ่าคลอด",
       date: "อังคารที่ 12 ธันวาคม 2566",
       day: "อังคาร",
@@ -60,6 +61,7 @@ const AppointmentsPage: React.FC = () => {
     },
     {
       id: 2,
+      momname: "ณัฐฐ อัมพรชัยจรัส",
       topic: "ตรวจแผลผ่าคลอด",
       date: "ศุกร์ที่ 15 ธันวาคม 2566",
       day: "ศุกร์",
@@ -73,6 +75,7 @@ const AppointmentsPage: React.FC = () => {
     },
     {
       id: 3,
+      momname: "ณัฐฐ อัมพรชัยจรัส",
       topic: "ตรวจแผลผ่าคลอด",
       date: "พุธที่ 17 มกราคม 2567",
       day: "พุธ",
@@ -86,6 +89,7 @@ const AppointmentsPage: React.FC = () => {
     },
     {
       id: 4,
+      momname: "ณัฐฐ อัมพรชัยจรัส",
       topic: "ตรวจแผลผ่าคลอด",
       date: "ศุกร์ที่ 22 มกราคม 2567",
       day: "ศุกร์",
@@ -160,8 +164,13 @@ const AppointmentsPage: React.FC = () => {
                 backgroundColor: "#B36868",
                 "&:hover": { backgroundColor: "#965757" },
               }}
-
-              // onClick={() => handleDelete(data.id)}
+              onClick={() =>
+                router.push(
+                  `/admin/appointment?search=${encodeURIComponent(
+                    appointments[0].momname
+                  )}`
+                )
+              }
             >
               ดูประวัตการนัด
             </Button>

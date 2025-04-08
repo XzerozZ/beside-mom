@@ -16,7 +16,7 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TopBarSection from "../components/Topbar";
 
 type AppointmentStatus = "สำเร็จ" | "ยกเลิก" | "เลื่อน" | "นัดแล้ว";
@@ -83,7 +83,9 @@ const statusDots = {
 };
 
 export default function AppointmentPage() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParams = useSearchParams();
+  const initialSearchTerm = searchParams.get("search") || "";
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [sortConfig, setSortConfig] = useState<{
     key: keyof (typeof appointments)[0];
     direction: "asc" | "desc";
@@ -148,7 +150,7 @@ export default function AppointmentPage() {
       <div className="flex-1 p-6">
         <Container>
           <TopBarSection
-            title="การตรวจตามนัด"
+            title="ข้อมูลการตรวจตามนัด"
             searchTerm={searchTerm}
             onSearchChange={(value) => setSearchTerm(value)}
             onAddClick={() => console.log("Add appointment clicked")}
