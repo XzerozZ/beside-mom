@@ -15,7 +15,7 @@ const Navbar = () => {
         <div className="max-xl:hidden">
           <ul className="flex flex-row gap-[44px] ">
             <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-              <a href="/">ข้อมูลทารก</a>
+              <a href="/user/baby">ข้อมูลทารก</a>
             </li>
             <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
               <a href="/user/story">เรื่องเราของคุณแม่</a>
