@@ -79,28 +79,7 @@ const Navbar = () => {
                       onClick={() => {}}
                     />
                   </div>
-                  <div className="flex flex-col gap-[20px]">
-                    <h1 className="font-bold text-[16px]">แบบประเมินพัฒนาการ</h1>
-                    <div className="flex flex-row justify-between">
-                      <div className="flex flex-row gap-2">
-                        <Image
-                          src="/health.svg"
-                          width={24}
-                          height={24}
-                          alt="health"
-                        ></Image>
-                        <h2 className=" align-middle">แบบประเมินทารกแรกเกิด</h2>
-                      </div>
-                      <div className="">
-                      <Image 
-                          src="/nexticon.svg"
-                          width={8}
-                            height={4}
-                          alt="next"
-                        ></Image>
-                      </div>
-                    </div>
-                  </div>
+                 
                   <div>
                     <h1 className="font-bold text-[16px] text-[#B36868] text-center">ออกจากระบบ</h1>
                   </div>

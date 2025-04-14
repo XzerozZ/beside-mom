@@ -5,10 +5,17 @@ import {
   FaMapMarkerAlt,
   FaNotesMedical,
 } from "react-icons/fa";
+import { FaUserDoctor } from "react-icons/fa6";
+import { MdBook } from "react-icons/md";
 
 const CalendarCard = () => {
   return (
     <div className="mt-4 space-y-4">
+       <div className="flex gap-3  justify-end md:hidden">
+            <div className="my-auto w-2 h-2 rounded-full bg-[#B36868] flex items-center justify-center text-white ">
+            </div>
+            <h3 className="text-[#b36868]">นัดแล้ว</h3>
+          </div>
       <div className="border rounded-lg p-[24px] max-sm:p-0 flex items-start justify-between shadow-sm max-sm:border-none max-sm:shadow-none">
         <div className="flex items-center w-full max-sm:flex-col max-sm:items-center max-sm:gap-4 ">
           <div className="text-[#B36868]  rounded-lg text-center w-48">
@@ -28,10 +35,24 @@ const CalendarCard = () => {
               <FaMapMarkerAlt />ชั้น 6 อาคารภปร.
             </p>
             <p className="flex items-center gap-2 text-gray-700">
+              <FaUserDoctor  />นายยินดี จงใจดี
+            </p>
+            <p className="flex items-center gap-2 text-gray-700">
+            <MdBook />นัดติดตามต่อเนื่อง
+            </p>
+            <p className="flex items-center gap-2 text-gray-700">
               <FaNotesMedical />เจาะเลือดก่อนพบแพทย์
             </p>
           </div>
+         
+         
         </div>
+        <div className="flex gap-3 w-1/2 max-sm:hidden">
+            <div className="my-auto w-2 h-2 rounded-full bg-[#B36868] flex items-center justify-center text-white ">
+            </div>
+            <h3 className="text-[#b36868]">นัดแล้ว</h3>
+          </div>
+        
        
       </div>
     </div>
