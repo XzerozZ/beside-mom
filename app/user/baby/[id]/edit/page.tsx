@@ -42,8 +42,8 @@ const page = () => {
             <div className="flex flex-col gap-8">
               {babyData.map((data, index) => (
                 <div key={index} className="flex flex-col">
-                  <div className="grid grid-cols-[1fr_1fr_1fr] gap-[64px]">
-                  <div className="flex flex-row gap-1">
+                  <div className="grid grid-cols-[1fr_1fr_1fr] gap-[64px] max-sm:gap-7">
+                  <div className="flex flex-row gap-1 max-sm:col-span-3">
                     <div className="flex-none">
                       <h3>{index+1}.</h3>
                     </div>
@@ -68,8 +68,8 @@ const page = () => {
             {showInput && (
               <div>
                 <div className="flex flex-col">
-                  <div className="grid grid-cols-[1fr_1fr_1fr] gap-[64px]">
-                    <div className="flex flex-row">
+                  <div className="grid grid-cols-[1fr_1fr_1fr] gap-[64px] ">
+                    <div className="flex flex-row col-span-3">
                       <div className="flex-none">
                         <h3>{babyData.length + 1}.</h3>
                       </div>
