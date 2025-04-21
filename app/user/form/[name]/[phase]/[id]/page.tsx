@@ -1,13 +1,16 @@
 "use client";
 import React from "react";
-import Navbar from "../../../component/navbar";
+import Navbar from "../../../../component/navbar";
 import { useParams } from "next/navigation";
 import ProgressBar from "@/app/user/component/progressbar";
 import FormCard from "@/app/user/component/FormCard";
+import Quiz from "@/app/user/component/quiz";
 
 const page = () => {
   const { name } = useParams();
   const { phase } = useParams();
+  const { id } = useParams();
+  const numericId = Number(id);
  
 
   // Decode the name parameter
@@ -28,7 +31,7 @@ const page = () => {
 
   return (
     <div className="flex flex-col">
-      <header className="fixed top-0 left-0 w-full">
+      <header className="fixed top-0 left-0 w-full z-30">
         <Navbar />
       </header>
       <main className="mt-[112px] max-sm:mt-[112px]">
@@ -40,8 +43,10 @@ const page = () => {
 
             <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
              
-              <ProgressBar />
-              <FormCard />
+            <div className="z-10">
+            <ProgressBar />
+            </div>
+             <Quiz param={numericId} />
             </div>
           </div>
         </div>

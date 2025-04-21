@@ -6,7 +6,7 @@ export const ButtonComponents: FC<ButtonProps> = (props) => {
   const { title, textSize, onClick } = props;
   return (
     <button
-      className=" bg-[#B36868] rounded-[4px] h-[44px] text-white font-bold text-[15px] w-full hover:bg-[#FF9494]"
+      className={`bg-[#B36868] rounded-[4px] h-[44px] text-white font-bold text-[15px] w-full hover:bg-[#FF9494] `}
       onClick={onClick}
     >
       <h1 className={textSize}>{title}</h1>
@@ -30,7 +30,7 @@ export const ButtonComponents3: FC<ButtonProps> = (props) => {
   const { title, textSize, onClick } = props;
   return (
     <button
-      className=" bg-[#B36868] rounded-[4px] h-[44px] text-white font-bold text-[15px] w-full hover:bg-[#FF9494]"
+      className={`bg-[#B36868] rounded-[4px] h-[44px] text-white font-bold text-[15px] w-full hover:bg-[#FF9494] `}
       onClick={onClick}
     >
       <div className="flex flex-row gap-2 justify-center">
@@ -45,7 +45,33 @@ export const ButtonComponents4: FC<ButtonProps> = (props) => {
   const { title, textSize, onClick } = props;
   return (
     <button
-      className="border-[#FF9494] border rounded-[4px] h-[44px] text-[#B36868] font-bold text-[15px] w-full "
+      className={`border-[#FF9494] border rounded-[4px] h-[44px] text-[#B36868] font-bold text-[15px] w-full `}
+      onClick={onClick}
+    >
+      <h1 className={textSize}>{title}</h1>
+    </button>
+  );
+};
+
+
+export const ButtonComponents5Size: FC<ButtonProps> = (props) => {
+  const { title, textSize, onClick , boxSize} = props;
+  return (
+    <button
+      className={`bg-[#B36868] rounded-[4px] h-[44px] text-white font-bold text-[15px] hover:bg-[#FF9494] ${boxSize}`}
+      onClick={onClick}
+    >
+      <h1 className={textSize}>{title}</h1>
+    </button>
+  );
+};
+
+
+export const ButtonComponents6Size: FC<ButtonProps> = (props) => {
+  const { title, textSize, onClick, boxSize } = props;
+  return (
+    <button
+      className={`border-[#FF9494] border rounded-[4px] h-[44px] text-[#B36868] font-bold text-[15px]  ${boxSize}`}
       onClick={onClick}
     >
       <h1 className={textSize}>{title}</h1>

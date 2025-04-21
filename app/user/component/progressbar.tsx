@@ -38,7 +38,7 @@ export default function StepProgress() {
   const stepWidthPercent = 100 / (steps.length - 1); // Spread steps evenly
 
   return (
-    <div className="w-full py-10">
+    <div className="w-full py-10 max-sm:py-8">
       <div className="relative mx-auto">
         {/* Line behind steps */}
         <div className="absolute top-[15px] left-0 right-0 h-0.5 bg-gray-300 z-0"></div>
@@ -66,14 +66,14 @@ export default function StepProgress() {
                 {step.number}
               </div>
               <div
-                className={`mt-2 font-semibold ${
+                className={` mt-2 font-semibold max-sm:hidden ${
                   step.active ? "text-black" : "text-gray-500"
                 }`}
               >
                 {step.titleTH}
               </div>
               <div
-                className={`text-sm ${
+                className={`text-sm max-sm:hidden ${
                   step.active ? "text-black font-bold" : "text-gray-500"
                 }`}
               >

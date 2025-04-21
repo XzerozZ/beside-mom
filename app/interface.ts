@@ -1,6 +1,7 @@
 export interface ButtonProps {
     title: string;
     textSize?: string;
+    boxSize?: string;
     onClick?: () => void;
 }
 
