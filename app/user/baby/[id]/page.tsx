@@ -106,7 +106,7 @@ const page = () => {
              <ButtonComponents title="เพิ่มข้อมูล" textSize="text-[15px] font-bold" />
              </div>
             </div>
-        
+        <LengthChart />
           </div>
         </div>
       </main>
