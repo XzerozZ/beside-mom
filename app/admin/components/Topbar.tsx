@@ -44,6 +44,9 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
     if (title === "การตรวจตามนัด") {
       router.push(`/admin/appointment/${id}/add`);
     }
+    if (title === "ข้อมูลการตรวจตามนัด") {
+      router.push(`/admin/appointment/add`);
+    }
   };
 
   return (
@@ -98,7 +101,7 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
         />
 
         <div>
-          {title != "ข้อมูลการตรวจตามนัด" && (
+          {/* {title != "ข้อมูลการตรวจตามนัด" && (
             <Button
               variant="contained"
               onClick={handleAddClick}
@@ -117,9 +120,33 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
                 ? "+ เพิ่มข้อมูลคุณแม่"
                 : title === "การตรวจตามนัด"
                 ? "+ เพิ่มข้อมูล"
+                : title === "ข้อมูลการตรวจตามนัด"
+                ? "+ เพิ่มข้อมูล"
                 : ""}
             </Button>
-          )}
+          )} */}
+          <Button
+              variant="contained"
+              onClick={handleAddClick}
+              sx={{
+                backgroundColor: "#B36868",
+                "&:hover": { backgroundColor: "#965757" },
+              }}
+            >
+              {title === "ข้อมูลเรื่องเล่าจากคุณแม่ทั้งหมด"
+                ? "+ เพิ่มเรื่องเล่าจากคุณแม่"
+                : title === "ข้อมูลการดูแลทารก"
+                ? "+ เพิ่มข้อมูลการดูแลทารก"
+                : title === "ข้อมูลคำถามที่พบบ่อย"
+                ? "+ เพิ่มข้อมูลคำถามที่พบบ่อย"
+                : title === "ข้อมูลคุณแม่ทั้งหมด"
+                ? "+ เพิ่มข้อมูลคุณแม่"
+                : title === "การตรวจตามนัด"
+                ? "+ เพิ่มข้อมูล"
+                : title === "ข้อมูลการตรวจตามนัด"
+                ? "+ เพิ่มข้อมูล"
+                : ""}
+            </Button>
           {showBox && title === "ข้อมูลการดูแลทารก" && (
             <Box
               sx={{

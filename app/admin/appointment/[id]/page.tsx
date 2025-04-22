@@ -52,7 +52,7 @@ const AppointmentsPage: React.FC = () => {
       date: "อังคารที่ 12 ธันวาคม 2566",
       day: "อังคาร",
       doctor: "นพ. สมชาย ใจดี",
-      type: "ตรวจแผลผ่าคลอด",
+     
       status: "นัดแล้ว",
       number: "12",
       time: "01:00 PM",
@@ -66,7 +66,7 @@ const AppointmentsPage: React.FC = () => {
       date: "ศุกร์ที่ 15 ธันวาคม 2566",
       day: "ศุกร์",
       doctor: "นพ. สมชาย ใจดี",
-      type: "ตรวจแผลผ่าคลอด",
+     
       status: "สำเร็จ",
       number: "15",
       time: "01:00 PM",
@@ -80,7 +80,7 @@ const AppointmentsPage: React.FC = () => {
       date: "พุธที่ 17 มกราคม 2567",
       day: "พุธ",
       doctor: "นพ. สมชาย ใจดี",
-      type: "ตรวจแผลผ่าคลอด",
+  
       status: "ยกเลิก",
       number: "17",
       time: "01:00 PM",
@@ -94,7 +94,7 @@ const AppointmentsPage: React.FC = () => {
       date: "ศุกร์ที่ 22 มกราคม 2567",
       day: "ศุกร์",
       doctor: "นพ. สมชาย ใจดี",
-      type: "ตรวจแผลผ่าคลอด",
+  
       status: "เลื่อน",
       number: "22",
       time: "01:00 PM",
@@ -107,7 +107,7 @@ const AppointmentsPage: React.FC = () => {
       appointment.topic.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.doctor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      appointment.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+
       appointment.day.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.info.toLowerCase().includes(searchTerm.toLowerCase())
@@ -122,7 +122,7 @@ const AppointmentsPage: React.FC = () => {
     <div className="flex bg-white">
       <Sidebar
         onItemSelect={(id) => {
-          if (id !== "5") {
+       
             // Navigate to other pages based on sidebar selection
             switch (id) {
               case "1":
@@ -144,7 +144,7 @@ const AppointmentsPage: React.FC = () => {
                 router.push("/admin/nurse-contact");
                 break;
             }
-          }
+          
         }}
         selectedItem="1" // Keep this fixed since we're in the mom info section
       />
@@ -202,9 +202,7 @@ const AppointmentsPage: React.FC = () => {
                       <FaUserMd />
                       {appointment.doctor}
                     </p>
-                    <p className="flex items-center gap-2 text-gray-700">
-                      <FaBookMedical /> {appointment.type}
-                    </p>
+              
 
                     <p className="flex items-center gap-2 text-gray-700">
                       <FaNotesMedical /> {appointment.info}

@@ -24,13 +24,24 @@ import Sidebar from "@/app/admin/components/SideBarAdmin";
 export default function Babygraphs() {
   const router = useRouter();
   const { id } = useParams();
+  const [momInfo, setMomInfo] = useState({
+    id: id,
+    momname: "ณัฐฐนิษา อัมพรชัยจรัส",
+  });
+  const doctors = [
+    { id: "1", name: "นพ. สมชาย ใจดี" },
+    { id: "2", name: "พญ. สมหญิง รักษาดี" },
+    { id: "3", name: "นพ. วิชัย สุขภาพดี" },
+    { id: "4", name: "พญ. นงนุช ชำนาญการ" },
+  ];
   const [appointmentmomInfo, setAppointmentmomInfo] = useState({
+    id: id,
+    momname: momInfo.momname,
     subject: "ตรวจแผลผ่าคลอด",
     date: "15/03/2025",
     time: "14:00",
     location: "ชั้น 6 อาคารกปร.",
     doctor: "นพ. สมชาย ใจดี",
-    type: "ตรวจแผลผ่าคลอด",
     description: "เจาะเลือดก่อนพบแพทย์",
   });
   // useEffect(() => {
@@ -77,8 +88,35 @@ export default function Babygraphs() {
           gutterBottom
           className="mt-7 font-bold text-2x text-neutral05"
         >
-          การแก้ไข / เพิ่มข้อมูลการนัดหมาย
+          การแก้ไขข้อมูลการนัดหมาย
         </Typography>
+        <Box className="mt-5">
+                    <Grid container spacing={3}>
+                      <Grid item xs={6}>
+                        <FormLabel>id</FormLabel>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          name="id"
+                          type="text"
+                          value={appointmentmomInfo.id}
+                          disabled
+                         
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <FormLabel>ชื่อคุณแม่</FormLabel>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          name="momname"
+                          type="text"
+                          value={appointmentmomInfo.momname}
+                          disabled
+                        />
+                      </Grid>
+                    </Grid>
+                  </Box>
         <Box className="mt-5">
           <FormLabel>หัวข้อ</FormLabel>
           <TextField
@@ -128,42 +166,28 @@ export default function Babygraphs() {
           />
         </Box>
         <Box className="mt-5">
-          <FormLabel>แพทย์</FormLabel>
-
-          <Select
-            fullWidth
-            size="small"
-            name="type"
-            value={appointmentmomInfo.doctor}
-            onChange={(e: SelectChangeEvent) =>
-              setAppointmentmomInfo({
-                ...appointmentmomInfo,
-                doctor: e.target.value,
-              })
-            }
-          >
-            <MenuItem value="1">นายแพทย์1</MenuItem>
-            <MenuItem value="2">นายแพทย์2</MenuItem>
-          </Select>
-        </Box>
-        <Box className="mt-5">
-          <FormLabel>ประเภท</FormLabel>
-          <Select
-            fullWidth
-            size="small"
-            name="type"
-            value={appointmentmomInfo.type}
-            onChange={(e: SelectChangeEvent) =>
-              setAppointmentmomInfo({
-                ...appointmentmomInfo,
-                type: e.target.value,
-              })
-            }
-          >
-            <MenuItem value="1">ประจำ</MenuItem>
-            <MenuItem value="2">ฉุกเฉิน</MenuItem>
-          </Select>
-        </Box>
+            <FormLabel>แพทย์</FormLabel>
+            <Select
+              fullWidth
+              size="small"
+              name="doctor"
+              value={appointmentmomInfo.doctor}
+              onChange={(e: SelectChangeEvent) =>
+                setAppointmentmomInfo({
+                  ...appointmentmomInfo,
+                  doctor: e.target.value,
+                })
+              }
+            >
+              <MenuItem value="">-- เลือกแพทย์ --</MenuItem>
+              {doctors.map((doctor) => (
+                <MenuItem key={doctor.id} value={doctor.id}>
+                  {doctor.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        
         <Box className="mt-5">
           <FormLabel>การเตรียมตัว</FormLabel>
           <TextField

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import {
   Container,
   Table,
@@ -14,6 +15,10 @@ import {
   TextField,
   Box,
   TableSortLabel,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -27,7 +32,6 @@ const appointments: {
   date: string;
   time: string;
   doctor: string;
-  type: string;
   status: AppointmentStatus;
 }[] = [
   {
@@ -36,7 +40,6 @@ const appointments: {
     date: "02/25/2025",
     time: "13:00",
     doctor: "ณัฐฐนิษา อัมพรชัยจรัส",
-    type: "นัดติดตามต่อเนื่อง",
     status: "สำเร็จ",
   },
   {
@@ -45,7 +48,6 @@ const appointments: {
     date: "02/24/2025",
     time: "13:00",
     doctor: "ณัฐฐนิษา อัมพรชัยจรัส",
-    type: "นัดติดตามต่อเนื่อง",
     status: "ยกเลิก",
   },
   {
@@ -54,7 +56,6 @@ const appointments: {
     date: "02/23/2025",
     time: "13:00",
     doctor: "ณัฐฐนิษา อัมพรชัยจรัส",
-    type: "นัดติดตามต่อเนื่อง",
     status: "เลื่อน",
   },
   {
@@ -63,7 +64,6 @@ const appointments: {
     date: "02/22/2025",
     time: "13:00",
     doctor: "ณัฐฐนิษา อัมพรชัยจรัส",
-    type: "นัดติดตามต่อเนื่อง",
     status: "นัดแล้ว",
   },
 ];
@@ -86,12 +86,27 @@ export default function AppointmentPage() {
   const searchParams = useSearchParams();
   const initialSearchTerm = searchParams.get("search") || "";
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  const [selectedDoctor, setSelectedDoctor] = useState<string>("");
+  const [doctorDropdownOpen, setDoctorDropdownOpen] = useState(false);
+
   const [sortConfig, setSortConfig] = useState<{
     key: keyof (typeof appointments)[0];
     direction: "asc" | "desc";
   } | null>(null);
+  const doctors = [
+    { id: "1", name: "นพ. สมชาย ใจดี" },
+    { id: "2", name: "พญ. สมหญิง รักษาดี" },
+    { id: "3", name: "นพ. วิชัย สุขภาพดี" },
+    { id: "4", name: "พญ. นงนุช ชำนาญการ" },
+    { id: "5", name: "ณัฐฐนิษา อัมพรชัยจรัส" },
+  ];
 
   const router = useRouter();
+
+  // Handle row selection/click
+  const handleRowClick = (appointmentId: string) => {
+    router.push(`/admin/appointment/${appointmentId}`);
+  };
 
   const handleSort = (key: keyof (typeof appointments)[0]) => {
     setSortConfig((prev) => {
@@ -113,10 +128,16 @@ export default function AppointmentPage() {
 
   const filteredAppointments = sortedAppointments.filter(
     (appointment) =>
-      appointment.id.includes(searchTerm) ||
-      appointment.name.includes(searchTerm) ||
-      appointment.doctor.includes(searchTerm)
+      (appointment.id.includes(searchTerm) ||
+        appointment.name.includes(searchTerm) ||
+        appointment.doctor.includes(searchTerm)) &&
+      (selectedDoctor === "" || appointment.doctor === selectedDoctor)
   );
+
+  const handleDoctorChange = (doctorName: string) => {
+    setSelectedDoctor(doctorName);
+    setDoctorDropdownOpen(false);
+  };
 
   return (
     <div className="flex bg-white">
@@ -147,18 +168,19 @@ export default function AppointmentPage() {
         }}
         selectedItem="5"
       />
-      <div className="flex-1 p-6">
-        <Container>
+      <div className="flex-1 p-6 h-full">
+        <Container className="h-full">
           <TopBarSection
             title="ข้อมูลการตรวจตามนัด"
             searchTerm={searchTerm}
             onSearchChange={(value) => setSearchTerm(value)}
             onAddClick={() => console.log("Add appointment clicked")}
           />
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
+
+          <TableContainer className="h-full overflow-visible">
+            <Table className="h-full overflow-visible">
+              <TableHead className="h-full">
+                <TableRow className="h-full">
                   <TableCell
                     className="font-bold text-center cursor-pointer"
                     onClick={() => handleSort("id")}
@@ -236,16 +258,77 @@ export default function AppointmentPage() {
                   </TableCell>
                   <TableCell className="font-bold text-center">เวลา</TableCell>
 
-                  <TableCell className="font-bold text-center">แพทย์</TableCell>
-                  <TableCell className="font-bold text-center">
-                    ประเภท
+                  <TableCell
+                    className="font-bold text-center cursor-pointer relative overflow-visible"
+                    onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      แพทย์
+                      <span className="w-4 h-4 inline-flex">
+                        <svg
+                          width="21"
+                          height="20"
+                          viewBox="0 0 21 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                            stroke="#4D4D4D"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    {doctorDropdownOpen && (
+                      <div className="absolute z-10 mt-2 right-0 min-w-[150px] bg-white shadow-lg rounded-md border border-gray-200">
+                        <div className="p-2">
+                          <div
+                            className={`px-4 py-2 cursor-pointer rounded-md hover:bg-gray-100 ${
+                              selectedDoctor === ""
+                                ? "bg-gray-100 font-medium"
+                                : ""
+                            }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDoctorChange("");
+                            }}
+                          >
+                            ทั้งหมด
+                          </div>
+                          {doctors.map((doctor) => (
+                            <div
+                              key={doctor.id}
+                              className={`px-4 py-2 cursor-pointer rounded-md hover:bg-gray-100 ${
+                                selectedDoctor === doctor.name
+                                  ? "bg-gray-100 font-medium"
+                                  : ""
+                              }`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDoctorChange(doctor.name);
+                              }}
+                            >
+                              {doctor.name}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </TableCell>
+
                   <TableCell className="font-bold text-center">สถานะ</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {filteredAppointments.map((appointment, index) => (
-                  <TableRow key={index}>
+                  <TableRow
+                    key={index}
+                    onClick={() => handleRowClick(appointment.id)}
+                    className="cursor-pointer"
+                  >
                     <TableCell className="text-center">
                       {appointment.id}
                     </TableCell>
@@ -261,11 +344,9 @@ export default function AppointmentPage() {
                     <TableCell className="text-center">
                       {appointment.doctor}
                     </TableCell>
-                    <TableCell className="text-center">
-                      {appointment.type}
-                    </TableCell>
+
                     <TableCell>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 items-center justify-center">
                         <span
                           className={`w-3 h-3 rounded-full ${
                             statusDots[appointment.status]

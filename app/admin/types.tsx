@@ -31,7 +31,7 @@ export interface Appointment {
   id: number;
   momname: string;
   doctor: string;
-  type: string;
+
   status: string;
   topic: string;
   day: string;
