@@ -105,8 +105,13 @@ const page = () => {
              <div className="w-2/12 max-sm:w-1/2">
              <ButtonComponents title="เพิ่มข้อมูล" textSize="text-[15px] font-bold" />
              </div>
+           
             </div>
-        <LengthChart />
+            <div className="w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px] flex flex-col justify-between">
+    <LengthChart />
+            </div>
+
+       
           </div>
         </div>
       </main>
