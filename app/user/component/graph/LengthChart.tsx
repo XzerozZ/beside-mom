@@ -112,19 +112,19 @@ const processedData: ChartDataPoint[] = baseData.map((d) => ({
 
 const SdAreaLineChart: FC = () => {
   return (
-    <div>
-      <ResponsiveContainer width="100%" height={500}>
+    <div style={{ width: '100%', height: '100%' }}>
+      <ResponsiveContainer className="w-[400px] max-xl:w-full" height={500}>
         <ComposedChart data={processedData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" label={{ value: 'Month', position: 'insideBottom', offset: -5 }} />
           <YAxis label={{ value: 'Weight (kg)', angle: -90 }} ticks={[0, 2, 4, 6, 8, 10, 12, 14, 16]} />
         
 
-          <Area dataKey="band1" stackId="1" stroke="none" fill="#6a5acd" fillOpacity={0.4} />
-          <Area dataKey="band2" stackId="1" stroke="none" fill="#3cb371" fillOpacity={0.4} />
-          <Area dataKey="band3" stackId="1" stroke="none" fill="#696969" fillOpacity={0.4} />
-          <Area dataKey="band4" stackId="1" stroke="none" fill="#ffa500" fillOpacity={0.4} />
-          <Area dataKey="full" stackId="1" stroke="none" fill="#4682b4" fillOpacity={0.4} />
+          <Area dataKey="band1" stackId="1" stroke="none" fill="#FE8014"  />
+          <Area dataKey="band2" stackId="1" stroke="none" fill="#9AD595"  />
+          <Area dataKey="band3" stackId="1" stroke="none" fill="#66BD6D"  />
+          <Area dataKey="band4" stackId="1" stroke="none" fill="#1B9850"  />
+          <Area dataKey="full" stackId="1" stroke="none" fill="#fff"  />
 
           {/* <Line dataKey="-3SD" stroke="#6a5acd" dot={false} />
           <Line dataKey="-2SD" stroke="#3cb371" dot={false} />
@@ -133,16 +133,7 @@ const SdAreaLineChart: FC = () => {
           <Line dataKey="+3SD" stroke="#ff4500" dot={false} /> */}
           <Line dataKey="weight" stroke="#dc143c" strokeWidth={2} dot={{ r: 2 }} />
 
-            <text
-            x="80%"
-            y={50}
-            textAnchor="middle"
-            fill="black"
-            fontSize={16}
-            fontWeight="bold"
-            >
-           น้ำหนักมากเกินเกณฑ์
-            </text>
+           
         </ComposedChart>
       </ResponsiveContainer>
     </div>
