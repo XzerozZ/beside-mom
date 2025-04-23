@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Navbar from "../../component/navbar";
 import { ButtonComponents } from "../../component/button";
+import WeightChart from "../../component/graph/WeightChart";
 import LengthChart from "../../component/graph/LengthChart";
-
 const page = () => {
 
    
@@ -114,9 +114,9 @@ const page = () => {
            
             </div>
             <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-row max-xl:flex-col justify-between gap-8">
-            <LengthChart />
-            <LengthChart />
-            <LengthChart />
+            <WeightChart gender="boy"/>
+            <LengthChart gender="boy"/>
+            <WeightChart gender="girl"/>
             </div>
 
        

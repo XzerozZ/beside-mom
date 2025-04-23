@@ -13,6 +13,8 @@ import {
 } from 'recharts';
 
 import { FC } from 'react';
+import { ButtonProps } from '@mui/material';
+import { ChartProps } from '@/app/interface';
 
 // Type for each data point in the standard deviation chart
 interface ChartDataPoint {
@@ -27,98 +29,148 @@ interface ChartDataPoint {
   band2: number;
   band3: number;
   band4: number;
-  weight: number | null;
+  height: number | null;
 }
 
 // Type for raw real measurement data
 interface RealMeasurement {
   month: number;
-  weight: number;
+  height: number;
 }
 
-// Sample data
-const baseData = [
-  { month: 0, '-3SD': 2.0, '-2SD': 2.4, '0SD': 3.2, '+2SD': 4.2, '+3SD': 4.7, full: 16.0 },
-  { month: 1, '-3SD': 2.7, '-2SD': 3.2, '0SD': 4.2, '+2SD': 5.4, '+3SD': 6.1, full: 16.0 },
-  { month: 2, '-3SD': 3.5, '-2SD': 4.0, '0SD': 5.1, '+2SD': 6.4, '+3SD': 7.2, full: 16.0 },
-  { month: 3, '-3SD': 4.1, '-2SD': 4.7, '0SD': 5.8, '+2SD': 7.2, '+3SD': 8.0, full: 16.0 },
-  { month: 4, '-3SD': 4.5, '-2SD': 5.1, '0SD': 6.3, '+2SD': 7.7, '+3SD': 8.6, full: 16.0 },
-  { month: 5, '-3SD': 4.9, '-2SD': 5.5, '0SD': 6.7, '+2SD': 8.2, '+3SD': 9.1, full: 16.0 },
-  { month: 6, '-3SD': 5.2, '-2SD': 5.8, '0SD': 7.3, '+2SD': 8.8, '+3SD': 9.7, full: 16.0 },
-  { month: 7, '-3SD': 5.5, '-2SD': 6.1, '0SD': 7.6, '+2SD': 9.2, '+3SD': 10.1, full: 16.0 },
-  { month: 8, '-3SD': 5.7, '-2SD': 6.3, '0SD': 7.9, '+2SD': 9.5, '+3SD': 10.4, full: 16.0 },
-  { month: 9, '-3SD': 5.9, '-2SD': 6.5, '0SD': 8.2, '+2SD': 9.8, '+3SD': 10.7, full: 16.0 },
-  { month: 10, '-3SD': 6.1, '-2SD': 6.7, '0SD': 8.4, '+2SD': 10.0, '+3SD': 11.0, full: 16.0 },
-  { month: 11, '-3SD': 6.3, '-2SD': 6.9, '0SD': 8.6, '+2SD': 10.3, '+3SD': 11.2, full: 16.0 },
-  { month: 12, '-3SD': 6.4, '-2SD': 7.0, '0SD': 8.9, '+2SD': 10.5, '+3SD': 11.4, full: 16.0 },
-  { month: 13, '-3SD': 6.6, '-2SD': 7.2, '0SD': 9.1, '+2SD': 10.7, '+3SD': 11.6, full: 16.0 },
-  { month: 14, '-3SD': 6.7, '-2SD': 7.3, '0SD': 9.3, '+2SD': 10.9, '+3SD': 11.8, full: 16.0 },
-  { month: 15, '-3SD': 6.9, '-2SD': 7.5, '0SD': 9.5, '+2SD': 11.1, '+3SD': 12.0, full: 16.0 },
-  { month: 16, '-3SD': 7.0, '-2SD': 7.6, '0SD': 9.6, '+2SD': 11.3, '+3SD': 12.2, full: 16.0 },
-  { month: 17, '-3SD': 7.1, '-2SD': 7.7, '0SD': 9.8, '+2SD': 11.5, '+3SD': 12.4, full: 16.0 },
-  { month: 18, '-3SD': 7.3, '-2SD': 7.9, '0SD': 10.0, '+2SD': 11.7, '+3SD': 12.6, full: 16.0 },
-  { month: 19, '-3SD': 7.4, '-2SD': 8.0, '0SD': 10.2, '+2SD': 11.9, '+3SD': 12.8, full: 16.0 },
-  { month: 20, '-3SD': 7.5, '-2SD': 8.1, '0SD': 10.3, '+2SD': 12.0, '+3SD': 13.0, full: 16.0 },
-  { month: 21, '-3SD': 7.6, '-2SD': 8.2, '0SD': 10.5, '+2SD': 12.2, '+3SD': 13.2, full: 16.0 },
-  { month: 22, '-3SD': 7.7, '-2SD': 8.3, '0SD': 10.6, '+2SD': 12.4, '+3SD': 13.3, full: 16.0 },
-  { month: 23, '-3SD': 7.8, '-2SD': 8.4, '0SD': 10.8, '+2SD': 12.5, '+3SD': 13.5, full: 16.0 },
-  { month: 24, '-3SD': 7.9, '-2SD': 8.5, '0SD': 11.0, '+2SD': 12.7, '+3SD': 13.7, full: 16.0 },
-];
-
-const realMeasurements: RealMeasurement[] = [
-  { month: 0, weight: 3.0 },
-  { month: 1, weight: 4.0 },
-  { month: 2, weight: 5.0 },
-  { month: 3, weight: 5.7 },
-  { month: 4, weight: 6.2 },
-  { month: 5, weight: 6.6 },
-  { month: 6, weight: 7.2 },
-  { month: 7, weight: 7.5 },
-  { month: 8, weight: 7.8 },
-  { month: 9, weight: 8.1 },
-  { month: 10, weight: 8.3 },
-  { month: 11, weight: 8.5 },
-  { month: 12, weight: 8.8 },
-  { month: 13, weight: 9.0 },
-  { month: 14, weight: 9.2 },
-  { month: 15, weight: 9.4 },
-  { month: 16, weight: 9.5 },
-  { month: 17, weight: 9.7 },
-  { month: 18, weight: 9.9 },
-  { month: 19, weight: 10.1 },
-  { month: 20, weight: 10.2 },
-  { month: 21, weight: 10.4 },
-  { month: 22, weight: 10.5 },
-  { month: 23, weight: 10.7 },
-  { month: 24, weight: 13.0 },
-];
-
-// Preprocess the data
-const processedData: ChartDataPoint[] = baseData.map((d) => ({
-  month: d.month,
-  '-3SD': d['-3SD'],
-  '-2SD': d['-2SD'],
-  '0SD': d['0SD'],
-  '+2SD': d['+2SD'],
-  '+3SD': d['+3SD'],
-  full: d.full - d['+3SD'],
-  band1: d['-3SD'],
-  band2: d['-2SD'] - d['-3SD'],
-  band3: d['+2SD'] - d['-2SD'],
-  band4: d['+3SD'] - d['+2SD'],
-  weight: realMeasurements.find((r) => r.month === d.month)?.weight ?? null,
-}));
 
 
-const SdAreaLineChart: FC = () => {
+const SdAreaLineChart: FC<ChartProps> = (props) => {
+  const { gender } = props;
+  const realMeasurements: RealMeasurement[] = [
+    { month: 0, height: 50.2 },
+    { month: 1, height: 54.1 },
+    { month: 2, height: 57.2 },
+    { month: 3, height: 59.9 },
+    { month: 4, height: 62.4 },
+    { month: 5, height: 64.8 },
+    { month: 6, height: 67.4 },
+    { month: 7, height: 69.7 },
+    { month: 8, height: 71.0 },
+    { month: 9, height: 72.3 },
+    { month: 10, height: 73.5 },
+    { month: 11, height: 74.7 },
+    { month: 12, height: 76.0 },
+    { month: 12.5, height: 76.0 },
+    { month: 13, height: 77.2 },
+    { month: 14, height: 78.4 },
+    { month: 15, height: 79.6 },
+    { month: 16, height: 80.8 },
+    { month: 17, height: 82.0 },
+    { month: 18, height: 83.2 },
+    { month: 19, height: 84.4 },
+    { month: 20, height: 85.6 },
+    { month: 21, height: 86.8 },
+    { month: 22, height: 88.0 },
+    { month: 23, height: 89.2 },
+    { month: 24, height: 90.5 },
+  ];
+  const BoyData = [
+    { month: 0, '-3SD': 44.2, '-2SD': 46.1, '0SD': 49.1, '+2SD': 52.2, '+3SD': 54.0 , full: 95 },
+    { month: 1, '-3SD': 47.8, '-2SD': 49.8, '0SD': 53.7, '+2SD': 57.6, '+3SD': 59.5 , full: 95 },
+    { month: 2, '-3SD': 50.3, '-2SD': 52.4, '0SD': 56.4, '+2SD': 60.6, '+3SD': 62.6 , full: 95 },
+    { month: 3, '-3SD': 52.2, '-2SD': 54.4, '0SD': 58.4, '+2SD': 62.7, '+3SD': 64.7 , full: 95 },
+    { month: 4, '-3SD': 53.7, '-2SD': 56.0, '0SD': 60.0, '+2SD': 64.4, '+3SD': 66.4 , full: 95 },
+    { month: 5, '-3SD': 55.0, '-2SD': 57.3, '0SD': 61.4, '+2SD': 65.9, '+3SD': 67.9 , full: 95 },
+    { month: 6, '-3SD': 56.1, '-2SD': 58.4, '0SD': 62.6, '+2SD': 67.3, '+3SD': 69.3 , full: 95 },
+    { month: 7, '-3SD': 57.1, '-2SD': 59.4, '0SD': 63.7, '+2SD': 68.5, '+3SD': 70.6, full: 95 },
+    { month: 8, '-3SD': 58.0, '-2SD': 60.3, '0SD': 64.7, '+2SD': 69.6, '+3SD': 71.7, full: 95 },
+    { month: 9, '-3SD': 58.9, '-2SD': 61.2, '0SD': 65.6, '+2SD': 70.6, '+3SD': 72.8 , full: 95 },
+    { month: 10, '-3SD': 59.6, '-2SD': 62.0, '0SD': 66.5, '+2SD': 71.6, '+3SD': 73.8 , full: 95 },
+    { month: 11, '-3SD': 60.3, '-2SD': 62.7, '0SD': 67.3, '+2SD': 72.5, '+3SD': 74.7 , full: 95 },
+    { month: 12, '-3SD': 60.9, '-2SD': 63.3, '0SD': 68.0, '+2SD': 73.3, '+3SD': 75.6 , full: 95 },
+    { month: 13, '-3SD': 61.5, '-2SD': 63.9, '0SD': 68.7, '+2SD': 74.0, '+3SD': 76.4 , full: 95 },
+    { month: 14, '-3SD': 62.0, '-2SD': 64.5, '0SD': 69.3, '+2SD': 74.7, '+3SD': 77.1 , full: 95 },
+    { month: 15, '-3SD': 62.5, '-2SD': 65.0, '0SD': 69.9, '+2SD': 75.4, '+3SD': 77.8 , full: 95 },
+    { month: 16, '-3SD': 63.0, '-2SD': 65.5, '0SD': 70.5, '+2SD': 76.0, '+3SD': 78.5 , full: 95 },
+    { month: 17, '-3SD': 63.4, '-2SD': 66.0, '0SD': 71.0, '+2SD': 76.6, '+3SD': 79.1 , full: 95 },
+    { month: 18, '-3SD': 63.9, '-2SD': 66.4, '0SD': 71.6, '+2SD': 77.2, '+3SD': 79.7 , full: 95 },
+    { month: 19, '-3SD': 64.3, '-2SD': 66.9, '0SD': 72.1, '+2SD': 77.8, '+3SD': 80.3 , full: 95 },
+    { month: 20, '-3SD': 64.7, '-2SD': 67.3, '0SD': 72.6, '+2SD': 78.3, '+3SD': 80.9 , full: 95 },
+    { month: 21, '-3SD': 65.1, '-2SD': 67.7, '0SD': 73.1, '+2SD': 78.9, '+3SD': 81.4 , full: 95 },
+    { month: 22, '-3SD': 65.5, '-2SD': 68.1, '0SD': 73.6, '+2SD': 79.4, '+3SD': 82.0 , full: 95 },
+    { month: 23, '-3SD': 65.9, '-2SD': 68.5, '0SD': 74.0, '+2SD': 79.9, '+3SD': 82.5 , full: 95 },
+    { month: 24, '-3SD': 66.3, '-2SD': 68.9, '0SD': 74.5, '+2SD': 80.4, '+3SD': 83.0 , full: 95 },
+  ];
+  const GirlData = [
+    { month: 0, '-3SD': 44.2, '-2SD': 46.1, '0SD': 49.1, '+2SD': 52.2, '+3SD': 54.0 , full: 95 },
+    { month: 1, '-3SD': 47.8, '-2SD': 49.8, '0SD': 53.7, '+2SD': 57.6, '+3SD': 59.5 , full: 95 },
+    { month: 2, '-3SD': 50.3, '-2SD': 52.4, '0SD': 56.4, '+2SD': 60.6, '+3SD': 62.6 , full: 95 },
+    { month: 3, '-3SD': 52.2, '-2SD': 54.4, '0SD': 58.4, '+2SD': 62.7, '+3SD': 64.7 , full: 95 },
+    { month: 4, '-3SD': 53.7, '-2SD': 56.0, '0SD': 60.0, '+2SD': 64.4, '+3SD': 66.4 , full: 95 },
+    { month: 5, '-3SD': 55.0, '-2SD': 57.3, '0SD': 61.4, '+2SD': 65.9, '+3SD': 67.9 , full: 95 },
+    { month: 6, '-3SD': 56.1, '-2SD': 58.4, '0SD': 62.6, '+2SD': 67.3, '+3SD': 69.3 , full: 95 },
+    { month: 7, '-3SD': 57.1, '-2SD': 59.4, '0SD': 63.7, '+2SD': 68.5, '+3SD': 70.6 , full: 95 },
+    { month: 8, '-3SD': 58.0, '-2SD': 60.3, '0SD': 64.7, '+2SD': 69.6, '+3SD': 71.7 , full: 95 },
+    { month: 9, '-3SD': 58.9, '-2SD': 61.2, '0SD': 65.6, '+2SD': 70.6, '+3SD': 72.8 , full: 95 },
+    { month: 10, '-3SD': 59.6, '-2SD': 62.0, '0SD': 66.5, '+2SD': 71.6, '+3SD': 73.8 , full: 95 },
+    { month: 11, '-3SD': 60.3, '-2SD': 62.7, '0SD': 67.3, '+2SD': 72.5, '+3SD': 74.7 , full: 95 },
+    { month: 12, '-3SD': 60.9, '-2SD': 63.3, '0SD': 68.0, '+2SD': 73.3, '+3SD': 75.6 , full: 95 },
+    { month: 13, '-3SD': 61.5, '-2SD': 63.9, '0SD': 68.7, '+2SD': 74.0, '+3SD': 76.4 , full: 95 },
+    { month: 14, '-3SD': 62.0, '-2SD': 64.5, '0SD': 69.3, '+2SD': 74.7, '+3SD': 77.1 , full: 95 },
+    { month: 15, '-3SD': 62.5, '-2SD': 65.0, '0SD': 69.9, '+2SD': 75.4, '+3SD': 77.8 , full: 95 },
+    { month: 16, '-3SD': 63.0, '-2SD': 65.5, '0SD': 70.5, '+2SD': 76.0, '+3SD': 78.5 , full: 95 },
+    { month: 17, '-3SD': 63.4, '-2SD': 66.0, '0SD': 71.0, '+2SD': 76.6, '+3SD': 79.1 , full: 95 },
+    { month: 18, '-3SD': 63.9, '-2SD': 66.4, '0SD': 71.6, '+2SD': 77.2, '+3SD': 79.7 , full: 95 },
+    { month: 19, '-3SD': 64.3, '-2SD': 66.9, '0SD': 72.1, '+2SD': 77.8, '+3SD': 80.3 , full: 95 },
+    { month: 20, '-3SD': 64.7, '-2SD': 67.3, '0SD': 72.6, '+2SD': 78.3, '+3SD': 80.9 , full: 95 },
+    { month: 21, '-3SD': 65.1, '-2SD': 67.7, '0SD': 73.1, '+2SD': 78.9, '+3SD': 81.4 , full: 95 },
+    { month: 22, '-3SD': 65.5, '-2SD': 68.1, '0SD': 73.6, '+2SD': 79.4, '+3SD': 82.0 , full: 95 },
+    { month: 23, '-3SD': 65.9, '-2SD': 68.5, '0SD': 74.0, '+2SD': 79.9, '+3SD': 82.5  ,full: 95 },
+    { month: 24, '-3SD': 66.3, '-2SD': 68.9, '0SD': 74.5, '+2SD': 80.4, '+3SD': 83.0 , full: 95 },
+  ];
+  // Preprocess the data
+  let processedData: ChartDataPoint[] = [];
+
+  if (gender === 'boy') {
+    processedData = BoyData.map((d) => ({
+      month: d.month,
+      '-3SD': d['-3SD'],
+      '-2SD': d['-2SD'],
+      '0SD': d['0SD'],
+      '+2SD': d['+2SD'],
+      '+3SD': d['+3SD'],
+      full: d.full - d['+3SD'],
+      band1: d['-3SD'],
+      band2: d['-2SD'] - d['-3SD'],
+      band3: d['+2SD'] - d['-2SD'],
+      band4: d['+3SD'] - d['+2SD'],
+      height: realMeasurements.find((r) => r.month === d.month)?.height ?? null,
+    }));
+  } else if (gender === 'girl') {
+    processedData = GirlData.map((d) => ({
+      month: d.month,
+      '-3SD': d['-3SD'],
+      '-2SD': d['-2SD'],
+      '0SD': d['0SD'],
+      '+2SD': d['+2SD'],
+      '+3SD': d['+3SD'],
+      full: d.full - d['+3SD'],
+      band1: d['-3SD'],
+      band2: d['-2SD'] - d['-3SD'],
+      band3: d['+2SD'] - d['-2SD'],
+      band4: d['+3SD'] - d['+2SD'],
+      height: realMeasurements.find((r) => r.month === d.month)?.height ?? null,
+    }));
+  }
+
+ 
+  
+
+
+
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <ResponsiveContainer className="w-[400px] max-xl:w-full" height={500}>
         <ComposedChart data={processedData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" label={{ value: 'Month', position: 'insideBottom', offset: -5 }} />
-          <YAxis label={{ value: 'Weight (kg)', angle: -90 }} ticks={[0, 2, 4, 6, 8, 10, 12, 14, 16]} />
-        
+          <YAxis ticks={[0, 5,10,15,20,25,30,35,40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]} domain={[40,95 ]} allowDataOverflow />
 
           <Area dataKey="band1" stackId="1" stroke="none" fill="#FE8014"  />
           <Area dataKey="band2" stackId="1" stroke="none" fill="#9AD595"  />
@@ -131,7 +183,7 @@ const SdAreaLineChart: FC = () => {
           <Line dataKey="0SD" stroke="#696969" strokeWidth={2} dot={false} />
           <Line dataKey="+2SD" stroke="#ffa500" dot={false} />
           <Line dataKey="+3SD" stroke="#ff4500" dot={false} /> */}
-          <Line dataKey="weight" stroke="#dc143c" strokeWidth={2} dot={{ r: 2 }} />
+          <Line dataKey="height" stroke="#dc143c" strokeWidth={2} dot={{ r: 2 }} />
 
            
         </ComposedChart>

@@ -14,3 +14,7 @@ export interface InputProps {
     placeholder: string;
     
 }
+
+export interface ChartProps {
+    gender: string;
+}
