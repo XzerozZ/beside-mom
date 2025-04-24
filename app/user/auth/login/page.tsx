@@ -2,10 +2,52 @@
 import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
-
+import { useRouter } from "next/navigation";
 const page = () => {
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      alert("Please enter both username and password");
+      return;
+    }
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_api_login! as string, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: username,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.status === "Success" && data.result?.token) {
+        localStorage.setItem("token", data.result.token);
+        localStorage.setItem("name", data.result.name);
+        localStorage.setItem("role", data.result.role);
+
+        if (data.result.role === "User") {
+          router.push("/user/home");
+        } else if (data.result.role === "Admin") {
+          router.push("/admin/mominfo");
+        }
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (error) {
+      alert("An error occurred during login");
+    }
+  };
+
+
+
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+
 
   return (
     <div className="bg-[#FFF4F4] flex justify-center h-screen items-center max-xl:bg-white">
@@ -84,7 +126,7 @@ const page = () => {
               <ButtonComponents
                 title="เข้าสู่ระบบ"
                 textSize="text-[15px] text-bold"
-                onClick={() => {}}
+                onClick={handleLogin}
               />
             </div>
           </div>

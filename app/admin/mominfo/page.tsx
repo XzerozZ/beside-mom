@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
+import { useEffect } from "react";
 
 interface MomData {
   id: string;
@@ -38,18 +39,36 @@ const AllMomInfoPage: React.FC = () => {
     router.push(`/admin/mominfo/${id}`);
   };
 
-  const [momData, setMomData] = useState<MomData[]>([
-    {
-      id: "1",
-      email: "mom1@email.com",
-      name: "mom 1",
-    },
-    {
-      id: "2",
-      email: "mom2@email.com",
-      name: "mom 2",
-    },
-  ]);
+  const [momData, setMomData] = useState<MomData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMomData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(process.env.NEXT_PUBLIC_api_mominfo as string, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (data.result && Array.isArray(data.result)) {
+          setMomData(
+            data.result.map((item: any) => ({
+              id: item.u_id,
+              email: item.email,
+              name: `${item.fname} ${item.lname}`,
+            }))
+          );
+        }
+      } catch (error) {
+        // handle error if needed
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMomData();
+  }, []);
 
   const handleDelete = (id: string) => {
     setMomData(momData.filter((mom) => mom.id !== id));
@@ -103,7 +122,28 @@ const AllMomInfoPage: React.FC = () => {
   );
 
   return (
+    
     <div className="flex bg-white">
+      {loading && (
+      <Box
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          bgcolor: "rgba(255,255,255,0.7)",
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Typography variant="h6" color="primary">
+          กำลังโหลดข้อมูล...
+        </Typography>
+      </Box>
+    )}
       <Sidebar
         onItemSelect={(id) => {
           if (id !== "1") {
