@@ -57,7 +57,7 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
       // Create FormData object
       const apiData = new FormData();
       apiData.append('title', formData.title);
-      apiData.append('description', formData.description);
+      apiData.append('desc', formData.description);
       apiData.append('type', formData.type);
 
       // Append banner if exists and is a base64 string

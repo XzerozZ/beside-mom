@@ -31,7 +31,14 @@ const MomstoryPage: React.FC = () => {
     console.log("Edit button clicked", id);
     router.push(`/admin/babycare/edit/${id}/${type}`);
   };
-  const [data, setData] = useState<any[]>([]);
+  type BabyCareItem = {
+    id: number;
+    title: string;
+    date: string;
+    type: string;
+    thumbnail: string;
+  };
+  const [data, setData] = useState<BabyCareItem[]>([]);
   useEffect(() => {
       const fetchData = async () => {
         try {
@@ -48,6 +55,7 @@ const MomstoryPage: React.FC = () => {
                 id: item.c_id,
                 title: item.title,
                 date: item.updated_at,
+                type: item.type,
                 thumbnail: item.banner,
               }))
             );
@@ -68,6 +76,44 @@ const MomstoryPage: React.FC = () => {
       item.date.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("คุณต้องการลบข้อมูลนี้ใช่หรือไม่?")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("กรุณาเข้าสู่ระบบใหม่");
+        router.push('/user/auth/login');
+        return;
+      }
+
+      const apiUrl = `${process.env.NEXT_PUBLIC_api_babycare}/${id}`;
+      const response = await fetch(apiUrl, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.status !== "Success") {
+        throw new Error(result.message || "Failed to delete item");
+      }
+
+      setData(prev => prev.filter(item => item.id.toString() !== id));
+      alert("ลบข้อมูลสำเร็จ");
+    } catch (err) {
+      console.error("Error deleting item:", err);
+      alert("เกิดข้อผิดพลาดในการลบข้อมูล");
+    }
+  };
   return (
     <div className="flex bg-white">
       <Sidebar
@@ -182,7 +228,7 @@ const MomstoryPage: React.FC = () => {
                             />
                           </svg>
                         }
-                        // onClick={() => handleDelete(data.id)}
+                        onClick={() => handleDelete(item.id.toString())}
                       >
                         ลบ
                       </Button>

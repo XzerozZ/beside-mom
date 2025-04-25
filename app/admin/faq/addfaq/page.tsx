@@ -46,6 +46,43 @@ const AddFag: React.FC = () => {
     setQaList(qaList.filter((_, i) => i !== index));
   };
 
+  const handleSubmit = async () => {
+    if (question.trim() === "" || answer.trim() === "") return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("กรุณาเข้าสู่ระบบใหม่");
+      router.push("/user/auth/login");
+      return;
+    }
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_api_question;
+      if (!apiUrl) throw new Error("API URL not defined");
+
+      const formData = new FormData();
+      formData.append("question", question);
+      formData.append("answer", answer);
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("API error");
+
+      alert("เพิ่มคำถามสำเร็จ");
+      setQuestion("");
+      setAnswer("");
+      router.push("/admin/faq");
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการเพิ่มคำถาม");
+    }
+  };
+
   return (
     <div className="flex bg-white ">
       <Sidebar
@@ -128,7 +165,7 @@ const AddFag: React.FC = () => {
             }}
             size="small"
             className="w-40"
-            onClick={handleAddQA}
+            onClick={handleSubmit}
           >
             เพิ่ม
           </Button>

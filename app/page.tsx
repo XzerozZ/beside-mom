@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    router.replace('/user/auth/login')
+    router.replace('/admin/mominfo')
   }, [router])
 
   return null

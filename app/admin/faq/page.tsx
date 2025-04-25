@@ -1,71 +1,137 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Container,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
   Card,
   CardContent,
+  Button,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
 
+interface FAQ {
+  Q_id: string;
+  question: string;
+  answer: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export default function Faq() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("all");
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch FAQs from API
+  useEffect(() => {
+    const fetchFAQs = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Get token from localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setError("No authentication token found");
+          alert("กรุณาเข้าสู่ระบบใหม่");
+          router.push('/user/auth/login');
+          return;
+        }
+        
+        // Fetch data from API
+        const apiUrl = process.env.NEXT_PUBLIC_api_question;
+        if (!apiUrl) {
+          throw new Error("API URL not defined");
+        }
+        
+        const response = await fetch(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.status !== "Success" && data.status_code !== 200) {
+          throw new Error(data.message || "Failed to fetch data");
+        }
+
+        setFaqs(data.result || []);
+      } catch (err) {
+        console.error("Error fetching FAQs:", err);
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFAQs();
+  }, [router]);
+
   const handleAddClick = () => {
-    console.log("Add faq clicked");
+    router.push("/admin/faq/add");
   };
 
-  const handleEdit = (id: number) => {
-    console.log("Edit faq clicked", id);
+  const handleEdit = (id: string) => {
     router.push(`/admin/faq/edit/${id}`);
   };
-  const handleDelete = (id: number) => {
-    console.log("Delete faq clicked", id);
-  };
-  const mockData = [
-    {
-      id: 1,
-      question: "ทำไมลูกน้อยไม่ถ่ายอุจจาระ",
-      answer:
-        "สาเหตุของอาการท้องผูกในเด็ก 90% เกิดจากปัญหาพฤติกรรมของเด็ก เด็กมักมีพฤติกรรมการอั้นอุจจาระ ซึ่งเกิดจากการมีประสบการณ์ที่ไม่ดีกับการขับถ่าย อาจมีอาการเจ็บขณะขับถ่าย ซึ่งมักเกิดตามหลังจากการเจ็บป่วย หรือการดูแลเด็กที่มีการเปลี่ยนแปลงบางอย่าง เช่น การเปลี่ยนนมไปเป็นอาหารเสริม การเปลี่ยนพฤติกรรมจากเดิมที่เคยอยู่บ้าน เข้าสู่โรงเรียน อาจส่งผลให้เด็กมีพฤติกรรมการอั้นอุจจาระได้",
-    },
-    {
-      id: 2,
-      question: "ทำไมลูกน้อยไม่ถ่ายอุจจาระ",
-      answer:
-        "สาเหตุของอาการท้องผูกในเด็ก 90% เกิดจากปัญหาพฤติกรรมของเด็ก เด็กมักมีพฤติกรรมการอั้นอุจจาระ ซึ่งเกิดจากการมีประสบการณ์ที่ไม่ดีกับการขับถ่าย อาจมีอาการเจ็บขณะขับถ่าย ซึ่งมักเกิดตามหลังจากการเจ็บป่วย หรือการดูแลเด็กที่มีการเปลี่ยนแปลงบางอย่าง เช่น การเปลี่ยนนมไปเป็นอาหารเสริม การเปลี่ยนพฤติกรรมจากเดิมที่เคยอยู่บ้าน เข้าสู่โรงเรียน อาจส่งผลให้เด็กมีพฤติกรรมการอั้นอุจจาระได้",
-    },
-    {
-      id: 3,
-      question: "ทำไมลูกน้อยไม่ถ่ายอุจจาระ",
-      answer:
-        "สาเหตุของอาการท้องผูกในเด็ก 90% เกิดจากปัญหาพฤติกรรมของเด็ก เด็กมักมีพฤติกรรมการอั้นอุจจาระ ซึ่งเกิดจากการมีประสบการณ์ที่ไม่ดีกับการขับถ่าย อาจมีอาการเจ็บขณะขับถ่าย ซึ่งมักเกิดตามหลังจากการเจ็บป่วย หรือการดูแลเด็กที่มีการเปลี่ยนแปลงบางอย่าง เช่น การเปลี่ยนนมไปเป็นอาหารเสริม การเปลี่ยนพฤติกรรมจากเดิมที่เคยอยู่บ้าน เข้าสู่โรงเรียน อาจส่งผลให้เด็กมีพฤติกรรมการอั้นอุจจาระได้",
-    },
-    {
-      id: 4,
-      question: "ทำไมลูกน้อยไม่ถ่ายอุจจาระ",
-      answer:
-        "สาเหตุของอาการท้องผูกในเด็ก 90% เกิดจากปัญหาพฤติกรรมของเด็ก เด็กมักมีพฤติกรรมการอั้นอุจจาระ ซึ่งเกิดจากการมีประสบการณ์ที่ไม่ดีกับการขับถ่าย อาจมีอาการเจ็บขณะขับถ่าย ซึ่งมักเกิดตามหลังจากการเจ็บป่วย หรือการดูแลเด็กที่มีการเปลี่ยนแปลงบางอย่าง เช่น การเปลี่ยนนมไปเป็นอาหารเสริม การเปลี่ยนพฤติกรรมจากเดิมที่เคยอยู่บ้าน เข้าสู่โรงเรียน อาจส่งผลให้เด็กมีพฤติกรรมการอั้นอุจจาระได้",
-    },
-  ];
+  
+  const handleDelete = async (id: string) => {
+    if (!confirm("คุณต้องการลบคำถามนี้ใช่หรือไม่?")) {
+      return;
+    }
+    
+    try {
+      // Get token from localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError("No authentication token found");
+        alert("กรุณาเข้าสู่ระบบใหม่");
+        router.push('/user/auth/login');
+        return;
+      }
+      
+      // Delete FAQ from API
+      const apiUrl = `${process.env.NEXT_PUBLIC_api_question}/${id}`;
+      const response = await fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
-  const filteredFaqs = mockData.filter(
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.status !== "Success") {
+        throw new Error(data.message || "Failed to delete FAQ");
+      }
+
+      // Remove FAQ from state
+      setFaqs(prev => prev.filter(faq => faq.Q_id !== id));
+      alert("ลบคำถามสำเร็จ");
+    } catch (err) {
+      console.error("Error deleting FAQ:", err);
+      alert("เกิดข้อผิดพลาดในการลบคำถาม");
+    }
+  };
+
+  // Filter FAQs based on search term
+  const filteredFaqs = faqs.filter(
     (faq) =>
       faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
@@ -96,7 +162,7 @@ export default function Faq() {
             }
           }
         }}
-        selectedItem="4" // Keep this fixed since we're in the mom info section
+        selectedItem="4"
       />
       <div className="flex-1 p-6">
         <Container>
@@ -106,92 +172,61 @@ export default function Faq() {
             onSearchChange={(value) => setSearchTerm(value)}
             onAddClick={handleAddClick}
           />
-          <div>
-            {filteredFaqs.length > 0 ? (
-              filteredFaqs.map((data) => (
-                <Card key={data.id} sx={{ mb: 2, p: 2 }}>
-                  <CardContent>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Typography variant="h6" fontWeight="bold">
-                        Q: {data.question}
-                      </Typography>
-                      <div>
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          sx={{ color: "#999999", borderColor: "#999999" }}
-                          className="text-neutral05 mr-5 w-24"
-                          startIcon={
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M15.723 6.0692L14.8599 6.93226L13.0672 5.13949L13.9309 4.27637L13.9309 4.27631C13.9934 4.21382 14.0782 4.17871 14.1666 4.17871C14.2549 4.17871 14.3396 4.21375 14.4021 4.27614C14.4021 4.27616 14.4021 4.27617 14.4022 4.27619C14.4022 4.27623 14.4022 4.27627 14.4023 4.27631L15.7229 5.59781L15.723 5.59787C15.7855 5.66038 15.8206 5.74515 15.8206 5.83353C15.8206 5.92189 15.7855 6.00664 15.723 6.06915C15.723 6.06916 15.723 6.06918 15.723 6.0692ZM3.8291 16.1669V14.3748L11.3282 6.8789L13.1212 8.67187L5.62616 16.1669H3.8291ZM3.80475 14.3992L3.80508 14.3988C3.80497 14.3989 3.80486 14.399 3.80475 14.3992Z"
-                                stroke="#4D4D4D"
-                              />
-                            </svg>
-                          }
-                          onClick={() => handleEdit(data.id)}
-                        >
-                          แก้ไข
-                        </Button>
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          sx={{ color: "#999999", borderColor: "#999999" }}
-                          className="text-neutral05 w-24"
-                          startIcon={
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M12.9165 3.83333H15.3332V4.5H4.6665V3.83333H7.08317H7.29028L7.43672 3.68689L8.12361 3H11.8761L12.563 3.68689L12.7094 3.83333H12.9165ZM6.6665 17C6.02598 17 5.49984 16.4739 5.49984 15.8333V6.33333H14.4998V15.8333C14.4998 16.4739 13.9737 17 13.3332 17H6.6665Z"
-                                stroke="#4D4D4D"
-                              />
-                            </svg>
-                          }
-                          onClick={() => handleDelete(data.id)}
-                        >
-                          ลบ
-                        </Button>
+          
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <CircularProgress />
+            </div>
+          ) : (
+            <>
+              {filteredFaqs.length > 0 ? 
+                filteredFaqs.map((faq) => (
+                  <Card key={faq.Q_id} sx={{ mb: 2, p: 2 }}>
+                    <CardContent>
+                      <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="h6" fontWeight="bold">
+                          Q: {faq.question}
+                        </Typography>
+                        <div>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            sx={{ color: "#999999", borderColor: "#999999" }}
+                            className="text-neutral05 mr-5 w-24"
+                            onClick={() => handleEdit(faq.Q_id)}
+                          >
+                            แก้ไข
+                          </Button>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            sx={{ color: "#999999", borderColor: "#999999" }}
+                            className="text-neutral05 w-24"
+                            onClick={() => handleDelete(faq.Q_id)}
+                          >
+                            ลบ
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                    <Typography variant="body1" sx={{ mt: 1 }}>
-                      A: {data.answer}
-                    </Typography>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginTop: 10,
-                      }}
-                    ></div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              <Typography
-                variant="body1"
-                sx={{ mt: 2 }}
-                className="text-neutral05"
-              >
-                ไม่พบผลลัพธ์ที่ตรงกับการค้นหา
-              </Typography>
-            )}
-          </div>
+                      <Typography variant="body1" sx={{ mt: 1 }}>
+                        A: {faq.answer}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                ))
+                : 
+                <Typography
+                  variant="body1"
+                  sx={{ mt: 2 }}
+                  className="text-neutral05"
+                >
+                  {searchTerm ? "ไม่พบผลลัพธ์ที่ตรงกับการค้นหา" : "ไม่มีข้อมูลคำถามที่พบบ่อย"}
+                </Typography>
+              }
+            </>
+          )}
         </Container>
       </div>
     </div>
