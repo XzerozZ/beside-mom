@@ -21,7 +21,7 @@ const EditMomStoryPage: React.FC = () => {
     title: "",
     description: "",
     videoUrl: "",
-    publishDate: "",
+  
   });
 
   //   useEffect(() => {
@@ -148,6 +148,28 @@ const EditMomStoryPage: React.FC = () => {
                   onChange={handleChange}
                   sx={{ mt: 2 }}
                 />
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "200px",
+                    backgroundColor: "#f0f0f0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mt: 2,
+                    mb: 6.1,
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{
+                      bgcolor: "#999999",
+                      "&:hover": { bgcolor: "#777777" },
+                    }}
+                  >
+                    อัปโหลดปกวิดีโอ
+                  </Button>
+                </Box>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography
@@ -175,14 +197,7 @@ const EditMomStoryPage: React.FC = () => {
                   rows={4}
                   sx={{ mt: 1, mb: 3 }}
                 />
-                <FormLabel>กำหนดวันเผยแพร่</FormLabel>
-                <TextField
-                  fullWidth
-                  name="publishDate"
-                  value={storyData.publishDate}
-                  onChange={handleChange}
-                  sx={{ mt: 1 }}
-                />
+               
               </Grid>
             </Grid>
             <Box

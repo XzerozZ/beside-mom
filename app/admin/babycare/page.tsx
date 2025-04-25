@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
+import { useEffect } from "react";
 
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
@@ -25,57 +26,42 @@ const MomstoryPage: React.FC = () => {
   const handleAddClick = () => {
     console.log("Add button clicked");
   };
+  const [loading, setLoading] = useState(true);
   const handleEdit = (id: number, type: string) => {
     console.log("Edit button clicked", id);
     router.push(`/admin/babycare/edit/${id}/${type}`);
   };
-  const [data, setData] = useState([
-    {
-      id: 1,
-      type: "video",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-    {
-      id: 2,
-      type: "video",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-    {
-      id: 3,
-      type: "picture",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-    {
-      id: 4,
-      type: "picture",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-    {
-      id: 5,
-      type: "video",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-  ]);
+  const [data, setData] = useState<any[]>([]);
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const res = await fetch(process.env.NEXT_PUBLIC_api_babycare as string, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await res.json();
+          if (data.result && Array.isArray(data.result)) {
+            setData(
+              data.result.map((item :any) => ({
+                id: item.c_id,
+                title: item.title,
+                date: item.updated_at,
+                thumbnail: item.banner,
+              }))
+            );
+          }
+        } catch (error) {
+          // handle error if needed
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }, []);
+
+  
   const filteredData = data.filter(
     (item) =>
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -121,11 +107,27 @@ const MomstoryPage: React.FC = () => {
             {filteredData.map((item) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                 <Card>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={item.thumbnail}
-                  />
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: 140,
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#f5f5f5",
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      image={item.thumbnail}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
                   <CardContent>
                     <Typography
                       variant="h6"
@@ -197,3 +199,4 @@ const MomstoryPage: React.FC = () => {
 };
 
 export default MomstoryPage;
+

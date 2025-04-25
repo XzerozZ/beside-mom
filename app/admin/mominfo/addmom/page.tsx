@@ -163,6 +163,27 @@ export default function EditMomInfo() {
                         strokeWidth="5"
                       />
                     </svg>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      id="mom-img-upload"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                          setMomInfo((prev) => ({
+                            ...prev,
+                            img: ev.target?.result as string,
+                          }));
+                        };
+                        reader.readAsDataURL(file);
+                      }}
+                    />
+                    <label htmlFor="mom-img-upload" style={{ position: "absolute", inset: 0, cursor: "pointer" }}>
+                      <span style={{ display: "block", width: "100%", height: "100%" }} />
+                    </label>
                   </IconButton>
                 </div>
               </Grid>
@@ -174,7 +195,6 @@ export default function EditMomInfo() {
                   // label="ID"
                   name="id"
                   value={momInfo.id}
-                  onChange={handleChangemMom}
                   disabled // Usually ID should be read-only
                 />
                 <FormLabel>ชื่อ</FormLabel>

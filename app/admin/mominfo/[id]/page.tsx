@@ -36,53 +36,46 @@ export default function MomInfoId() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const momdata = {
-        id: params.id as string, // mock data
-        img: "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0",
-        firstName: "ณัฐฐนิษา",
-        lastName: "อัมพรชัยจรัส",
-        email: "lovely@gmail.com",
-      };
-      setMomInfo(momdata);
-      const babydata = [
-        {
-          id: "1",
-          img: "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg",
-          firstName: "อรดี",
-          lastName: "แสงทอง1",
-          nickname: "อร",
-          gender: "female",
-          birthDate: "2021-10-01",
-          bloodType: "O",
-          birthWeight: "18.6",
-          birthHeight: "50",
-          note: "เด็กเป็นปกติหลังคลอด",
-          growthData: [
-            { date: "2025-01-25", weight: 31.8, height: 63.5 },
-            { date: "2025-02-25", weight: 31.8, height: 63.5 },
-          ],
-        },
-        {
-          id: "2",
-          img: "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg",
-          firstName: "อรดี",
-          lastName: "แสงทอง2",
-          nickname: "อร",
-          gender: "female",
-          birthDate: "2021-10-01",
-          bloodType: "O",
-          birthWeight: "18.6",
-          birthHeight: "50",
-          note: "เด็กเป็นปกติหลังคลอด",
-          growthData: [
-            { date: "2025-01-25", weight: 31.8, height: 63.5 },
-            { date: "2025-02-25", weight: 31.8, height: 63.8 },
-          ],
-        },
-      ];
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_api_mominfo_personal}/${params.id}`,
+          {
+            cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+            },
+          }
+        );
+        if (!res.ok) throw new Error("Failed to fetch mom info");
+        const data = await res.json();
+        const mom = data.result;
+        setMomInfo({
+          id: mom.u_id,
+          img: mom.image_link,
+          firstName: mom.fname,
+          lastName: mom.lname,
+          email: mom.email,
+        });
 
-      setBabyInfo(babydata);
-      setSelectedBabyId(babydata[0].id); // Set the first baby as the default selected baby
+        const babydata = (mom.kids || []).map((kid: any) => ({
+          id: kid.u_id,
+          img: kid.image_link,
+          firstName: kid.fname,
+          lastName: kid.lname,
+          nickname: kid.uname,
+          gender: kid.sex === "ชาย" ? "male" : "female",
+          birthDate: kid.birth_date?.slice(0, 10) || "",
+          bloodType: kid.blood_type,
+          birthWeight: kid.birth_weight?.toString() || "",
+          birthHeight: kid.birth_length?.toString() || "",
+          note: kid.note,
+          growthData: [], 
+        }));
+        setBabyInfo(babydata);
+        if (babydata.length > 0) setSelectedBabyId(babydata[0].id);
+      } catch (error) {
+        // handle error (optional)
+      }
     };
 
     fetchData();
@@ -208,7 +201,10 @@ export default function MomInfoId() {
                       ทารกคนที่ {index + 1}
                     </button>
                   ))}
-                  <button
+                  
+                </div>
+              )}
+              <button
                     type="button"
                     className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
 
@@ -216,8 +212,6 @@ export default function MomInfoId() {
                   >
                     เพิ่มทารก
                   </button>
-                </div>
-              )}
             </div>
             {selectedBabyId &&
               babyInfo
