@@ -183,7 +183,10 @@ const MomstoryPage: React.FC = () => {
                       {item.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      {item.date}
+                     
+                      {item.date
+                          ? new Date(item.date).toLocaleDateString("th-TH")
+                          : ""}
                     </Typography>
                     <Box display="flex" justifyContent="space-between" mt={2}>
                       <Button

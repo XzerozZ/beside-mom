@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { MomInfo, BabyInfo, GrowthData } from "@/app/admin/types";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 export default function MomInfoId() {
   const params = useParams();
@@ -66,10 +67,16 @@ export default function MomInfoId() {
           gender: kid.sex === "ชาย" ? "male" : "female",
           birthDate: kid.birth_date?.slice(0, 10) || "",
           bloodType: kid.blood_type,
-          birthWeight: kid.birth_weight?.toString() || "",
-          birthHeight: kid.birth_length?.toString() || "",
+          birthWeight: kid.weight?.toString() || "",
+          birthHeight: kid.length?.toString() || "",
           note: kid.note,
-          growthData: [], 
+          growthData: (kid.growth || []).map((g: any) => ({
+            id: g.G_id,
+            date: g.created_at.slice(0, 10),
+            months: g.months,
+            weight: g.weight,
+            height: g.length,
+          })),
         }));
         setBabyInfo(babydata);
         if (babydata.length > 0) setSelectedBabyId(babydata[0].id);
@@ -84,6 +91,10 @@ export default function MomInfoId() {
   const handleBabySelect = (id: string) => {
     setSelectedBabyId(id);
   };
+
+  // Get selected baby's growth data for chart
+  const selectedBaby = babyInfo.find((b) => b.id === selectedBabyId);
+  const growthData = selectedBaby?.growthData || [];
 
   return (
     <div className="flex bg-white">
@@ -112,7 +123,7 @@ export default function MomInfoId() {
             }
           }
         }}
-        selectedItem="1" // Keep this fixed since we're in the mom info section
+        selectedItem="1"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -201,17 +212,14 @@ export default function MomInfoId() {
                       ทารกคนที่ {index + 1}
                     </button>
                   ))}
-                  
                 </div>
               )}
               <button
-                    type="button"
-                    className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
-
-                    // onClick={() => handleBabyShelect()}
-                  >
-                    เพิ่มทารก
-                  </button>
+                type="button"
+                className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
+              >
+                เพิ่มทารก
+              </button>
             </div>
             {selectedBabyId &&
               babyInfo
@@ -367,26 +375,17 @@ export default function MomInfoId() {
                 >
                   กราฟการเจริญเติบโตด้านน้ำหนัก
                 </Typography>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "200px",
-                    backgroundColor: "#f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mt: 2,
-                  }}
-                >
-                  <img
-                    src="https://via.placeholder.com/150"
-                    alt="Weight Growth Chart"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
+                <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <LineChart data={growthData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="months" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
+                      <YAxis label={{ value: "กก.", angle: -90, position: "insideLeft" }} />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="weight" name="น้ำหนัก (กก.)" stroke="#B36868" activeDot={{ r: 8 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </Box>
                 <TextField
                   fullWidth
@@ -405,26 +404,17 @@ export default function MomInfoId() {
                 >
                   กราฟการเจริญเติบโตด้านส่วนสูง
                 </Typography>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "200px",
-                    backgroundColor: "#f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mt: 2,
-                  }}
-                >
-                  <img
-                    src="https://via.placeholder.com/150"
-                    alt="Height Growth Chart"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
+                <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <LineChart data={growthData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="months" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
+                      <YAxis label={{ value: "ซม.", angle: -90, position: "insideLeft" }} />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="height" name="ส่วนสูง (ซม.)" stroke="#68A3B3" activeDot={{ r: 8 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </Box>
                 <TextField
                   fullWidth

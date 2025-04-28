@@ -41,3 +41,11 @@ export interface Appointment {
   location: string;
   info: string;
 }
+
+export   const doctors = [
+  { id: "1", name: "นพ. สมชาย ใจดี" },
+  { id: "2", name: "พญ. สมหญิง รักษาดี" },
+  { id: "3", name: "นพ. วิชัย สุขภาพดี" },
+  { id: "4", name: "พญ. นงนุช ชำนาญการ" },
+  { id: "5", name: "ชิณภัทร สุขทอง" },
+];
