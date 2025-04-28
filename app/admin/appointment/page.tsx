@@ -25,7 +25,7 @@ import {
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { useRouter, useSearchParams } from "next/navigation";
 import TopBarSection from "../components/Topbar";
-
+import { doctors } from "../types";
 type AppointmentStatus = "สำเร็จ" | "ยกเลิก" | "เลื่อน" | "นัดแล้ว";
 
 const statusMap: Record<number, AppointmentStatus> = {
@@ -74,14 +74,7 @@ export default function AppointmentPage() {
     direction: "asc" | "desc";
   } | null>(null);
 
-  const doctors = [
-    { id: "1", name: "นพ. สมชาย ใจดี" },
-    { id: "2", name: "พญ. สมหญิง รักษาดี" },
-    { id: "3", name: "นพ. วิชัย สุขภาพดี" },
-    { id: "4", name: "พญ. นงนุช ชำนาญการ" },
-    { id: "5", name: "ณัฐฐนิษา อัมพรชัยจรัส" },
-    { id: "6", name: "ชิณภัทร สุขทอง" },
-  ];
+
 
   const router = useRouter();
 

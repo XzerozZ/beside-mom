@@ -14,17 +14,12 @@ import {
   MenuItem,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
-
+import { doctors } from "@/app/admin/types";
 export default function Babygraphs() {
   const router = useRouter();
   const { id } = useParams();
 
-  const doctors = [
-    { id: "1", name: "นพ. สมชาย ใจดี" },
-    { id: "2", name: "พญ. สมหญิง รักษาดี" },
-    { id: "3", name: "นพ. วิชัย สุขภาพดี" },
-    { id: "4", name: "พญ. นงนุช ชำนาญการ" },
-  ];
+ 
 
   const [appointmentmomInfo, setAppointmentmomInfo] = useState({
     id: id,

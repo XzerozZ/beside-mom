@@ -20,17 +20,13 @@ import {
   IconButton,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
+import { doctors } from "@/app/admin/types";
 
-export default function Babygraphs() {
+export default function AppointmentAdd() {
   const router = useRouter();
-  const [searchTermName, setsearchTermName] = useState("");
-  const [searchTermID, setsearchTermID] = useState("");
-  const [allmomInfo, setallMomInfo] = useState([
-    { id: "1", momname: "นิษา ชัยจรัส" },
-    { id: "2", momname: "ณัฐฐษา อัมพรชัยจรัส" },
-    { id: "3", momname: "ณัฐฐ อัมชัยจรัส" },
-    { id: "4", momname: "ฐนิษา อัมพรชัย" },
-  ]);
+  const [searchTermName, setSearchTermName] = useState("");
+  const [searchTermID, setSearchTermID] = useState("");
+  const [allmomInfo, setAllMomInfo] = useState<{ id: string; momname: string }[]>([]);
   const [appointmentmomInfo, setAppointmentmomInfo] = useState({
     id: "",
     momname: "",
@@ -42,15 +38,37 @@ export default function Babygraphs() {
     description: "",
   });
 
-  // Sample doctors data
-  const doctors = [
-    { id: "1", name: "นพ. สมชาย ใจดี" },
-    { id: "2", name: "พญ. สมหญิง รักษาดี" },
-    { id: "3", name: "นพ. วิชัย สุขภาพดี" },
-    { id: "4", name: "พญ. นงนุช ชำนาญการ" },
-  ];
+  // ดึงข้อมูลแม่ทั้งหมด
+  useEffect(() => {
+    const fetchAllMoms = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("กรุณาเข้าสู่ระบบใหม่");
+          router.push("/user/auth/login");
+          return;
+        }
+        const apiUrl = process.env.NEXT_PUBLIC_api_mominfo;
+        const response = await fetch(apiUrl as string, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!response.ok) throw new Error("API error");
+        const data = await response.json();
+        if (data.status !== "Success") throw new Error(data.message || "Error");
+        const moms = (data.result || []).map((m: any) => ({
+          id: m.u_id,
+          momname: `${m.fname} ${m.lname}`,
+        }));
+        setAllMomInfo(moms);
+      } catch (err) {
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+      }
+    };
+    fetchAllMoms();
+  }, [router]);
 
-  const filteredMomsname = searchTermName
+  // ฟิลเตอร์
+  const filteredMomsName = searchTermName
     ? allmomInfo.filter((mom) =>
         mom.momname.toLowerCase().includes(searchTermName.toLowerCase())
       )
@@ -61,22 +79,54 @@ export default function Babygraphs() {
       )
     : [];
 
-  // Handle mom selection
+  // เลือกแม่แล้ว set ทั้ง id และชื่อ
   const handleMomSelect = (mom: { id: string; momname: string }) => {
-    setAppointmentmomInfo({
-      ...appointmentmomInfo,
+    setAppointmentmomInfo((prev) => ({
+      ...prev,
       id: mom.id,
       momname: mom.momname,
-    });
-    setsearchTermName(""); // Clear search after selection
-    setsearchTermID(""); // Clear search after selection
+    }));
+    setSearchTermName("");
+    setSearchTermID("");
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAppointmentmomInfo({
-      ...appointmentmomInfo,
-      [e.target.name]: e.target.value,
-    });
+  // ส่งข้อมูลนัดหมาย
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("กรุณาเข้าสู่ระบบใหม่");
+      router.push("/user/auth/login");
+      return;
+    }
+    try {
+      // ส่งไปที่ /appoint/{mom_id}
+      const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/${appointmentmomInfo.id}`;
+      const formData = new FormData();
+      formData.append("title", appointmentmomInfo.subject);
+      const formattedDate = appointmentmomInfo.date
+      ? appointmentmomInfo.date.replace(/\//g, "-")
+      : "";
+    formData.append("date", formattedDate);
+      formData.append("start_time", appointmentmomInfo.time);
+      formData.append("building", appointmentmomInfo.location);
+      formData.append("doctor", appointmentmomInfo.doctor);
+      formData.append("requirement", appointmentmomInfo.description);
+      console.log("Form data:", appointmentmomInfo);
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      if (!response.ok) throw new Error("API error");
+      alert("บันทึกข้อมูลสำเร็จ");
+      router.push("/admin/appointment");
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    }
   };
 
   return (
@@ -127,7 +177,7 @@ export default function Babygraphs() {
                   type="text"
                   value={appointmentmomInfo.id || ""}
                   onChange={(e) => {
-                    setsearchTermID(e.target.value);
+                    setSearchTermID(e.target.value);
                     setAppointmentmomInfo({
                       ...appointmentmomInfo,
                       id: e.target.value,
@@ -173,7 +223,7 @@ export default function Babygraphs() {
                   placeholder="ค้นหาชื่อคุณแม่"
                   value={appointmentmomInfo.momname || ""}
                   onChange={(e) => {
-                    setsearchTermName(e.target.value);
+                    setSearchTermName(e.target.value);
                     setAppointmentmomInfo({
                       ...appointmentmomInfo,
                       momname: e.target.value,
@@ -187,8 +237,8 @@ export default function Babygraphs() {
                     sx={{ maxHeight: 200, overflow: "auto", mt: 1 }}
                     className="absolute z-10 w-64"
                   >
-                    {filteredMomsname.length > 0 ? (
-                      filteredMomsname.map((mom) => (
+                    {filteredMomsName.length > 0 ? (
+                      filteredMomsName.map((mom) => (
                         <Box
                           key={mom.id}
                           sx={{
@@ -223,7 +273,12 @@ export default function Babygraphs() {
               name="subject"
               type="text"
               value={appointmentmomInfo.subject}
-              onChange={handleChange}
+              onChange={(e) =>
+                setAppointmentmomInfo({
+                  ...appointmentmomInfo,
+                  subject: e.target.value,
+                })
+              }
             />
           </Box>
           <Box className="mt-5">
@@ -236,7 +291,12 @@ export default function Babygraphs() {
                   name="date"
                   type="date"
                   value={appointmentmomInfo.date}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    setAppointmentmomInfo({
+                      ...appointmentmomInfo,
+                      date: e.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item xs={6}>
@@ -245,9 +305,14 @@ export default function Babygraphs() {
                   fullWidth
                   size="small"
                   name="time"
-                  type="time"
+                  type="text"
                   value={appointmentmomInfo.time}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    setAppointmentmomInfo({
+                      ...appointmentmomInfo,
+                      time: e.target.value,
+                    })
+                  }
                 />
               </Grid>
             </Grid>
@@ -260,7 +325,12 @@ export default function Babygraphs() {
               name="location"
               type="text"
               value={appointmentmomInfo.location}
-              onChange={handleChange}
+              onChange={(e) =>
+                setAppointmentmomInfo({
+                  ...appointmentmomInfo,
+                  location: e.target.value,
+                })
+              }
             />
           </Box>
           <Box className="mt-5">
@@ -279,7 +349,7 @@ export default function Babygraphs() {
             >
               <MenuItem value="">-- เลือกแพทย์ --</MenuItem>
               {doctors.map((doctor) => (
-                <MenuItem key={doctor.id} value={doctor.id}>
+                <MenuItem key={doctor.id} value={doctor.name}>
                   {doctor.name}
                 </MenuItem>
               ))}
@@ -294,7 +364,12 @@ export default function Babygraphs() {
               name="description"
               type="text"
               value={appointmentmomInfo.description}
-              onChange={handleChange}
+              onChange={(e) =>
+                setAppointmentmomInfo({
+                  ...appointmentmomInfo,
+                  description: e.target.value,
+                })
+              }
             />
           </Box>
           <Box
@@ -321,6 +396,7 @@ export default function Babygraphs() {
                 "&:hover": { bgcolor: "#934343" },
               }}
               className="w-40"
+              onClick={handleSubmit}
             >
               บันทึก
             </Button>
