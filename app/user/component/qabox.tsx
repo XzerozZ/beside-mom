@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import Image from "next/image";
+import { QuestionAnswer } from "@/app/interface";
 
-const Qabox = () => {
+const Qabox: FC<QuestionAnswer> = (props:QuestionAnswer) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -16,7 +17,7 @@ const Qabox = () => {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
       >
-        <h1 className="text-[16px] font-bold">Q: ทำไมลูกน้อยไม่ถ่ายอุจจาระ</h1>
+        <h1 className="text-[16px] font-bold">Q: {props.question}</h1>
         <Image
           src={isOpen ? "/up.svg" : "/down.svg"}
           width={16}
@@ -31,7 +32,7 @@ const Qabox = () => {
         }`}
       >
         <p className="text-gray-700 text-sm">
-          A: สาเหตุของอาการท้องผูกในเด็ก 90% เกิดจากปัญหาพฤติกรรมของเด็ก เด็กมักมีพฤติกรรมการอั้นอุจจาระ ซึ่งเกิดจากการมีประสบการณ์ที่ไม่ดีกับการขับถ่าย อาจมีอาการเจ็บขณะขับถ่าย ซึ่งมักเกิดตามหลังจากการเจ็บป่วย หรือการดูแลเด็กที่มีการเปลี่ยนแปลงบางอย่าง เช่น การเปลี่ยนนมไปเป็นอาหารเสริม การเปลี่ยนพฤติกรรมจากเดิมที่เคยอยู่บ้าน เข้าสู่โรงเรียน อาจส่งผลให้เด็กมีพฤติกรรมการอั้นอุจจาระได้
+          A: {props.answer}
         </p>
       </div>
     </div>

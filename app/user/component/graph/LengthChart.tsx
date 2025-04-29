@@ -14,7 +14,7 @@ import {
 
 import { FC } from 'react';
 import { ButtonProps } from '@mui/material';
-import { ChartProps } from '@/app/interface';
+import { ChartProps, LengthGrowth } from '@/app/interface';
 
 // Type for each data point in the standard deviation chart
 interface ChartDataPoint {
@@ -41,7 +41,13 @@ interface RealMeasurement {
 
 
 const SdAreaLineChart: FC<ChartProps> = (props) => {
-  const { gender } = props;
+  const { gender,GrowthRecord } = props;
+  const RealHeight:LengthGrowth[] = GrowthRecord.map(item => ({
+    month: item.months,
+    length: item.length
+    
+  }));
+  console.log(RealHeight);  
   const realMeasurements: RealMeasurement[] = [
     { month: 0, height: 50.2 },
     { month: 1, height: 54.1 },
@@ -140,7 +146,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
       band2: d['-2SD'] - d['-3SD'],
       band3: d['+2SD'] - d['-2SD'],
       band4: d['+3SD'] - d['+2SD'],
-      height: realMeasurements.find((r) => r.month === d.month)?.height ?? null,
+      height: RealHeight.find((r) => r.month === d.month)?.length ?? null,
     }));
   } else if (gender === 'girl') {
     processedData = GirlData.map((d) => ({
@@ -155,7 +161,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
       band2: d['-2SD'] - d['-3SD'],
       band3: d['+2SD'] - d['-2SD'],
       band4: d['+3SD'] - d['+2SD'],
-      height: realMeasurements.find((r) => r.month === d.month)?.height ?? null,
+      height: RealHeight.find((r) => r.month === d.month)?.length ?? null,
     }));
   }
 

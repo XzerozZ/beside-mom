@@ -13,7 +13,7 @@ import {
 } from 'recharts';
 
 import { FC } from 'react';
-import { ButtonProps } from '@mui/material';
+import { GrowthRecord, WeightGrowth } from '@/app/interface';
 import { ChartProps } from '@/app/interface';
 
 // Type for each data point in the standard deviation chart
@@ -41,7 +41,14 @@ interface RealMeasurement {
 
 
 const SdAreaLineChart: FC<ChartProps> = (props) => {
-  const { gender } = props;
+  const { gender,GrowthRecord } = props;
+
+  const RealWeight: WeightGrowth[] = GrowthRecord.map(item => ({
+    month: item.months,
+    weight: item.weight
+  }));
+  console.log(RealWeight);
+ 
   const realMeasurements: RealMeasurement[] = [
     { month: 0, weight: 3.0 },
     { month: 1, weight: 4.0 },
@@ -61,14 +68,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
     { month: 14, weight: 9.2 },
     { month: 15, weight: 9.4 },
     { month: 16, weight: 9.5 },
-    { month: 17, weight: 9.7 },
-    { month: 18, weight: 9.9 },
-    { month: 19, weight: 10.1 },
-    { month: 20, weight: 10.2 },
-    { month: 21, weight: 10.4 },
-    { month: 22, weight: 10.5 },
-    { month: 23, weight: 10.7 },
-    { month: 24, weight: 13.0 },
+   
   ];
   const BoyData = [
     { month: 0, '-3SD': 2.0, '-2SD': 2.4, '0SD': 3.2, '+2SD': 4.2, '+3SD': 4.7, full: 16.0 },
@@ -140,7 +140,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
       band2: d['-2SD'] - d['-3SD'],
       band3: d['+2SD'] - d['-2SD'],
       band4: d['+3SD'] - d['+2SD'],
-      weight: realMeasurements.find((r) => r.month === d.month)?.weight ?? null,
+      weight: RealWeight.find((r) => r.month === d.month)?.weight ?? null,
     }));
   } else if (gender === 'girl') {
     processedData = GirlData.map((d) => ({
@@ -155,7 +155,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
       band2: d['-2SD'] - d['-3SD'],
       band3: d['+2SD'] - d['-2SD'],
       band4: d['+3SD'] - d['+2SD'],
-      weight: realMeasurements.find((r) => r.month === d.month)?.weight ?? null,
+      weight: RealWeight.find((r) => r.month === d.month)?.weight ?? null,
     }));
   }
 

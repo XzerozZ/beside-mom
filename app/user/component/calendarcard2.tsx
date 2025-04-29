@@ -10,6 +10,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { MdBook } from "react-icons/md";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
+import Link from "next/link";
 
 
 const CalendarCard: FC<Appointment> = (props:Appointment) => {
@@ -60,20 +61,16 @@ const CalendarCard: FC<Appointment> = (props:Appointment) => {
 
   return (
     <div className="mt-4 space-y-4">
-       <div className="flex gap-3  justify-end md:hidden">
-            <div className="my-auto w-2 h-2 rounded-full bg-[#B36868] flex items-center justify-center text-white ">
-            </div>
-            <h3 className={`text-[${statusColor}]`}>{statusText}</h3>
-          </div>
-      <div className="border rounded-lg p-[24px] max-sm:p-0 flex items-start justify-between shadow-sm max-sm:border-none max-sm:shadow-none">
-        <div className="flex items-center w-full max-sm:flex-col max-sm:items-center max-sm:gap-4 ">
+     
+    <Link href={`/user/calendar/history/${props.id}`} className="max-sm:block hidden">
+    <div className="border rounded-lg p-[24px]  flex items-start justify-between shadow-sm max-sm:shadow-none">
+        <div className="flex items-center w-full max-sm:flex-row max-sm:items-center max-sm:gap-4 ">
           <div className="text-[#B36868]  rounded-lg text-center w-48">
-            <p className="font-bold text-[16px]">{props.title}</p>
+            <p className="font-bold text-[16px]">ตรวจแผลผ่าคลอด</p>
             <p className="text-[20px] py-4">{onlyDay}</p>
             <p className="text-4xl font-bold">{day}</p>
           </div>
-          <div className="border-l border-gray-300 ml-[8px] mr-[48px] h-[0px] max-sm:border-b max-sm:w-full max-sm:mr-0 max-sm:ml-0 max-sm:my-[24px]"></div>
-          <div className="flex-1 flex flex-col gap-4 ">
+          <div className="flex-1 flex flex-col gap-4 max-sm:hidden">
             <p className="flex items-center gap-2 text-gray-700 ">
               <FaRegCalendarAlt />{formattedDate}
             </p>
@@ -94,7 +91,44 @@ const CalendarCard: FC<Appointment> = (props:Appointment) => {
          
          
         </div>
-        <div className="flex gap-3 w-1/2 max-sm:hidden">
+        <div className="flex gap-3 w-1/2 ">
+            <div className={`my-auto w-2 h-2 rounded-full bg-[${statusColor}] flex items-center justify-center text-white`}>
+            </div>
+            <h3 className={`text-[${statusColor}]`}>{statusText}</h3>
+          </div>
+        
+       
+      </div></Link>
+     
+    <div className="border rounded-lg p-[24px]  flex items-start justify-between shadow-sm max-sm:shadow-none max-sm:hidden">
+        <div className="flex items-center w-full max-sm:flex-row max-sm:items-center max-sm:gap-4 ">
+          <div className="text-[#B36868]  rounded-lg text-center w-48">
+            <p className="font-bold text-[16px]">ตรวจแผลผ่าคลอด</p>
+            <p className="text-[20px] py-4">{onlyDay}</p>
+            <p className="text-4xl font-bold">{day}</p>
+          </div>
+          <div className="flex-1 flex flex-col gap-4 max-sm:hidden">
+            <p className="flex items-center gap-2 text-gray-700 ">
+              <FaRegCalendarAlt />{formattedDate}
+            </p>
+            <p className="flex items-center gap-2 text-gray-700">
+              <FaClock />{formattedTime}
+            </p>
+            <p className="flex items-center gap-2 text-gray-700">
+              <FaMapMarkerAlt />{props.building}
+            </p>
+            <p className="flex items-center gap-2 text-gray-700">
+              <FaUserDoctor  />{props.doctor}
+            </p>
+           
+            <p className="flex items-center gap-2 text-gray-700">
+              <FaNotesMedical />{props.requirement}
+            </p>
+          </div>
+         
+         
+        </div>
+        <div className="flex gap-3 w-1/2 ">
             <div className={`my-auto w-2 h-2 rounded-full bg-[${statusColor}] flex items-center justify-center text-white`}>
             </div>
             <h3 className={`text-[${statusColor}]`}>{statusText}</h3>

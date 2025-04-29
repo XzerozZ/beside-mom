@@ -1,12 +1,73 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Navbar from "../../component/navbar";
 import { ButtonComponents } from "../../component/button";
 import WeightChart from "../../component/graph/WeightChart";
 import LengthChart from "../../component/graph/LengthChart";
+import  WeigthLengthGrowth  from "../../component/graph/WeightLengthChart";
+import { KidProfile } from "@/app/interface";
+import { useParams } from "next/navigation";
+import { GrowthRecord } from "@/app/interface";
 const page = () => {
+    const param = useParams();
+    const [kidData, setKidData] = React.useState<KidProfile>();
+    const [graphData, setGraphData] =  React.useState<GrowthRecord[]>();
+    const fetchKidData = async (id: string) => {
+      try {
+        const res = await fetch(`http://localhost:5000/kid/${id}`, {
+          headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNTYxYmRkOTEtYjlkZS00MzlkLThkZTgtYzU5ZTk0ZjI3ZmJiIn0.82AHeCIaX9m7mr-nTb6YrbeSqx4tD-ZmkEjFa6Rr8I8`,
+          },
+        });
+        if (res.status === 200) {
+          const data = await res.json();
+          setKidData(data.result);
+        } else {
+          console.error("Failed to fetch kid data");
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching kid data:", error);
+      }
+    }
+    const fetchGraphKid = async (id: string) => {
+      try {
+      const res = await fetch(`http://localhost:5000/growth/kid/${id}/summary`, {
+        headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNTYxYmRkOTEtYjlkZS00MzlkLThkZTgtYzU5ZTk0ZjI3ZmJiIn0.82AHeCIaX9m7mr-nTb6YrbeSqx4tD-ZmkEjFa6Rr8I8`,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setGraphData(data.result);
+      } else {
+        console.error(`Failed to fetch graph data: ${res.status} ${res.statusText}`);
+      }
+      } catch (error) {
+      console.error("An error occurred while fetching graph data:", error);
+      }
+    };
+    useEffect(() => {
+      if (typeof param.id === "string") {
+        fetchKidData(param.id);
+        fetchGraphKid(param.id);
+      } else {
+        console.error("Invalid or missing parameter: id");
+      }
+    },[])
+    console.log(kidData);
+    console.log(graphData);
+
+    const formatDate = (dateString?: string): string => {
+      if (!dateString) return "-";
+      const date = new Date(dateString);
+      return date.toLocaleDateString("th-TH", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    };
 
    
   return (
@@ -24,7 +85,7 @@ const page = () => {
             <div className="flex flex-row gap-[64px] max-md:flex-col max-md:gap-0">
               <div className="w-44 h-44 rounded-full overflow-hidden flex-none max-md:mx-auto  max-md:mb-6">
                 <Image
-                  src="/baby.png"
+                  src={kidData?.image_link || "/baby.png"}
                   alt="Description of the image"
                   width={176}
                   height={176}
@@ -35,33 +96,33 @@ const page = () => {
                 <div className="grid grid-cols-4 justify-between max-md:flex-col max-md:gap-6 max-sm:grid-cols-1">
                   <div className="w-1/4">
                     <h3>ชื่อ</h3>
-                    <h4>ณัชพล</h4>
+                    <h4>{kidData?.firstname}</h4>
                   </div>
                   <div className="w-1/4">
                     <h3>นามสกุล</h3>
-                    <h4>พลแหลม</h4>
+                    <h4>{kidData?.lastname}</h4>
                   </div>
                   <div className="w-1/4">
                     <h3>ชื่อเล่น</h3>
-                    <h4>ทู</h4>
+                    <h4>{kidData?.username}</h4>
                   </div>
                 </div>
                 <div className="flex flex-row justify-between max-sm:flex-col max-sm:gap-5">
                   <div className="w-1/4">
                     <h3>วันเกิด</h3>
-                    <h4>01/02/2000</h4>
+                    <h4>{formatDate(kidData?.birthdate)}</h4>
                   </div>
                   <div className="w-1/4">
                     <h3>กรุ๊ปเลือด</h3>
-                    <h4>B</h4>
+                    <h4>ฺ{kidData?.blood}</h4>
                   </div>
                   <div className="w-1/4">
                     <h3>น้ำหนัก (กก.)</h3>
-                    <h4>23.1</h4>
+                    <h4>{kidData?.birthweight}</h4>
                   </div>
                   <div className="w-1/4">
                     <h3>ความยาว (ซม.)</h3>
-                    <h4>18.6</h4>
+                    <h4>{kidData?.birthlength}</h4>
                   </div>
                 </div>
               </div>
@@ -71,30 +132,32 @@ const page = () => {
                 <h3>เพศ</h3>
                 <div className="flex gap-4 flex-col">
                   <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="male"
-                      disabled
-                      className="accent-[#B36868]"
-                    />
-                    ชาย
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked={kidData?.sex === "ชาย"}
+                    readOnly
+                    className="accent-[#B36868]"
+                  />
+                  ชาย
                   </label>
                   <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="female"
-                      defaultChecked
-                      className="accent-[#B36868]"
-                    />
-                    หญิง
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    checked={kidData?.sex === "หญิง"}
+                    readOnly
+                    className="accent-[#B36868]"
+                  />
+                  หญิง
                   </label>
                 </div>
               </div>
               <div>
                 <h3 className="text-[16px]">โน๊ต</h3>
-                <h4 className="text-[20px]">เด็กมีปานที่หลัง</h4>
+                <h4 className="text-[20px]">{kidData?.note}</h4>
               </div>
             </div>
             <hr className="" />
@@ -114,9 +177,9 @@ const page = () => {
            
             </div>
             <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-row max-xl:flex-col justify-between gap-8">
-            <WeightChart gender="boy"/>
-            <LengthChart gender="boy"/>
-            <WeightChart gender="girl"/>
+            <WeightChart gender="boy" GrowthRecord={graphData || []}/>
+            <LengthChart gender="boy" GrowthRecord={graphData || []}/>
+            <WeigthLengthGrowth gender="girl" GrowthRecord={graphData || []}/>
             </div>
 
        
