@@ -72,6 +72,23 @@ const AllMomInfoPage: React.FC = () => {
 
   const handleDelete = (id: string) => {
     setMomData(momData.filter((mom) => mom.id !== id));
+    const token = localStorage.getItem("token");
+    fetch(`${process.env.NEXT_PUBLIC_api_mominfo}/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to delete mom info");
+        }
+      })
+      .catch((error) => {
+        // Optionally handle error, e.g., show notification
+        console.error(error);
+      });
   };
 
   const handleAddClick = () => {

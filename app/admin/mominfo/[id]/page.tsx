@@ -75,7 +75,7 @@ export default function MomInfoId() {
             date: g.created_at.slice(0, 10),
             months: g.months,
             weight: g.weight,
-            height: g.length,
+            length: g.length,
           })),
         }));
         setBabyInfo(babydata);
@@ -197,7 +197,7 @@ export default function MomInfoId() {
                 ข้อมูลทารก
               </Typography>
               {babyInfo.length > 1 && (
-                <div className="flex gap-4">
+                <div className="flex gap-4 ">
                   {babyInfo.map((baby, index) => (
                     <button
                       key={baby.id}
@@ -212,14 +212,10 @@ export default function MomInfoId() {
                       ทารกคนที่ {index + 1}
                     </button>
                   ))}
+                  
                 </div>
               )}
-              <button
-                type="button"
-                className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
-              >
-                เพิ่มทารก
-              </button>
+              
             </div>
             {selectedBabyId &&
               babyInfo
@@ -412,7 +408,7 @@ export default function MomInfoId() {
                       <YAxis label={{ value: "ซม.", angle: -90, position: "insideLeft" }} />
                       <Tooltip />
                       <Legend />
-                      <Line type="monotone" dataKey="height" name="ส่วนสูง (ซม.)" stroke="#68A3B3" activeDot={{ r: 8 }} />
+                      <Line type="monotone" dataKey="length" name="ส่วนสูง (ซม.)" stroke="#68A3B3" activeDot={{ r: 8 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </Box>
@@ -464,8 +460,8 @@ export default function MomInfoId() {
                         <TextField
                           fullWidth
                           size="small"
-                          name="height"
-                          value={data.height}
+                          name="length"
+                          value={data.length}
                           disabled
                         />
                       </Grid>

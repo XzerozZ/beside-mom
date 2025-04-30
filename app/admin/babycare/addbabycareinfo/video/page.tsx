@@ -131,11 +131,11 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
     // Validation
     const newErrors: {[key: string]: string} = {};
     
-    if (!formData.title) newErrors.title = 'Title is required';
-    if (!formData.description) newErrors.description = 'Description is required';
-    if (!formData.videoFile && !formData.link) {
-      newErrors.video = 'Please either upload a video or provide a video link';
-    }
+    if (!formData.title) newErrors.title = 'กรุณากรอกหัวข้อ';
+    if (!formData.description) newErrors.description = 'กรุณากรอกรายละเอียด';
+    if (!formData.videoFile && !formData.link) newErrors.video = 'กรุณาอัปโหลดวิดีโอหรือใส่ลิงก์วิดีโอ';
+    if (formData.videoFile && formData.link) newErrors.video = 'เลือกได้เพียงไฟล์วิดีโอหรือใส่ลิงก์วิดีโออย่างใดอย่างหนึ่งเท่านั้น';
+    if (!formData.banners) newErrors.banners = 'กรุณาอัปโหลดภาพปกวิดีโอ';
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);

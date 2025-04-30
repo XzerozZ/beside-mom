@@ -24,7 +24,7 @@ export interface BabyInfo {
 export interface GrowthData {
   date: string;
   weight: number;
-  height: number;
+  length: number;
 }
 
 export interface Appointment {
