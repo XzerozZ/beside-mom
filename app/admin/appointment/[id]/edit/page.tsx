@@ -125,29 +125,9 @@ export default function Babygraphs() {
 
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "1") {
-            switch (id) {
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="1"
+      <Sidebar 
+      selectedItem="5"
+  
       />
       <Container maxWidth="lg" sx={{ mb: 4 }}>
         <Typography

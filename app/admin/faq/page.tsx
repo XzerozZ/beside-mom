@@ -46,7 +46,7 @@ export default function Faq() {
         }
         
         // Fetch data from API
-        const apiUrl = process.env.NEXT_PUBLIC_api_question;
+        const apiUrl = process.env.NEXT_PUBLIC_api_question ;
         if (!apiUrl) {
           throw new Error("API URL not defined");
         }
@@ -139,30 +139,8 @@ export default function Faq() {
 
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "4") {
-            // Navigate to other pages based on sidebar selection
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="4"
+    <Sidebar 
+      selectedItem="4"
       />
       <div className="flex-1 p-6">
         <Container>

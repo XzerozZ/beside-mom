@@ -28,30 +28,8 @@ const ContactNurseInfo: React.FC = () => {
 
   return (
     <div className="flex bg-white ">
-      <Sidebar
-        onItemSelect={(id) => {
-          switch (id) {
-            case "1":
-              router.push("/admin/mominfo");
-              break;
-            case "2":
-              router.push("/admin/momstories");
-              break;
-            case "3":
-              router.push("/admin/babycare");
-              break;
-            case "4":
-              router.push("/admin/faq");
-              break;
-            case "5":
-              router.push("/admin/appointment");
-              break;
-            case "6":
-              router.push("/admin/nurse-contact");
-              break;
-          }
-        }}
-        selectedItem="6"
+      <Sidebar 
+       selectedItem="6"
       />
       <div className="flex-1 p-6">
         <Container>

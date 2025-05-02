@@ -100,7 +100,7 @@ export default function AppointmentAdd() {
       return;
     }
     try {
-      // ส่งไปที่ /appoint/{mom_id}
+      
       const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/${appointmentmomInfo.id}`;
       const formData = new FormData();
       formData.append("title", appointmentmomInfo.subject);
@@ -131,31 +131,9 @@ export default function AppointmentAdd() {
 
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          // Navigate to other pages based on sidebar selection
-          switch (id) {
-            case "1":
-              router.push("/admin/mominfo");
-              break;
-            case "2":
-              router.push("/admin/momstories");
-              break;
-            case "3":
-              router.push("/admin/babycare");
-              break;
-            case "4":
-              router.push("/admin/faq");
-              break;
-            case "5":
-              router.push("/admin/appointment");
-              break;
-            case "6":
-              router.push("/admin/nurse-contact");
-              break;
-          }
-        }}
-        selectedItem="5"
+      <Sidebar 
+      selectedItem="5"
+       
       />
       <div className="flex-1 p-6 w-full ">
         <Container maxWidth="lg" sx={{ mb: 4 }}>

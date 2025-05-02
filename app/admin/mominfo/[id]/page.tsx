@@ -98,32 +98,8 @@ export default function MomInfoId() {
 
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "0") {
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="1"
+    <Sidebar 
+       selectedItem="1"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -276,6 +252,7 @@ export default function MomInfoId() {
                         type="date"
                       />
                     </Grid>
+                    
                     <Grid item xs={12} sm={0.7}>
                       <FormLabel>เพศ</FormLabel>
                     </Grid>
@@ -358,7 +335,19 @@ export default function MomInfoId() {
                         rows={3}
                       />
                     </Grid>
-                  </Grid>
+                   
+                    <div style={{ display: "flex", justifyContent: "center", width: "100%" }} className="mt-4">
+                      <Button
+                        variant="contained"
+                        onClick={() => router.push(`/admin/mominfo/${momInfo.id}/evaluate/${baby.id}`)}
+                        sx={{ backgroundColor: "#B36868", "&:hover": { backgroundColor: "#a05555" } }}
+                      >
+                        แบบประเมินพัฒนาการ
+                      </Button>
+                    </div>
+                        </Grid>
+
+                 
                 ))}
           </Box>
           <Box sx={{ mt: 3 }}>

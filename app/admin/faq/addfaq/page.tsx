@@ -85,31 +85,10 @@ const AddFag: React.FC = () => {
 
   return (
     <div className="flex bg-white ">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "4") {
-            // Navigate to other pages based on sidebar selection
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="4"
+      <Sidebar 
+      selectedItem="4"
       />
+     
       <div className="flex-1 p-6">
         <h1 className="text-neutral05 font-bold">เพิ่มข้อมูล</h1>
         <Box className="mt-8">

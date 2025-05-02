@@ -166,30 +166,8 @@ export default function EditMomInfo() {
 
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "1") {
-            // Navigate to other pages based on sidebar selection
-            switch (id) {
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="1" // Keep this fixed since we're in the mom info section
+      <Sidebar 
+       selectedItem="1"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
