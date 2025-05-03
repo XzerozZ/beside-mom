@@ -101,6 +101,7 @@ export default function AddKid() {
       router.push(`/admin/mominfo/${params.id}`);
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

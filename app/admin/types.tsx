@@ -7,21 +7,22 @@ export interface MomInfo {
 }
 
 export interface BabyInfo {
-  id: string;
-  img: string;
-  firstName: string;
-  lastName: string;
-  nickname: string;
-  gender: string;
-  birthDate: string;
-  bloodType: string;
-  birthWeight: string;
-  birthHeight: string;
+  u_id: string;
+  image_link: string;
+  fname: string;
+  lname: string;
+  uname: string;
+  sex: string;
+  birth_date: string;
+  blood_type: string;
+  weight: string;
+  length: string;
   note: string;
-  growthData: GrowthData[];
+  growth: GrowthData[];
 }
 
 export interface GrowthData {
+ 
   date: string;
   weight: number;
   length: number;

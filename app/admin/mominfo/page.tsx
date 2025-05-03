@@ -11,12 +11,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Box,
   Button,
-  TextField,
-  Select,
-  MenuItem,
+
+
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
@@ -31,7 +29,7 @@ interface MomData {
 const AllMomInfoPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("all");
+
   const handleEdit = (id: string) => {
     router.push(`/admin/mominfo/${id}/edit`);
   };
@@ -62,7 +60,9 @@ const AllMomInfoPage: React.FC = () => {
           );
         }
       } catch (error) {
-        // handle error if needed
+        console.error("Error fetching mom data:", error);
+        // Optionally handle error, e.g., show notification
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
       } finally {
         setLoading(false);
       }

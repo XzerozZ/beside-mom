@@ -58,12 +58,12 @@ const AppointmentsPage: React.FC = () => {
   const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        setLoading(true);
+     
         const token = localStorage.getItem("token");
         if (!token) {
           alert("กรุณาเข้าสู่ระบบใหม่");
@@ -105,10 +105,9 @@ const AppointmentsPage: React.FC = () => {
         }));
         setAppointments(mapped);
       } catch (error) {
-        // handle error
-      } finally {
-        setLoading(false);
-      }
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลการนัดหมาย");
+        console.error(error);
+      } 
     };
     fetchAppointments();
   }, [id, router]);
@@ -131,7 +130,7 @@ const AppointmentsPage: React.FC = () => {
   async function handleDelete(appointmentId: string): Promise<void> {
     if (!window.confirm("คุณต้องการลบการนัดนี้ใช่หรือไม่?")) return;
     try {
-      setLoading(true);
+    
       const token = localStorage.getItem("token");
       if (!token) {
         alert("กรุณาเข้าสู่ระบบใหม่");
@@ -149,9 +148,8 @@ const AppointmentsPage: React.FC = () => {
       setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
     } catch (error) {
       alert("เกิดข้อผิดพลาดในการลบการนัด");
-    } finally {
-      setLoading(false);
-    }
+      console.error(error);
+    } 
   }
   return (
     <div className="flex bg-white">

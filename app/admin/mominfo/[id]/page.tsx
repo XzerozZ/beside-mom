@@ -9,7 +9,7 @@ import {
   Box,
   Typography,
   Grid,
-  Paper,
+
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -58,7 +58,7 @@ export default function MomInfoId() {
           email: mom.email,
         });
 
-        const babydata = (mom.kids || []).map((kid: any) => ({
+        const babydata = (mom.kids || []).map((kid: BabyInfo) => ({
           id: kid.u_id,
           img: kid.image_link,
           firstName: kid.fname,
@@ -70,7 +70,7 @@ export default function MomInfoId() {
           birthWeight: kid.weight?.toString() || "",
           birthHeight: kid.length?.toString() || "",
           note: kid.note,
-          growthData: (kid.growth || []).map((g: any) => ({
+          growthData: (kid.growth || []).map((g: GrowthData) => ({
             id: g.G_id,
             date: g.created_at.slice(0, 10),
             months: g.months,
@@ -81,7 +81,8 @@ export default function MomInfoId() {
         setBabyInfo(babydata);
         if (babydata.length > 0) setSelectedBabyId(babydata[0].id);
       } catch (error) {
-        // handle error (optional)
+        console.error("Error fetching mom info:", error);
+
       }
     };
 
@@ -93,8 +94,8 @@ export default function MomInfoId() {
   };
 
   // Get selected baby's growth data for chart
-  const selectedBaby = babyInfo.find((b) => b.id === selectedBabyId);
-  const growthData = selectedBaby?.growthData || [];
+  const selectedBaby = babyInfo.find((b) => b.u_id === selectedBabyId);
+  const growthData = selectedBaby?.growth || [];
 
   return (
     <div className="flex bg-white">
@@ -176,14 +177,14 @@ export default function MomInfoId() {
                 <div className="flex gap-4 ">
                   {babyInfo.map((baby, index) => (
                     <button
-                      key={baby.id}
+                      key={baby.u_id}
                       type="button"
                       className={`border border-primary5 text-primary5 rounded-lg px-4 py-2 mb-2 ${
-                        selectedBabyId === baby.id
+                        selectedBabyId === baby.u_id
                           ? "bg-primary5 text-white"
                           : ""
                       }`}
-                      onClick={() => handleBabySelect(baby.id)}
+                      onClick={() => handleBabySelect(baby.u_id)}
                     >
                       ทารกคนที่ {index + 1}
                     </button>
@@ -195,14 +196,14 @@ export default function MomInfoId() {
             </div>
             {selectedBabyId &&
               babyInfo
-                .filter((baby) => baby.id === selectedBabyId)
+                .filter((baby) => baby.u_id === selectedBabyId)
                 .map((baby, index) => (
-                  <Grid container spacing={3} key={baby.id}>
+                  <Grid container spacing={3} key={baby.u_id}>
                     <Grid item xs={12} sm={2.4} className="relative">
                       <div className="relative w-44 h-44">
                         <img
                           src={
-                            baby.img ||
+                            baby.image_link ||
                             "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                           }
                           alt="Profile"
@@ -221,7 +222,7 @@ export default function MomInfoId() {
                         fullWidth
                         size="small"
                         name="firstName"
-                        value={baby.firstName}
+                        value={baby.fname}
                         disabled
                       />
                       <FormLabel>ชื่อเล่น</FormLabel>
@@ -229,7 +230,7 @@ export default function MomInfoId() {
                         fullWidth
                         size="small"
                         name="nickname"
-                        value={baby.nickname}
+                        value={baby.uname}
                         disabled
                       />
                     </Grid>
@@ -239,7 +240,7 @@ export default function MomInfoId() {
                         fullWidth
                         size="small"
                         name="lastName"
-                        value={baby.lastName}
+                        value={baby.lname}
                         disabled
                       />
                       <FormLabel>วันเกิด</FormLabel>
@@ -247,7 +248,7 @@ export default function MomInfoId() {
                         fullWidth
                         size="small"
                         name="birthDate"
-                        value={baby.birthDate}
+                        value={baby.birth_date}
                         disabled
                         type="date"
                       />
@@ -257,7 +258,7 @@ export default function MomInfoId() {
                       <FormLabel>เพศ</FormLabel>
                     </Grid>
                     <Grid item xs={12} sm={1.75}>
-                      <RadioGroup name="gender" value={baby.gender}>
+                      <RadioGroup name="gender" value={baby.sex}>
                         <FormControlLabel
                           value="male"
                           control={
@@ -294,7 +295,7 @@ export default function MomInfoId() {
                         fullWidth
                         size="small"
                         name="bloodType"
-                        value={baby.bloodType}
+                        value={baby.blood_type}
                         disabled
                       >
                         <MenuItem value="A">A</MenuItem>
@@ -309,7 +310,7 @@ export default function MomInfoId() {
                         fullWidth
                         size="small"
                         name="birthWeight"
-                        value={baby.birthWeight}
+                        value={baby.weight}
                         disabled
                       />
                     </Grid>
@@ -319,7 +320,7 @@ export default function MomInfoId() {
                         fullWidth
                         size="small"
                         name="birthHeight"
-                        value={baby.birthHeight}
+                        value={baby.length}
                         disabled
                       />
                     </Grid>
@@ -339,7 +340,7 @@ export default function MomInfoId() {
                     <div style={{ display: "flex", justifyContent: "center", width: "100%" }} className="mt-4">
                       <Button
                         variant="contained"
-                        onClick={() => router.push(`/admin/mominfo/${momInfo.id}/evaluate/${baby.id}`)}
+                        onClick={() => router.push(`/admin/mominfo/${momInfo.id}/evaluate/${baby.u_id}`)}
                         sx={{ backgroundColor: "#B36868", "&:hover": { backgroundColor: "#a05555" } }}
                       >
                         แบบประเมินพัฒนาการ
@@ -419,9 +420,9 @@ export default function MomInfoId() {
 
             <Grid container spacing={3} sx={{ mt: 2 }}>
               {babyInfo
-                .filter((baby) => baby.id === selectedBabyId)
+                .filter((baby) => baby.u_id === selectedBabyId)
                 .map((baby) =>
-                  baby.growthData.map((data, index) => (
+                  baby.growth.map((data, index) => (
                     <Grid container spacing={3} key={index} className="mb-4">
                       <Grid item xs={12} sm={4}>
                         <FormLabel>วันที่</FormLabel>

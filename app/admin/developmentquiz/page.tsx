@@ -17,7 +17,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/navigation";
-import { hadUnsupportedValue } from "next/dist/build/analysis/get-page-static-info";
 
 interface Quiz {
   quiz_id: number;
@@ -84,6 +83,7 @@ export default function DevelopmentQuizPage() {
     }
     } catch (error) {
     alert("เกิดข้อผิดพลาดในการลบคำถาม");
+    console.error("Error deleting quiz:", error);
     }
   }
 

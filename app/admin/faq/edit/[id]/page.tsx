@@ -42,6 +42,7 @@ const EditFaq: React.FC = () => {
         setAnswer(data.result.answer);
       } catch (err) {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error("Error fetching FAQ data:", err);
       } finally {
         setLoading(false);
       }
@@ -75,6 +76,7 @@ const EditFaq: React.FC = () => {
       router.push("/admin/faq");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการแก้ไขข้อมูล");
+      console.error("Error updating FAQ data:", err);
     }
   };
 

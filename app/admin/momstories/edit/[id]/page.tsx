@@ -61,6 +61,7 @@ const EditMomStoryPage: React.FC = () => {
         }));
       } catch (err) {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error(err);
       }
     };
     fetchData();
@@ -175,6 +176,7 @@ const EditMomStoryPage: React.FC = () => {
       router.push("/admin/momstories");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

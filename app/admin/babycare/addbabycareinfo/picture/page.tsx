@@ -9,11 +9,10 @@ import {
   Button,
   Box,
   Grid,
-  Paper,
   FormLabel,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
-import { link } from "fs";
+
 
 const AddBabyCareInfoPicturePage: React.FC = () => {
   const router = useRouter();

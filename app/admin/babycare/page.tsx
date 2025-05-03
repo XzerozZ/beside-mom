@@ -9,9 +9,6 @@ import {
   CardContent,
   Box,
   Button,
-  TextField,
-  Select,
-  MenuItem,
   Grid,
   CardMedia,
 } from "@mui/material";
@@ -22,11 +19,11 @@ import { useEffect } from "react";
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("all");
+
   const handleAddClick = () => {
     console.log("Add button clicked");
   };
-  const [loading, setLoading] = useState(true);
+
   const handleEdit = (id: number, type: string) => {
     console.log("Edit button clicked", id);
     router.push(`/admin/babycare/edit/${id}/${type}`);
@@ -61,10 +58,9 @@ const MomstoryPage: React.FC = () => {
             );
           }
         } catch (error) {
-          // handle error if needed
-        } finally {
-          setLoading(false);
-        }
+          console.error("Error fetching data:", error);
+          alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        } 
       };
       fetchData();
     }, []);

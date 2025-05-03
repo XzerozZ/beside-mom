@@ -1,7 +1,7 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import {useRouter } from "next/navigation";
+import { useState} from "react";
 import {
   Container,
   TextField,
@@ -9,7 +9,6 @@ import {
   Box,
   Typography,
   Grid,
-  Paper,
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -24,18 +23,18 @@ import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { MomInfo, BabyInfo } from "@/app/admin/types";
 
 const defaultBaby = {
-  id: "",
-  img: "",
-  firstName: "",
-  lastName: "",
-  nickname: "",
-  gender: "",
-  birthDate: "",
-  bloodType: "",
-  birthWeight: "",
-  birthHeight: "",
+  u_id: "",
+  image_link: "",
+  fname: "",
+  lname: "",
+  uname: "",
+  sex: "",
+  birth_date: "",
+  blood_type: "",
+  weight: "",
+  length: "",
   note: "",
-  growthData: [],
+  growth: [] 
 };
 
 export default function EditMomInfo() {
@@ -78,7 +77,7 @@ export default function EditMomInfo() {
     reader.onload = (ev) => {
       setBabyInfo((prev) => {
         const updated = [...prev];
-        updated[0] = { ...updated[0], img: ev.target?.result as string };
+        updated[0] = { ...updated[0], image_link: ev.target?.result as string };
         return updated;
       });
     };
@@ -93,7 +92,7 @@ export default function EditMomInfo() {
     }
     // ตรวจสอบข้อมูลทารก (เฉพาะตัวแรก)
     const baby = babyInfo[0];
-    if (!baby.firstName || !baby.lastName || !baby.birthDate || !baby.gender) {
+    if (!baby.fname || !baby.lname || !baby.birth_date || !baby.sex) {
       alert("กรุณากรอกข้อมูลทารกให้ครบถ้วน (ชื่อ, นามสกุล, วันเกิด, เพศ)");
       return false;
     }
@@ -118,18 +117,18 @@ export default function EditMomInfo() {
       formData.append("email", momInfo.email);
       // Baby info (first baby only)
       if (babyInfo[0]) {
-        formData.append("firstname", babyInfo[0].firstName || "");
-        formData.append("lastname", babyInfo[0].lastName || "");
-        formData.append("username", babyInfo[0].nickname || "");
-        formData.append("sex", babyInfo[0].gender || "");
+        formData.append("firstname", babyInfo[0].fname || "");
+        formData.append("lastname", babyInfo[0].lname || "");
+        formData.append("username", babyInfo[0].uname || "");
+        formData.append("sex", babyInfo[0].sex || "");
         
-        const formattedDate = babyInfo[0].birthDate 
-      ? babyInfo[0].birthDate.replace(/\//g, "-")
+        const formattedDate = babyInfo[0].birth_date 
+      ? babyInfo[0].birth_date.replace(/\//g, "-")
       : "";
         formData.append("birthdate", formattedDate);
-        formData.append("bloodtype", babyInfo[0].bloodType || "");
-        formData.append("birthweight", babyInfo[0].birthWeight || "");
-        formData.append("birthlength", babyInfo[0].birthHeight || "");
+        formData.append("bloodtype", babyInfo[0].blood_type || "");
+        formData.append("birthweight", babyInfo[0].weight || "");
+        formData.append("birthlength", babyInfo[0].length || "");
         formData.append("note", babyInfo[0].note || "");
       }
       // Images: [0] mom, [1] kid
@@ -141,9 +140,9 @@ export default function EditMomInfo() {
           formData.append("images", blob, "mom.jpg");
         }
       }
-      if (babyInfo[0]?.img) {
-        if (babyInfo[0].img.startsWith("data:image")) {
-          const res = await fetch(babyInfo[0].img);
+      if (babyInfo[0]?.image_link) {
+        if (babyInfo[0].image_link.startsWith("data:image")) {
+          const res = await fetch(babyInfo[0].image_link);
           const blob = await res.blob();
           formData.append("images", blob, "baby.jpg");
         }
@@ -161,6 +160,7 @@ export default function EditMomInfo() {
       router.push("/admin/mominfo");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 
@@ -288,7 +288,7 @@ export default function EditMomInfo() {
                 <div className="relative w-44 h-44">
                   <img
                     src={
-                      babyInfo[0]?.img ||
+                      babyInfo[0]?.image_link ||
                       "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                     }
                     alt="Profile"
@@ -328,7 +328,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="firstName"
-                  value={babyInfo[0]?.firstName ?? ""}
+                  value={babyInfo[0]?.fname ?? ""}
                   onChange={handleChangeBaby}
                 />
                 <FormLabel>ชื่อเล่น</FormLabel>
@@ -336,7 +336,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="nickname"
-                  value={babyInfo[0]?.nickname ?? ""}
+                  value={babyInfo[0]?.uname ?? ""}
                   onChange={handleChangeBaby}
                 />
               </Grid>
@@ -346,7 +346,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="lastName"
-                  value={babyInfo[0]?.lastName ?? ""}
+                  value={babyInfo[0]?.lname ?? ""}
                   onChange={handleChangeBaby}
                 />
                 <FormLabel>วันเกิด</FormLabel>
@@ -354,7 +354,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="birthDate"
-                  value={babyInfo[0]?.birthDate ?? ""}
+                  value={babyInfo[0]?.birth_date ?? ""}
                   onChange={handleChangeBaby}
                   type="date"
                 />
@@ -369,7 +369,7 @@ export default function EditMomInfo() {
               <Grid item xs={12} sm={1.75}>
                 <RadioGroup
                   name="gender"
-                  value={babyInfo[0]?.gender}
+                  value={babyInfo[0]?.sex}
                   onChange={handleChangeBaby}
                 >
                   <FormControlLabel
@@ -406,7 +406,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="bloodType"
-                  value={babyInfo[0]?.bloodType ?? ""}
+                  value={babyInfo[0]?.blood_type ?? ""}
                   onChange={handleChangeBaby}
                 >
                   <MenuItem value="">เลือกกรุ๊ปเลือด</MenuItem>
@@ -426,7 +426,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="birthWeight"
-                  value={babyInfo[0]?.birthWeight}
+                  value={babyInfo[0]?.weight}
                   onChange={handleChangeBaby}
                 />
               </Grid>
@@ -436,7 +436,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="birthHeight"
-                  value={babyInfo[0]?.birthHeight}
+                  value={babyInfo[0]?.length}
                   onChange={handleChangeBaby}
                 />
               </Grid>

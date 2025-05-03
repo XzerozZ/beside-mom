@@ -9,7 +9,6 @@ import {
   Box,
   Typography,
   Grid,
-  Paper,
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -83,7 +82,8 @@ export default function EditMomInfo() {
           if (data.result.kids?.[0]?.u_id) setSelectedBabyId(data.result.kids[0].u_id);
         }
       } catch (e) {
-        // handle error
+        console.error("Error fetching mom info:", e);
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
       }
     };
     fetchData();
@@ -109,7 +109,7 @@ export default function EditMomInfo() {
     const { name, value } = e.target;
     setBabyInfo((prev) =>
       prev.map((baby) =>
-        baby.id === selectedBabyId ? { ...baby, [name]: value } : baby
+        baby.u_id === selectedBabyId ? { ...baby, [name]: value } : baby
       )
     );
   };
@@ -122,11 +122,11 @@ export default function EditMomInfo() {
   ) => {
     setBabyInfo((prev) =>
           prev.map((baby) =>
-            baby.id === id
+            baby.u_id === id
               ? {
                   ...baby,
                   growthData: [
-                    ...baby.growthData,
+                    ...baby.growth,
                     { date: date, weight: weight, length: length },
                   ],
                 }
@@ -140,9 +140,9 @@ export default function EditMomInfo() {
     });
   };
   const [fromgrowthdatafield, setfromgrowthdatafield] = useState<GrowthData>({
-    date: "",
-    weight: 0,
-    length: 0,
+      date: "",
+      weight: 0,
+      length: 0,
   });
 
   const handleaddBabygrowthdatafield = (
@@ -196,20 +196,20 @@ export default function EditMomInfo() {
       // PUT ข้อมูลลูกแต่ละคน
       for (const baby of babyInfo) {
         const kidFormData = new FormData();
-        kidFormData.append("firstname", baby.firstName || "");
-        kidFormData.append("lastname", baby.lastName || "");
-        kidFormData.append("username", baby.nickname || "");
-        kidFormData.append("sex", baby.gender || "");
-        const formattedDate = baby.birthDate ? baby.birthDate.replace(/\//g, "-") : "";
+        kidFormData.append("firstname", baby.fname || "");
+        kidFormData.append("lastname", baby.fname || "");
+        kidFormData.append("username", baby.uname || "");
+        kidFormData.append("sex", baby.sex || "");
+        const formattedDate = baby.birth_date ? baby.birth_date.replace(/\//g, "-") : "";
         kidFormData.append("birthdate", formattedDate);
-        kidFormData.append("bloodtype", baby.bloodType || "");
-        kidFormData.append("birthweight", baby.birthWeight || "");
-        kidFormData.append("birthlength", baby.birthHeight || "");
+        kidFormData.append("bloodtype", baby.blood_type || "");
+        kidFormData.append("birthweight", baby.weight || "");
+        kidFormData.append("birthlength", baby.length || "");
         kidFormData.append("note", baby.note || "");
-        if (baby.img && baby.img.startsWith("data:image")) {
-          kidFormData.append("images", dataURLtoBlob(baby.img), `baby.jpg`);
+        if (baby.image_link && baby.image_link.startsWith("data:image")) {
+          kidFormData.append("images", dataURLtoBlob(baby.image_link), `baby.jpg`);
         }
-        await fetch(`${process.env.NEXT_PUBLIC_api_kid}/${baby.id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_api_kid}/${baby.u_id}`, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -220,14 +220,14 @@ export default function EditMomInfo() {
 
       // เพิ่ม growth data ของแต่ละ baby
       for (const baby of babyInfo) {
-        if (baby.growthData && baby.growthData.length > 0) {
-          for (const growth of baby.growthData) {
+        if (baby.growth && baby.growth.length > 0) {
+          for (const growth of baby.growth) {
             const growthFormData = new FormData();
             const formattedDate = growth.date ? growth.date.replace(/\//g, "-") : "";
             growthFormData.append("date", formattedDate);
             growthFormData.append("weight", growth.weight.toString());
             growthFormData.append("length", growth.length.toString());
-            await fetch(`${process.env.NEXT_PUBLIC_api_growth_kid}/${baby.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_api_growth_kid}/${baby.u_id}`, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -242,6 +242,7 @@ export default function EditMomInfo() {
       router.push("/admin/mominfo");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error("Error saving data:", err);
     }
   };
 
@@ -363,14 +364,14 @@ export default function EditMomInfo() {
                 <div className="flex gap-4">
                   {babyInfo.map((baby, index) => (
                     <button
-                      key={baby.id}
+                      key={baby.u_id}
                       type="button"
                       className={`border border-primary5 text-primary5 rounded-lg px-4 py-2 mb-2 ${
-                        selectedBabyId === baby.id
+                        selectedBabyId === baby.u_id
                           ? "bg-primary5 text-white"
                           : ""
                       }`}
-                      onClick={() => handleBabySelect(baby.id)}
+                      onClick={() => handleBabySelect(baby.u_id)}
                     >
                       ทารกคนที่ {index + 1}
                     </button>
@@ -387,15 +388,15 @@ export default function EditMomInfo() {
             </div>
             {selectedBabyId &&
               babyInfo
-                .filter((baby) => baby.id === selectedBabyId)
+                .filter((baby) => baby.u_id === selectedBabyId)
                 .map((baby) => (
-                  <div key={baby.id}>
+                  <div key={baby.u_id}>
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={2.4} className="relative">
                         <div className="relative w-44 h-44">
                           <img
                             src={
-                              baby.img ||
+                              baby.image_link ||
                               "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                             }
                             alt="Profile"
@@ -433,7 +434,7 @@ export default function EditMomInfo() {
                           fullWidth
                           size="small"
                           name="firstName"
-                          value={baby.firstName}
+                          value={baby.fname}
                           onChange={handleChangeBaby}
                         />
                         <FormLabel>ชื่อเล่น</FormLabel>
@@ -441,9 +442,9 @@ export default function EditMomInfo() {
                           fullWidth
                           size="small"
                           name="nickname"
-                          value={baby.nickname}
+                          value={baby.uname}
                           onChange={handleChangeBaby}
-                          error={!baby.nickname}
+                          error={!baby.uname}
                         />
                       </Grid>
                       <Grid
@@ -457,7 +458,7 @@ export default function EditMomInfo() {
                           fullWidth
                           size="small"
                           name="lastName"
-                          value={baby.lastName}
+                          value={baby.lname}
                           onChange={handleChangeBaby}
                         />
                         <FormLabel>วันเกิด</FormLabel>
@@ -465,7 +466,7 @@ export default function EditMomInfo() {
                           fullWidth
                           size="small"
                           name="birthDate"
-                          value={baby.birthDate}
+                          value={baby.birth_date}
                           onChange={handleChangeBaby}
                           type="date"
                         />
@@ -479,7 +480,7 @@ export default function EditMomInfo() {
                         <Grid item xs={12} sm={1.75}>
                           <RadioGroup
                             name="gender"
-                            value={baby.gender}
+                            value={baby.sex}
                             onChange={handleChangeBaby}
                           >
                             <FormControlLabel
@@ -516,7 +517,7 @@ export default function EditMomInfo() {
                             fullWidth
                             size="small"
                             name="bloodType"
-                            value={baby.bloodType}
+                            value={baby.blood_type}
                             onChange={handleChangeBaby}
                           >
                             <MenuItem value="A">A</MenuItem>
@@ -535,7 +536,7 @@ export default function EditMomInfo() {
                             fullWidth
                             size="small"
                             name="birthWeight"
-                            value={baby.birthWeight}
+                            value={baby.weight  }
                             onChange={handleChangeBaby}
                           />
                         </Grid>
@@ -545,7 +546,7 @@ export default function EditMomInfo() {
                             fullWidth
                             size="small"
                             name="birthHeight"
-                            value={baby.birthHeight}
+                            value={baby.length}
                             onChange={handleChangeBaby}
                           />
                         </Grid>
@@ -569,10 +570,10 @@ export default function EditMomInfo() {
           {/* Prepare growthData for the selected baby */}
           {(() => {
             // Find the selected baby's growth data
-            const selectedBaby = babyInfo.find((baby) => baby.id === selectedBabyId);
+            const selectedBaby = babyInfo.find((baby) => baby.u_id === selectedBabyId);
             // Map growthData to include a 'months' field for the X axis (or use date)
             const growthData =
-              selectedBaby?.growthData?.map((g) => ({
+              selectedBaby?.growth?.map((g) => ({
                 ...g,
                 months: g.date, // You can replace this with a calculation of months if needed
                 length: g.length, // For chart compatibility
@@ -671,9 +672,9 @@ export default function EditMomInfo() {
 
             <Grid container spacing={3} sx={{ mt: 2 }}>
               {babyInfo
-                .filter((baby) => baby.id === selectedBabyId)
+                .filter((baby) => baby.u_id === selectedBabyId)
                 .map((baby) =>
-                  baby.growthData.map((data, index) => (
+                  baby.growth.map((data, index) => (
                     <Grid container spacing={3} key={index} className="mb-4">
                       <Grid item xs={12} sm={4}>
                         <FormLabel>วันที่</FormLabel>

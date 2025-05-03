@@ -137,6 +137,7 @@ const AddMomStoryPage: React.FC = () => {
       router.push("/admin/momstories");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

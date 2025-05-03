@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
   Container,
@@ -10,14 +10,10 @@ import {
   Typography,
   Grid,
   Paper,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
   FormLabel,
   Select,
   SelectChangeEvent,
   MenuItem,
-  IconButton,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { doctors } from "@/app/admin/types";
@@ -62,6 +58,7 @@ export default function AppointmentAdd() {
         setAllMomInfo(moms);
       } catch (err) {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        console.error(err);
       }
     };
     fetchAllMoms();
@@ -126,6 +123,7 @@ export default function AppointmentAdd() {
       router.push("/admin/appointment");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

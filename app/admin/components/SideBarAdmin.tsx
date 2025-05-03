@@ -1,9 +1,9 @@
 "use client";
 
-import { it } from "node:test";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaRegCalendar, FaRegCalendarTimes } from "react-icons/fa";
+
 interface MenuItem {
   id: number;
   label: string;
@@ -17,10 +17,10 @@ interface SidebarProps {
 const Sidebar = ({ selectedItem }: SidebarProps) => {
   const router = useRouter();
   const [activeMenu, setActiveMenu] = useState(selectedItem);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const profileImageUrl =
     "https://th.bing.com/th/id/OIP.GKAbRpYzDlJa139WC8xPtwHaIC?rs=1&pid=ImgDetMain";
-    "https://th.bing.com/th/id/OIP.GKAbRpYzDlJa139WC8xPtwHaIC?rs=1&pid=ImgDetMain";
+
 
   const menuItems: MenuItem[] = [
     { id: 1, label: "ข้อมูลคุณแม่" },
