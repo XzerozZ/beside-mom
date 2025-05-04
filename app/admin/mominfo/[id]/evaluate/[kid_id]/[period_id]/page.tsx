@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -44,8 +45,9 @@ const ContactNurseInfo: React.FC = () => {
       if (!res.ok) throw new Error("ไม่สามารถดึงข้อมูลได้");
       const data = await res.json();
       setEvaluateData(data.result);
-    } catch (err: any) {
-      setError(err.message || "เกิดข้อผิดพลาด");
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+      console.error(err);
     } finally {
       setLoading(false);
     }

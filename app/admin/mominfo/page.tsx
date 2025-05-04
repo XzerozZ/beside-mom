@@ -19,6 +19,7 @@ import {
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
 import { useEffect } from "react";
+import { MomInfo } from "../types";
 
 interface MomData {
   id: string;
@@ -52,7 +53,7 @@ const AllMomInfoPage: React.FC = () => {
         const data = await res.json();
         if (data.result && Array.isArray(data.result)) {
           setMomData(
-            data.result.map((item: any) => ({
+            data.result.map((item: MomInfo) => ({
               id: item.u_id,
               email: item.email,
               name: `${item.fname} ${item.lname}`,

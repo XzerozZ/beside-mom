@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -99,8 +99,9 @@ const EvaluateList: React.FC = () => {
         if (!res.ok) throw new Error("ไม่พบข้อมูล");
         const data = await res.json();
         setEvaluates(data.result || []);
-      } catch (err: any) {
-        setError(err?.message || "เกิดข้อผิดพลาด");
+      } catch (err) {
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error(err);
       } finally {
         setLoading(false);
       }

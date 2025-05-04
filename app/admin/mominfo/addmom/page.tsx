@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {useRouter } from "next/navigation";
@@ -40,10 +41,10 @@ const defaultBaby = {
 export default function EditMomInfo() {
   const router = useRouter();
   const [momInfo, setMomInfo] = useState<MomInfo>({
-    id: "",
+    u_id: "",
     img: "",
-    firstName: "",
-    lastName: "",
+    fname: "",
+    lname: "",
     email: "",
   });
 
@@ -86,7 +87,7 @@ export default function EditMomInfo() {
 
   const validateForm = () => {
     // ตรวจสอบข้อมูลแม่
-    if (!momInfo.firstName || !momInfo.lastName || !momInfo.email) {
+    if (!momInfo.fname || !momInfo.lname || !momInfo.email) {
       alert("กรุณากรอกข้อมูลคุณแม่ให้ครบถ้วน");
       return false;
     }
@@ -112,8 +113,8 @@ export default function EditMomInfo() {
       const apiUrl = process.env.NEXT_PUBLIC_api_mominfo as string;
       const formData = new FormData();
       // Mom info
-      formData.append("firstname", momInfo.firstName || "");
-      formData.append("lastname", momInfo.lastName || "");
+      formData.append("firstname", momInfo.fname || "");
+      formData.append("lastname", momInfo.lname || "");
       formData.append("email", momInfo.email);
       // Baby info (first baby only)
       if (babyInfo[0]) {
@@ -246,7 +247,7 @@ export default function EditMomInfo() {
                   size="small"
                   // label="ชื่อ"
                   name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
+                  value={momInfo.fname || ""} // You'll need to add firstName to MomInfo interface
                   onChange={handleChangemMom}
                 />
                  
@@ -269,7 +270,7 @@ export default function EditMomInfo() {
                   size="small"
                   // label="นามสกุล"
                   name="lastName"
-                  value={momInfo.lastName} // You'll need to add lastName to MomInfo interface
+                  value={momInfo.lname} // You'll need to add lastName to MomInfo interface
                   onChange={handleChangemMom}
                 />
               </Grid>

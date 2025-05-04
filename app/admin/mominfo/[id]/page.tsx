@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -25,10 +27,10 @@ export default function MomInfoId() {
   const params = useParams();
   const router = useRouter();
   const [momInfo, setMomInfo] = useState<MomInfo>({
-    id: "",
+    u_id: "",
     img: "",
-    firstName: "",
-    lastName: "",
+    fname: "",
+    lname: "",
     email: "",
   });
 
@@ -51,10 +53,10 @@ export default function MomInfoId() {
         const data = await res.json();
         const mom = data.result;
         setMomInfo({
-          id: mom.u_id,
+          u_id: mom.u_id,
           img: mom.image_link,
-          firstName: mom.fname,
-          lastName: mom.lname,
+          fname: mom.fname,
+          lname: mom.lname,
           email: mom.email,
         });
 
@@ -130,7 +132,7 @@ export default function MomInfoId() {
                   fullWidth
                   size="small"
                   name="id"
-                  value={momInfo.id}
+                  value={momInfo.u_id}
                   disabled // Usually ID should be read-only
                 />
 
@@ -139,7 +141,7 @@ export default function MomInfoId() {
                   fullWidth
                   size="small"
                   name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
+                  value={momInfo.fname || ""} // You'll need to add firstName to MomInfo interface
                   disabled
                 />
               </Grid>
@@ -159,7 +161,7 @@ export default function MomInfoId() {
                   fullWidth
                   size="small"
                   name="lastName"
-                  value={momInfo.lastName} // You'll need to add lastName to MomInfo interface
+                  value={momInfo.lname} // You'll need to add lastName to MomInfo interface
                   disabled
                 />
               </Grid>
@@ -340,7 +342,7 @@ export default function MomInfoId() {
                     <div style={{ display: "flex", justifyContent: "center", width: "100%" }} className="mt-4">
                       <Button
                         variant="contained"
-                        onClick={() => router.push(`/admin/mominfo/${momInfo.id}/evaluate/${baby.u_id}`)}
+                        onClick={() => router.push(`/admin/mominfo/${momInfo.u_id}/evaluate/${baby.u_id}`)}
                         sx={{ backgroundColor: "#B36868", "&:hover": { backgroundColor: "#a05555" } }}
                       >
                         แบบประเมินพัฒนาการ

@@ -16,7 +16,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
-import { doctors } from "@/app/admin/types";
+import { doctors, MomInfo } from "@/app/admin/types";
 
 export default function AppointmentAdd() {
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function AppointmentAdd() {
         if (!response.ok) throw new Error("API error");
         const data = await response.json();
         if (data.status !== "Success") throw new Error(data.message || "Error");
-        const moms = (data.result || []).map((m: any) => ({
+        const moms = (data.result || []).map((m: MomInfo) => ({
           id: m.u_id,
           momname: `${m.fname} ${m.lname}`,
         }));

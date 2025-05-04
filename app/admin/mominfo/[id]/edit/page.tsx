@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -29,16 +30,16 @@ import {
   Legend,
 } from "recharts";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
-import { MomInfo, BabyInfo, GrowthData } from "@/app/admin/types";
+import { MomInfo, BabyInfo, GrowthDataUse } from "@/app/admin/types";
 
 export default function EditMomInfo() {
   const params = useParams();
   const router = useRouter();
   const [momInfo, setMomInfo] = useState<MomInfo>({
-    id: "",
+    u_id: "",
     img: "",
-    firstName: "",
-    lastName: "",
+    fname: "",
+    lname: "",
     email: "",
   });
 
@@ -57,14 +58,14 @@ export default function EditMomInfo() {
         const data = await res.json();
         if (data?.result) {
           setMomInfo({
-            id: data.result.u_id,
+            u_id: data.result.u_id,
             img: data.result.image_link,
-            firstName: data.result.fname,
-            lastName: data.result.lname,
+            fname: data.result.fname,
+            lname: data.result.lname,
             email: data.result.email,
           });
           setBabyInfo(
-            (data.result.kids || []).map((kid: any) => ({
+            (data.result.kids || []).map((kid: BabyInfo) => ({
               id: kid.u_id,
               img: kid.image_link,
               firstName: kid.fname,
@@ -134,12 +135,14 @@ export default function EditMomInfo() {
           )
         );
     setfromgrowthdatafield({
+      
+
       date: "",
       weight: 0,
       length: 0,
     });
   };
-  const [fromgrowthdatafield, setfromgrowthdatafield] = useState<GrowthData>({
+  const [fromgrowthdatafield, setfromgrowthdatafield] = useState<GrowthDataUse>({
       date: "",
       weight: 0,
       length: 0,
@@ -165,8 +168,8 @@ export default function EditMomInfo() {
       // ใช้ FormData และ key ตามหน้า add mom
       const formData = new FormData();
       // Mom info
-      formData.append("firstname", momInfo.firstName || "");
-      formData.append("lastname", momInfo.lastName || "");
+      formData.append("firstname", momInfo.fname || "");
+      formData.append("lastname", momInfo.lname || "");
       formData.append("email", momInfo.email);
       // Images: [0] mom, [1...] kid
       if (momInfo.img) {
@@ -184,7 +187,7 @@ export default function EditMomInfo() {
      
      
       // PUT ข้อมูลแม่
-      const response = await fetch(`${process.env.NEXT_PUBLIC_api_mominfo}/${momInfo.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_api_mominfo}/${momInfo.u_id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -318,7 +321,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="id"
-                  value={momInfo.id}
+                  value={momInfo.u_id}
                   onChange={handleChangemMom}
                   disabled // Usually ID should be read-only
                 />
@@ -327,7 +330,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
+                  value={momInfo.fname || ""} // You'll need to add firstName to MomInfo interface
                   onChange={handleChangemMom}
                 />
               </Grid>
@@ -346,7 +349,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="lastName"
-                  value={momInfo.lastName} // You'll need to add lastName to MomInfo interface
+                  value={momInfo.lname} // You'll need to add lastName to MomInfo interface
                   onChange={handleChangemMom}
                 />
               </Grid>
@@ -379,7 +382,7 @@ export default function EditMomInfo() {
                     <button
                     type="button"
                     className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
-                    onClick={() => router.push(`/admin/mominfo/${momInfo.id}/addkid`)}
+                    onClick={() => router.push(`/admin/mominfo/${momInfo.u_id}/addkid`)}
                     >
                     เพิ่มทารก
                     </button>

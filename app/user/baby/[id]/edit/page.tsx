@@ -1,9 +1,7 @@
 "use client";
 import React from "react";
-
-import Image from "next/image";
 import Navbar from "@/app/user/component/navbar";
-import { ButtonComponents, ButtonComponents3, ButtonComponents4 } from "@/app/user/component/button";
+import { ButtonComponents, ButtonComponents4 } from "@/app/user/component/button";
 
 const page = () => {
   const [babyData, setBabyData] = React.useState([

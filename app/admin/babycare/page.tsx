@@ -15,6 +15,7 @@ import {
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
 import { useEffect } from "react";
+import { BabyCareItemRes } from "../types";
 
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
@@ -48,7 +49,7 @@ const MomstoryPage: React.FC = () => {
           const data = await res.json();
           if (data.result && Array.isArray(data.result)) {
             setData(
-              data.result.map((item :any) => ({
+              data.result.map((item :BabyCareItemRes) => ({
                 id: item.c_id,
                 title: item.title,
                 date: item.updated_at,

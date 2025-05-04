@@ -1,9 +1,9 @@
 export interface MomInfo {
-  id: string;
+  u_id: string;
   img: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  fname?: string;
+  lname?: string;
 }
 
 export interface BabyInfo {
@@ -22,7 +22,15 @@ export interface BabyInfo {
 }
 
 export interface GrowthData {
- 
+  G_id: number;
+  created_at: string;
+  date: string;
+  months: number;
+  weight: number;
+  length: number;
+}
+
+export interface GrowthDataUse {
   date: string;
   weight: number;
   length: number;
@@ -50,3 +58,12 @@ export   const doctors = [
   { id: "4", name: "พญ. นงนุช ชำนาญการ" },
   { id: "5", name: "ชิณภัทร สุขทอง" },
 ];
+
+export interface BabyCareItemRes {
+  c_id: number;
+  title: string;
+  type: string;
+  updated_at: string;
+  banner: string;
+  description: string;
+}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -106,8 +107,9 @@ export default function AppointmentPage() {
           status: statusMap[item.status as number] || "นัดแล้ว",
         }));
         setAppointments(mapped);
-      } catch (err: any) {
-        setError(err.message || "เกิดข้อผิดพลาดในการโหลดข้อมูล");
+      } catch (err) {
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลการนัดหมาย");
+        console.log(err);
       } finally {
         setLoading(false);
       }
