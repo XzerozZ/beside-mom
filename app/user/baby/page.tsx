@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import Navbar from "../component/navbar";
 import Image from "next/image";
 import { BabyCard } from "../component/babycard";
@@ -7,11 +7,13 @@ import { User } from "@/app/interface";
 
 const page = () => {
 
+  const userId = localStorage.getItem("key");
+  const uid = localStorage.getItem("u_id");
   const [momData, setMomData] = React.useState<User>();
-  const fetchMomData = async (id: string) => {
+  const fetchMomData = async (id: string,key: string) => {
     const res = await fetch(`http://localhost:5000/user/info/${id}`, {
       headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNTYxYmRkOTEtYjlkZS00MzlkLThkZTgtYzU5ZTk0ZjI3ZmJiIn0.82AHeCIaX9m7mr-nTb6YrbeSqx4tD-ZmkEjFa6Rr8I8`,
+      Authorization: `Bearer ${key}`,
       },
     });
     if (res.status === 200) {
@@ -23,7 +25,7 @@ const page = () => {
     }
   }
   useEffect(() => {
-    fetchMomData("4459a0ff-b393-412e-8733-3503d91c1270");
+    fetchMomData(uid!,userId!);
   },[])
   console.log(momData);
 

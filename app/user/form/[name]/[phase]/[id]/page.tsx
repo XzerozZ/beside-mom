@@ -4,14 +4,16 @@ import Navbar from "../../../../component/navbar";
 import { useParams } from "next/navigation";
 import ProgressBar from "@/app/user/component/progressbar";
 import FormCard from "@/app/user/component/FormCard";
-import Quiz from "@/app/user/component/quiz";
+import QuizForm from "@/app/user/component/quiz";
+import { Quiz, QuizHistory } from "@/app/interface";
 
 const page = () => {
   const { name } = useParams();
   const { phase } = useParams();
   const { id } = useParams();
   const numericId = Number(id);
- 
+  const param = useParams();
+  const token = localStorage.getItem("key");
 
   // Decode the name parameter
   const getDecodedName = (name: string | undefined) => {
@@ -28,7 +30,54 @@ const page = () => {
   const decodedName = getDecodedName(
     typeof name === "string" ? name : undefined
   );
+  const decodedPhase = getDecodedName(
+    typeof phase === "string" ? phase : undefined
+  );
 
+  const [quiz, setQuiz] = React.useState<Quiz[]>();
+  const [quizHistory, setQuizHistory] = React.useState<QuizHistory[]>();
+  const [quizHistoryData, setQuizHistoryData] = React.useState<Quiz[]>();
+  const fetchQuiz = async (id: number,token: string) => {
+    try {
+      const response = await fetch(`http://localhost:5000/quiz/period/1/category/1/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch quiz data");
+      }
+      const data = await response.json();
+      setQuiz(data.result);
+    } catch (error) {
+      console.error("Error fetching quiz data:", error);
+    }
+  };
+ 
+  const fetchQuizArray = async (token: string) => {
+    try {
+      const response = await fetch(`http://localhost:5000/quiz/period/1/category/1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch quiz data");
+      }
+      const data = await response.json();
+      setQuizHistoryData(data.result);
+    } catch (error) {
+      console.error("Error fetching quiz data:", error);
+    }
+  };
+  React.useEffect(() => {
+    fetchQuiz(numericId,token!);
+    fetchQuizArray(token!);
+  }, []);
+  console.log(quizHistoryData);
+  console.log(quiz);
+  console.log(quizHistory);
+ 
   return (
     <div className="flex flex-col">
       <header className="fixed top-0 left-0 w-full z-30">
@@ -38,15 +87,15 @@ const page = () => {
         <div className="">
           <div className="flex flex-col items-center gap-[30px]">
             <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
-              การตรวจตามนัด {">>"} {decodedName} {">>"} {phase}
+              การตรวจตามนัด {">>"} {decodedName} {">>"} {decodedPhase}
             </h1>
 
             <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
-             
-            <div className="z-10">
-            <ProgressBar />
-            </div>
-             <Quiz param={numericId} />
+              <div className="z-10">
+                {/* <ProgressBar {...combinedData} /> */}
+              </div>
+
+              {quiz && <QuizForm props={quiz} param={`${quizHistoryData?.length}`} navigate={`${name}/${phase}`} history={quizHistoryData ?? []}/>}
             </div>
           </div>
         </div>

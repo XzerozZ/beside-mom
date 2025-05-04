@@ -130,12 +130,135 @@ export interface WeightGrowth {
   }
 
   export interface VideoClip {
-    banner: string;
-    count_like: number;
-    description: string;
-    id: string;
+   
+        banner: string;
+        count_like: number;
+        description: string;
+        id: string;
+        link: string;
+        publish_at: string;
+        title: string;
+        view: number;
+      
+  }
+
+  export interface Evaluation {
+    E_id: string;
+    period_id: number;
+    status: boolean;
+    solution_status: string;
+    evaluate_times: number;
+    done_times: number;
+    completed_at: string | null;
+    created_at: string;
+    updated_at: string;
+  }
+
+  export interface Asset {
+    asset_id: string;
     link: string;
-    publish_at: string;
+  }
+  
+  export interface CareItem {
+    c_id: string;
+    type: string;
     title: string;
-    view: number;
+    desc: string;
+    banner: string;
+    user_id: string;
+    assets: Asset[];
+    created_at: string; // ISO 8601 date string
+    updated_at: string; // ISO 8601 date string
+  }
+
+export  interface QuizCategory {
+    ID: number;
+    category: string;
+  }
+  
+  export interface QuizPeriod {
+    ID: number;
+    period: string;
+  }
+  
+  export interface Quiz {
+    quiz_id: number;
+    question: string;
+    desc: string;
+    solution: string;
+    suggestion: string;
+    banner: string;
+    category_id: number;
+    period_id: number;
+    category: QuizCategory;
+    period: QuizPeriod;
+    created_at: string;
+    updated_at: string;
+  }
+  
+  export interface QuizHistory {
+    H_id: string;
+    quiz_id: number;
+    answer: boolean;
+    status: boolean;
+    evaluate_times: number;
+    done_times: number;
+    quiz: Quiz;
+    created_at: string;
+    updated_at: string;
+  }
+  
+
+
+  export interface QuizCategory2 {
+    ID: number;
+    category: string;
+  }
+  
+  export interface QuizPeriod2 {
+    ID: number;
+    period: string;
+  }
+  
+  export interface Quiz2 {
+    quiz_id: number;
+    question: string;
+    desc: string;
+    solution: string;
+    suggestion: string;
+    banner: string;
+    category_id: number;
+    period_id: number;
+    category: QuizCategory;
+    period: QuizPeriod;
+    created_at: string;
+    updated_at: string;
+  }
+  
+  export interface History {
+    H_id: string;
+    quiz_id: number;
+    answer: boolean;
+    status: boolean;
+    evaluate_times: number;
+    done_times: number;
+    quiz: Quiz;
+    created_at: string;
+    updated_at: string;
+  }
+  
+  export interface HistoryItem {
+    Histories: History[];
+    solution_status: string;
+    DoneAt: string;
+  }
+  
+  export type HistoryData = Record<string, HistoryItem>;
+  
+
+ export interface QuizResult {
+    id: string;
+    Histories: History[];
+    solution_status: string;
+    DoneAt: string;
   }

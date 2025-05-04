@@ -4,17 +4,20 @@ import Navbar from "../../component/navbar";
 import { Card } from "../../component/card";
 import { useParams } from "next/navigation";
 import { VideoClip } from "@/app/interface";
+import Image from "next/image";
 
 const page = () => {
   const param = useParams();
+  const [like, setLike] = React.useState<boolean>(false);
   const [isToggle, setIsToggle] = React.useState(false);
   const [video, setVideo] = React.useState<VideoClip>();
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
-  const fetchVideos = async () => {
+  const token = localStorage.getItem("key");
+  const fetchVideos = async (token: string) => {
     try {
       const res = await fetch(`http://localhost:5000/video`, {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNmFjMDQ4OGQtYWFiMS00YjhiLWJhYzUtMTgxNjg2M2JhOWYwIn0.IOe-r5myKw2a3SnU-1AVNWjqtUg0Eqgs_TCZPHXbt1U`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
@@ -28,11 +31,11 @@ const page = () => {
     }
   };
 
-  const fetchVideo = async (id: String) => {
+  const fetchVideo = async (id: String,token: string) => {
     try {
       const res = await fetch(`http://localhost:5000/video/${id}`, {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNmFjMDQ4OGQtYWFiMS00YjhiLWJhYzUtMTgxNjg2M2JhOWYwIn0.IOe-r5myKw2a3SnU-1AVNWjqtUg0Eqgs_TCZPHXbt1U`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
@@ -67,7 +70,7 @@ const page = () => {
     return `${day} ${month} ${year}`;
   };
 
-  const postLike = async (id: String) => {
+  const postLike = async (id: String,token:string) => {
     try {
       const formData = new FormData();
       formData.append("videoid", id.toString());
@@ -75,13 +78,13 @@ const page = () => {
       const res = await fetch(`http://localhost:5000/like`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNmFjMDQ4OGQtYWFiMS00YjhiLWJhYzUtMTgxNjg2M2JhOWYwIn0.IOe-r5myKw2a3SnU-1AVNWjqtUg0Eqgs_TCZPHXbt1U`,
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
       if (res.status === 200) {
         console.log("Video liked successfully");
-        fetchVideo(id); // Refresh video data
+        setLike(true); // Refresh video data
       } else {
         console.error("Failed to like video");
       }
@@ -90,17 +93,17 @@ const page = () => {
     }
   };
 
-  const deleteLike = async (id: String) => {
+  const deleteLike = async (id: String,token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/video/${id}`, {
+      const res = await fetch(`http://localhost:5000/like/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNmFjMDQ4OGQtYWFiMS00YjhiLWJhYzUtMTgxNjg2M2JhOWYwIn0.IOe-r5myKw2a3SnU-1AVNWjqtUg0Eqgs_TCZPHXbt1U`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
         console.log("Video unliked successfully");
-        fetchVideo(id); // Refresh video data
+        setLike(false); // Refresh video data
       } else {
         console.error("Failed to unlike video");
       }
@@ -109,19 +112,23 @@ const page = () => {
     }
   };
 
-  const checkLike = async (id: String) => {
+  const checkLike = async (id: String,token:string) => {
     try {
       const res = await fetch(`http://localhost:5000/like/${id}`, {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNmFjMDQ4OGQtYWFiMS00YjhiLWJhYzUtMTgxNjg2M2JhOWYwIn0.IOe-r5myKw2a3SnU-1AVNWjqtUg0Eqgs_TCZPHXbt1U`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
         const data = await res.json();
+        setLike(true);
         return data.liked; // Assuming the API returns a "liked" boolean
       } else {
+        setLike(false);
         console.error("Failed to check like status");
         return false;
+       
+        
       }
     } catch (error) {
       console.error("An error occurred while checking like status:", error);
@@ -132,11 +139,20 @@ const page = () => {
   const formattedDate = formatDate(video?.publish_at || "");
 
   useEffect(() => {
+   
     if (param.id) {
-      fetchVideo(param.id.toString());
-      fetchVideos();
+      fetchVideo(param.id.toString(),token || "");
+      fetchVideos(token || "");
     }
   }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkLike(video?.id || "", token || "");
+    }, 1000); // 1 minute interval
+
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, [like]);
+  console.log(like);
 
   return (
     <div className="flex flex-col">
@@ -163,8 +179,36 @@ const page = () => {
                   </video>
                 </div>
                 <div className="flex flex-col gap-[16px] mt-[20px">
-                  <h1 className="text-[20px] font-bold">{video?.title} </h1>
+                  <div className="flex justify-between ">
+                 
+                   <h1 className="text-[20px] font-bold">{video?.title} </h1>
+                   <div className="flex hover:bg-[#f2f2f2] gap-4 p-1 rounded-[4px]">
+                    <div className="flex  gap-2">
+                        <Image
+                        src={like ? "/mdi_like.svg" : "/like_default.svg"}
+                        alt="like"
+                        width={24}
+                        height={24}
+                        className="inline-block mr-2 cursor-pointer"
+                        onClick={() => {
+                          if (like) {
+                          deleteLike(video?.id || "", token || "");
+                          setLike(false);
+                          } else {
+                          postLike(video?.id || "", token || "");
+                          setLike(true);
+                          }
+                        }}
+                        ></Image>
+                      <div className="my-auto">{video?.count_like}</div>
+                    </div>
+                   </div>
+                  </div>
+                 
                   <div>
+                  <div>
+                    {video?.view} views
+                  </div>
                     {isToggle ? (
                       <div id="toggleContent">
                         <h2 className="text-[16px]">{video?.description}</h2>
@@ -191,15 +235,18 @@ const page = () => {
                   วีดิโออื่นๆ
                 </h1>
                 <div className="grid grid-cols-1 gap-y-[20px] max-xl:hidden max-sm:grid max-sm:grid-cols-1">
-                  {videos.map((video: VideoClip, index: number) => (
+                    {videos.slice(0, 7).map((video: VideoClip, index: number) => (
                     <Card key={index} {...video} />
-                  ))}
+                    ))}
                 </div>
                 <div className="hidden max-xl:flex max-xl:overflow-x-auto max-xl:gap-[20px] max-sm:hidden max-xl:snap-x max-xl:snap-mandatory px-4">
                   <div className="flex space-x-5">
-                    {videos.map((video: VideoClip, index: number) => (
-                      <div  key={index} className="w-[calc(100%/3-20px)] flex-shrink-0 snap-start">
-                        <Card {...video} />
+                    {videos.slice(0, 7).map((video: VideoClip, index: number) => (
+                      <div
+                      key={index}
+                      className="w-[calc(100%/20px)] flex-shrink-0 snap-start"
+                      >
+                      <Card {...video} />
                       </div>
                     ))}
                   </div>

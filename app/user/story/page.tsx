@@ -5,14 +5,15 @@ import Navbar from "../component/navbar";
 import { VideoClip } from "@/app/interface";
 
 const page = () => {
+  const token = localStorage.getItem("key");
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
-  const fetchVideo = async () => {
+  const fetchVideo = async (token: string) => {
     try {
       const res = await fetch(
         `http://localhost:5000/video`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNmFjMDQ4OGQtYWFiMS00YjhiLWJhYzUtMTgxNjg2M2JhOWYwIn0.IOe-r5myKw2a3SnU-1AVNWjqtUg0Eqgs_TCZPHXbt1U`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -27,7 +28,7 @@ const page = () => {
     }
   };
   useEffect(() => {
-    fetchVideo();
+    fetchVideo(token || "");
   }
   , []);
 

@@ -1,10 +1,34 @@
-import React from "react";
+"use client";
+import React, { use, useEffect } from "react";
 import Navbar from "../component/navbar";
 import Image from "next/image";
 import { FaAngleDown } from "react-icons/fa6";
-import { Card } from "../component/card";
+import { Card, CardCare } from "../component/card";
+import { CareItem } from "@/app/interface";
 
 const page = () => {
+  const token = localStorage.getItem("key");
+  const [care, setCare] = React.useState<CareItem[]>();
+  const fetchCare = async (token: string) => {
+    try {
+      const response = await fetch(`http://localhost:5000/care`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch quiz data");
+      }
+      const data = await response.json();
+      setCare(data.result);
+    } catch (error) {
+      console.error("Error fetching quiz data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchCare(token!);
+  }, []);
+
   return (
     <div className="flex flex-col">
       <header className="fixed top-0 left-0 w-full">
@@ -24,15 +48,10 @@ const page = () => {
                   </h1>
                   <div className="flex flex-col gap-[20px]">
                     <h2 className="text-right font-bold text-[20px]">
-                      10 วิธีป้องกันอุบัติเหตุในบ้าน สำหรับเด็กเล็ก
+                      {care?.[0]?.title}
                     </h2>
                     <h3 className="text-right text-[16px] ">
-                      บ้านนับเป็นที่ที่ปลอดภัยที่สุดสำหรับทุกคนในครอบครัว
-                      แต่สำหรับเด็ก ๆ โดยเฉพาะเด็กเล็ก ๆ แล้ว สิ่งของ
-                      เฟอร์นิเจอร์ ของใช้ต่าง ๆ ภายในบ้าน
-                      ก่อให้เกิดอุบัติเหตุเป็นอันตรายอาจทำให้ลูกๆของเราบาดเจ็บตั้งแต่
-                      เล็กน้อย จนถึงรุนแรง
-                      และอาจเสียชีวิตได้ทุกเมื่ออุบัติเหตุในบ้าน มีอะไรบ้าง
+                     {care?.[0]?.desc}
                     </h3>
                     <div className="flex flex-row justify-end gap-[5px]">
                       <h1 className="text-[14px] font-bold">ดูเพิ่มเติม</h1>
@@ -47,7 +66,7 @@ const page = () => {
                 </div>
                 <div className="w-3/5">
                   <Image
-                    src="/baby.png"
+                    src={care?.[0]?.banner || "/baby.png"}
                     alt="baby"
                     layout="responsive"
                     width={500}
@@ -55,46 +74,17 @@ const page = () => {
                   ></Image>
                 </div>
               </div>
-              <div className="w-full flex  justify-center">
-                <div className="flex flex-row gap-[20px] justify-between w-[500px] ">
-                  <div className="bg-white border border-[#B36868] rounded-[4px] py-[8px] px-[16px]  w-full flex flex-row justify-between">
-                    <h1 className="text-[16px] text-[#B36868] ">กรองโดย</h1>
-                    <FaAngleDown className="text-[#B36868] my-auto" />
-                  </div>
-                  <div className="bg-white border border-[#B36868] rounded-[4px] py-[8px] px-[16px]  w-full flex flex-row justify-between">
-                    <h1 className="text-[16px] text-[#B36868] ">กรองโดย</h1>
-                    <Image
-                      src="/filter.svg"
-                      alt="filter"
-                      width={16}
-                      height={16}
-                    ></Image>
-                  </div>
-                </div>
-              </div>
+             
               <div className="grid grid-cols-4 gap-[40px] max-xl:hidden max-sm:grid max-sm:grid-cols-1">
-                <Card
-                  title="เรื่องของแม่ที่ต้องพูด....."
-                  textSize="text-[16px]"
-                />
-                <Card
-                  title="เรื่องของแม่ที่ต้องพูด....."
-                  textSize="text-[16px]"
-                />
-                <Card
-                  title="เรื่องของแม่ที่ต้องพูด....."
-                  textSize="text-[16px]"
-                />
-                <Card
-                  title="เรื่องของแม่ที่ต้องพูด....."
-                  textSize="text-[16px]"
-                />
-                <Card
-                  title="เรื่องของแม่ที่ต้องพูด....."
-                  textSize="text-[16px]"
-                />
+                {care?.map((item) => (
+                  <div key={item.c_id} className="flex flex-col gap-[20px]">
+                    <CardCare
+                      {...item}
+                    />
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-between mt-[40px]">
+              {/* <div className="flex justify-between mt-[40px]">
                 <button className="px-[16px] py-[8px] text-white">
                  <Image src="/left.svg" alt="left" width={8} height={8}></Image>
                 </button>
@@ -112,7 +102,7 @@ const page = () => {
                 <button className="px-[16px] py-[8px] text-white">
                  <Image src="/right.svg" alt="left" width={8} height={8}></Image>
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

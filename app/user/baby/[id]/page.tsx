@@ -12,13 +12,14 @@ import { useParams } from "next/navigation";
 import { GrowthRecord } from "@/app/interface";
 const page = () => {
     const param = useParams();
+    const token = localStorage.getItem("key");
     const [kidData, setKidData] = React.useState<KidProfile>();
     const [graphData, setGraphData] =  React.useState<GrowthRecord[]>();
-    const fetchKidData = async (id: string) => {
+    const fetchKidData = async (id: string,token: string) => {
       try {
         const res = await fetch(`http://localhost:5000/kid/${id}`, {
           headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNTYxYmRkOTEtYjlkZS00MzlkLThkZTgtYzU5ZTk0ZjI3ZmJiIn0.82AHeCIaX9m7mr-nTb6YrbeSqx4tD-ZmkEjFa6Rr8I8`,
+        Authorization: `Bearer ${token}`,
           },
         });
         if (res.status === 200) {
@@ -31,11 +32,11 @@ const page = () => {
         console.error("An error occurred while fetching kid data:", error);
       }
     }
-    const fetchGraphKid = async (id: string) => {
+    const fetchGraphKid = async (id: string,token: string) => {
       try {
       const res = await fetch(`http://localhost:5000/growth/kid/${id}/summary`, {
         headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNTYxYmRkOTEtYjlkZS00MzlkLThkZTgtYzU5ZTk0ZjI3ZmJiIn0.82AHeCIaX9m7mr-nTb6YrbeSqx4tD-ZmkEjFa6Rr8I8`,
+        Authorization: `Bearer ${token}`,
         },
       });
       if (res.ok) {
@@ -50,8 +51,8 @@ const page = () => {
     };
     useEffect(() => {
       if (typeof param.id === "string") {
-        fetchKidData(param.id);
-        fetchGraphKid(param.id);
+        fetchKidData(param.id,token!);
+        fetchGraphKid(param.id,token!);
       } else {
         console.error("Invalid or missing parameter: id");
       }
@@ -114,7 +115,7 @@ const page = () => {
                   </div>
                   <div className="w-1/4">
                     <h3>กรุ๊ปเลือด</h3>
-                    <h4>ฺ{kidData?.blood}</h4>
+                    <h4>{kidData?.blood}</h4>
                   </div>
                   <div className="w-1/4">
                     <h3>น้ำหนัก (กก.)</h3>
