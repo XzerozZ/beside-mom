@@ -6,7 +6,6 @@ import {
   Container,
   Box,
   Grid,
-  Typography,
   Button,
   TextField,
   Select,
@@ -75,8 +74,9 @@ export default function EditDevelopmentQuiz() {
         setSolution(quiz.solution || "");
         setSuggestion(quiz.suggestion || "");
         setBannerPreview(quiz.banner || quiz.banners || null);
-      } catch (err: any) {
-        setError(err?.message || "เกิดข้อผิดพลาด");
+      } catch (err) {
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -122,8 +122,9 @@ export default function EditDevelopmentQuiz() {
       }
       setSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/developmentquiz");
-    } catch (err: any) {
-      setError(err?.message || "เกิดข้อผิดพลาด");
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     } finally {
       setSaving(false);
     }

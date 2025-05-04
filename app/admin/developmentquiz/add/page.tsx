@@ -5,15 +5,13 @@ import {
   Container,
   Box,
   Grid,
-  Typography,
   Button,
   TextField,
   Select,
   MenuItem,
   FormLabel,
-  Paper,
   Alert,
-  CircularProgress,
+
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 
@@ -46,7 +44,6 @@ export default function AddDevelopmentQuiz() {
   const [suggestion, setSuggestion] = useState("");
   const [banners, setBanners] = useState<File | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -62,7 +59,6 @@ export default function AddDevelopmentQuiz() {
     e.preventDefault();
     setError("");
     setSuccess("");
-    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("categoryid", categoryid);
@@ -90,11 +86,10 @@ export default function AddDevelopmentQuiz() {
       router.push("/admin/developmentquiz");
      
       if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (err: any) {
-      setError(err?.message || "เกิดข้อผิดพลาด");
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
+    } 
   };
 
   return (

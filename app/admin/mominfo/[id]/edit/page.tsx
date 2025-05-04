@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -9,7 +11,6 @@ import {
   Box,
   Typography,
   Grid,
-  Paper,
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -83,7 +84,8 @@ export default function EditMomInfo() {
           if (data.result.kids?.[0]?.u_id) setSelectedBabyId(data.result.kids[0].u_id);
         }
       } catch (e) {
-        // handle error
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error(e);
       }
     };
     fetchData();
@@ -242,6 +244,7 @@ export default function EditMomInfo() {
       router.push("/admin/mominfo");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 
@@ -359,6 +362,7 @@ export default function EditMomInfo() {
               <Typography className="font-bold text-2x text-neutral05">
                 ข้อมูลทารก
               </Typography>
+
               {babyInfo.length > 1 && (
                 <div className="flex gap-4">
                   {babyInfo.map((baby, index) => (
@@ -375,15 +379,17 @@ export default function EditMomInfo() {
                       ทารกคนที่ {index + 1}
                     </button>
                   ))}
-                    <button
+                    
+                </div>
+              )}
+              <button
                     type="button"
                     className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
                     onClick={() => router.push(`/admin/mominfo/${momInfo.id}/addkid`)}
                     >
                     เพิ่มทารก
                     </button>
-                </div>
-              )}
+
             </div>
             {selectedBabyId &&
               babyInfo

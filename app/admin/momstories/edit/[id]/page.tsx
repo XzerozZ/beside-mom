@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -61,6 +62,7 @@ const EditMomStoryPage: React.FC = () => {
         }));
       } catch (err) {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error(err);
       }
     };
     fetchData();
@@ -175,6 +177,7 @@ const EditMomStoryPage: React.FC = () => {
       router.push("/admin/momstories");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

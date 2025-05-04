@@ -19,10 +19,6 @@ export default function Babygraphs() {
   const router = useRouter();
   const { id } = useParams();
 
-  const [momInfo, setMomInfo] = useState({
-    id: id,
-    momname: "",
-  });
 
   const [appointmentmomInfo, setAppointmentmomInfo] = useState({
     id: id,
@@ -67,12 +63,10 @@ export default function Babygraphs() {
           requirement: result.requirement || "",
           status: result.status ? String(result.status) : "",
         });
-        setMomInfo({
-          id: result.id,
-          momname: result.name || "",
-        });
+       
       } catch (err) {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูลนัดหมาย");
+        console.error(err);
       }
     };
     fetchAppointment();
@@ -120,6 +114,7 @@ export default function Babygraphs() {
       router.push(`/admin/appointment/${appointmentmomInfo.u_id}`);
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

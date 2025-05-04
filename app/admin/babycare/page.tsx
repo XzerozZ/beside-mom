@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -9,24 +10,20 @@ import {
   CardContent,
   Box,
   Button,
-  TextField,
-  Select,
-  MenuItem,
   Grid,
   CardMedia,
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
 import { useEffect } from "react";
+import { ContentBabycareItem} from "../types";
 
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("all");
   const handleAddClick = () => {
     console.log("Add button clicked");
   };
-  const [loading, setLoading] = useState(true);
   const handleEdit = (id: number, type: string) => {
     console.log("Edit button clicked", id);
     router.push(`/admin/babycare/edit/${id}/${type}`);
@@ -49,22 +46,21 @@ const MomstoryPage: React.FC = () => {
             },
           });
           const data = await res.json();
-          if (data.result && Array.isArray(data.result)) {
-            setData(
-              data.result.map((item :any) => ({
-                id: item.c_id,
-                title: item.title,
-                date: item.updated_at,
-                type: item.type,
-                thumbnail: item.banner,
-              }))
-            );
+          if (Array.isArray(data.result)) {
+            const result: ContentBabycareItem[] = data.result;
+            const mapped: BabyCareItem[] = result.map(item => ({
+              id: Number(item.c_id),
+              title: item.title,
+              date: item.updated_at,
+              type: item.type,
+              thumbnail: item.banner,
+            }));
+            setData(mapped);
           }
         } catch (error) {
-          // handle error if needed
-        } finally {
-          setLoading(false);
-        }
+          console.log("Error fetching data:", error);
+          alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        } 
       };
       fetchData();
     }, []);

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
@@ -101,6 +103,7 @@ export default function AddKid() {
       router.push(`/admin/mominfo/${params.id}`);
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

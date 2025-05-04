@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
 import { useRouter } from "next/navigation";
-const page = () => {
+const Loginpage = () => {
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -40,6 +40,7 @@ const page = () => {
       }
     } catch (error) {
       alert("An error occurred during login");
+      console.error("Login error:", error);
     }
   };
 
@@ -202,4 +203,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Loginpage;

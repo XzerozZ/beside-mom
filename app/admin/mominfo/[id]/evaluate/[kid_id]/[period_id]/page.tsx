@@ -1,22 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams} from "next/navigation";
 import {
   Container,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import Sidebar from "../../../../../components/SideBarAdmin";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';

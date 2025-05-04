@@ -1,7 +1,9 @@
+
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState} from "react";
 import {
   Container,
   TextField,
@@ -9,7 +11,7 @@ import {
   Box,
   Typography,
   Grid,
-  Paper,
+
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -161,6 +163,7 @@ export default function EditMomInfo() {
       router.push("/admin/mominfo");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

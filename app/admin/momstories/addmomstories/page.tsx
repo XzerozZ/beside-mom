@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import React, { useState, useRef } from "react";
@@ -137,6 +138,7 @@ const AddMomStoryPage: React.FC = () => {
       router.push("/admin/momstories");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

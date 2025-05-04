@@ -1,22 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
-  Container,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+ 
   Box,
   Button,
   TextField,
-  Select,
-  MenuItem,
+
   FormLabel,
 } from "@mui/material";
 import Sidebar from "../../components/SideBarAdmin";
@@ -27,25 +18,10 @@ const AddFag: React.FC = () => {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
 
-  // State for storing multiple Q&A entries
-  const [qaList, setQaList] = useState<{ question: string; answer: string }[]>(
-    []
-  );
+
 
   // Function to add Q&A to the list
-  const handleAddQA = () => {
-    if (question.trim() !== "" && answer.trim() !== "") {
-      setQaList([...qaList, { question, answer }]);
-      setQuestion("");
-      setAnswer("");
-    }
-  };
-
-  // Function to remove a Q&A entry
-  const handleDeleteQA = (index: number) => {
-    setQaList(qaList.filter((_, i) => i !== index));
-  };
-
+ 
   const handleSubmit = async () => {
     if (question.trim() === "" || answer.trim() === "") return;
 
@@ -80,6 +56,7 @@ const AddFag: React.FC = () => {
       router.push("/admin/faq");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการเพิ่มคำถาม");
+      console.error(err);
     }
   };
 

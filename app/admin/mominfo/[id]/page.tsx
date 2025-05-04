@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -9,7 +11,6 @@ import {
   Box,
   Typography,
   Grid,
-  Paper,
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -18,7 +19,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
-import { MomInfo, BabyInfo, GrowthData } from "@/app/admin/types";
+import { MomInfo, BabyInfo} from "@/app/admin/types";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 export default function MomInfoId() {
@@ -81,7 +82,8 @@ export default function MomInfoId() {
         setBabyInfo(babydata);
         if (babydata.length > 0) setSelectedBabyId(babydata[0].id);
       } catch (error) {
-        // handle error (optional)
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        console.error("Error fetching mom info:", error);
       }
     };
 
@@ -196,7 +198,7 @@ export default function MomInfoId() {
             {selectedBabyId &&
               babyInfo
                 .filter((baby) => baby.id === selectedBabyId)
-                .map((baby, index) => (
+                .map((baby) => (
                   <Grid container spacing={3} key={baby.id}>
                     <Grid item xs={12} sm={2.4} className="relative">
                       <div className="relative w-44 h-44">

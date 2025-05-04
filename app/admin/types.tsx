@@ -5,7 +5,33 @@ export interface MomInfo {
   firstName?: string;
   lastName?: string;
 }
+export interface MomRawItem {
+  u_id: string;
+  email: string;
+  fname: string;
+  lname: string;
+}
+export interface MomMappedItem {
+  id: string;
+  email: string;
+  name: string;
+}
+export interface ContentBabycareItem {
+  c_id: string;
+  title: string;
+  updated_at: string;
+  type: string;
+  banner: string;
+}
 
+
+export interface MappedBabycareItem {
+  id: string;
+  title: string;
+  date: string;
+  type: string;
+  thumbnail: string;
+}
 export interface BabyInfo {
   id: string;
   img: string;

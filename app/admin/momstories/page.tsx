@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -43,6 +44,7 @@ const MomstoryPage: React.FC = () => {
         setData(data.result || []);
       } catch (err) {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -88,6 +90,7 @@ const MomstoryPage: React.FC = () => {
       alert("ลบเรื่องเล่าสำเร็จ");
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการลบข้อมูล");
+      console.error(err);
     } finally {
       setLoading(false);
     }

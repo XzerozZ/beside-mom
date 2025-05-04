@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -55,6 +56,7 @@ export default function Babygraphs() {
         }));
       } catch (err) {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        console.error(err);
       }
     };
     fetchMomInfo();
@@ -111,6 +113,7 @@ export default function Babygraphs() {
       router.push(`/admin/appointment/${id}`);
     } catch (err) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
     }
   };
 

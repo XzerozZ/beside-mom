@@ -11,16 +11,17 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+
   Box,
   Button,
-  TextField,
-  Select,
-  MenuItem,
+
+
+
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
 import { useEffect } from "react";
+import { MomMappedItem, MomRawItem } from "../types";
 
 interface MomData {
   id: string;
@@ -31,7 +32,7 @@ interface MomData {
 const AllMomInfoPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("all");
+
   const handleEdit = (id: string) => {
     router.push(`/admin/mominfo/${id}/edit`);
   };
@@ -52,17 +53,19 @@ const AllMomInfoPage: React.FC = () => {
           },
         });
         const data = await res.json();
-        if (data.result && Array.isArray(data.result)) {
-          setMomData(
-            data.result.map((item: any) => ({
-              id: item.u_id,
-              email: item.email,
-              name: `${item.fname} ${item.lname}`,
-            }))
-          );
+        if (Array.isArray(data.result)) {
+          const result: MomRawItem[] = data.result;
+          const mapped: MomMappedItem[] = result.map(item => ({
+            id: item.u_id,
+            email: item.email,
+            name: `${item.fname} ${item.lname}`,
+          }));
+          setMomData(mapped);
         }
       } catch (error) {
-        // handle error if needed
+        console.error("Error fetching mom data:", error);
+        // Optionally handle error, e.g., show notification
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
       } finally {
         setLoading(false);
       }

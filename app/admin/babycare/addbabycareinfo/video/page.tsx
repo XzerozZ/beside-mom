@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import React, { useState, useRef } from "react";
@@ -9,7 +10,6 @@ import {
   Button,
   Box,
   Grid,
-  Paper,
   FormLabel,
   FormHelperText,
 } from "@mui/material";
