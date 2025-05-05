@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Navbar from "../../../../component/navbar";
+import Navbar from "../../../../../component/navbar";
 import { useParams } from "next/navigation";
 import ProgressBar from "@/app/user/component/progressbar";
 import FormCard from "@/app/user/component/FormCard";
@@ -11,6 +11,8 @@ const page = () => {
   const { name } = useParams();
   const { phase } = useParams();
   const { id } = useParams();
+  const searchParams = new URLSearchParams(window.location.search);
+  const babyId = searchParams.get("babyid");
   const numericId = Number(id);
   const param = useParams();
   const token = localStorage.getItem("key");
@@ -35,15 +37,17 @@ const page = () => {
   );
 
   const [quiz, setQuiz] = React.useState<Quiz[]>();
-  const [quizHistory, setQuizHistory] = React.useState<QuizHistory[]>();
   const [quizHistoryData, setQuizHistoryData] = React.useState<Quiz[]>();
-  const fetchQuiz = async (id: number,token: string) => {
+  const fetchQuiz = async (id: number, token: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/quiz/period/1/category/1/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/quiz/period/2/category/1/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch quiz data");
       }
@@ -53,14 +57,17 @@ const page = () => {
       console.error("Error fetching quiz data:", error);
     }
   };
- 
+
   const fetchQuizArray = async (token: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/quiz/period/1/category/1`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/quiz/period/2/category/1`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch quiz data");
       }
@@ -71,13 +78,12 @@ const page = () => {
     }
   };
   React.useEffect(() => {
-    fetchQuiz(numericId,token!);
+    fetchQuiz(numericId, token!);
     fetchQuizArray(token!);
   }, []);
-  console.log(quizHistoryData);
+  console.log("test", quizHistoryData);
   console.log(quiz);
-  console.log(quizHistory);
- 
+
   return (
     <div className="flex flex-col">
       <header className="fixed top-0 left-0 w-full z-30">
@@ -95,11 +101,25 @@ const page = () => {
                 {/* <ProgressBar {...combinedData} /> */}
               </div>
 
-              {quiz && <QuizForm props={quiz} param={`${quizHistoryData?.length}`} navigate={`${name}/${phase}`} history={quizHistoryData ?? []}/>}
+              {quiz && (
+                <QuizForm
+                  props={quiz}
+                  param={`${quizHistoryData?.length}`}
+                  navigate={`${name}/${phase}/1`}
+                  history={quizHistoryData ?? []}
+                  index={Number(id)}
+                  babyId={babyId!}
+                />
+              )}
             </div>
           </div>
         </div>
       </main>
+      <style jsx global>{`
+        nextjs-portal {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 };

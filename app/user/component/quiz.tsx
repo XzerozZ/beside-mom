@@ -1,18 +1,133 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { ButtonComponents6Size, ButtonComponents5Size } from "./button";
 import { Quiz, QuizHistory } from "@/app/interface";
 import Link from "next/link";
 
-const QuizForm: React.FC<{ props: Quiz[]; param: string ,navigate: string,history: Quiz[] }> = ({
-  props,
-  param,
-    navigate,
-    history
-}) => {
-    console.log("thisis ",props);
-    // const isAnswered = history[Number(param)-1]?.answer;
-    
+const QuizForm: React.FC<{
+  props: Quiz[];
+  param: string;
+  navigate: string;
+  history: Quiz[];
+  index: number;
+  babyId: string;
+}> = ({ props, param, navigate, history, index ,babyId}) => {
+  console.log("thisis ", props);
+  console.log("thisis param ", param);
+  console.log("thisis index ", index);
+  // const isAnswered = history[Number(param)-1]?.answer;
+
+  const [isAnswered, setIsAnswered] = React.useState<boolean | null>(null);
+
+  const [quiz, setQuiz] = React.useState<Quiz>();
+  const [quizNex, setQuizNext] = React.useState<boolean>(false);
+
+  const fetchQuizById = async (id: number, token: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/quiz/period/2/category/1/question/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch quiz data");
+      }
+      const data = await response.json();
+      setQuiz(data.result);
+    } catch (error) {
+      console.error("Error fetching quiz data:", error);
+    }
+  };
+  const fetchQuizByIdInNext = async (id: number, token: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/quiz/period/2/category/1/question/${id + 1}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        setQuizNext(true);
+      }
+    } catch (error) {}
+  };
+
+  const handleAnswer = (value: boolean) => {
+    const storedAnswers = JSON.parse(
+      localStorage.getItem("quizAnswers") || "[]"
+    );
+    const quizId = Number(quiz?.quiz_id);
+
+    // Ensure array has enough length
+    while (storedAnswers.length < quizId) storedAnswers.push(null);
+
+    storedAnswers[quizId - 1] = value;
+    localStorage.setItem("quizAnswers", JSON.stringify(storedAnswers));
+  };
+
+
+  const handleSubmit = async () => {
+    const storedAnswers = JSON.parse(
+      localStorage.getItem("quizAnswers") || "[]"
+    );
+    const token = localStorage.getItem("key");
+    const filteredAnswers = storedAnswers.filter((ans: boolean) => ans !== null);
+    const formData = new FormData();
+    filteredAnswers.forEach((answer: boolean) => {
+      formData.append(`answer`, answer.toString());
+    });
+    if (token) {
+      try {
+        const formData = new FormData();
+        formData.append("answer", isAnswered?.toString() || "");
+
+        const response = await fetch(
+          `http://localhost:5000/quiz/period/2/category/1/question/${index}/answer`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to submit answer");
+        }
+      } catch (error) {
+        console.error("Error submitting answer:", error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem("key");
+    if (token && index) {
+      fetchQuizById(Number(index), token);
+    } else {
+      console.error("Token not found in local storage");
+    }
+
+    const storedAnswers = JSON.parse(
+      localStorage.getItem("quizAnswers") || "[]"
+    );
+    const previousAnswer = storedAnswers[Number(index) - 1];
+    if (previousAnswer !== null && previousAnswer !== undefined) {
+      setIsAnswered(previousAnswer);
+    }
+    try {
+      fetchQuizByIdInNext(Number(index), localStorage.getItem("key") || "");
+    } catch (error) {
+      console.log("hello");
+    }
+  }, []);
+
   return (
     <div>
       <div className="flex p-[20px] gap-[80px] max-sm:flex-col max-sm:gap-8">
@@ -21,11 +136,11 @@ const QuizForm: React.FC<{ props: Quiz[]; param: string ,navigate: string,histor
         </div>
         <div className="flex flex-col gap-[16px]">
           <h1 className="font-bold text-[20px] text-[#4d4d4d]">
-            {props[0]?.quiz_id}.{props[0]?.question}
+            {quiz?.question}
           </h1>
           <h3 className="font-bold text-[16px] text-[#4d4d4d]">
-            {props[0]?.desc}
-            ผลลัพธ์ที่ควรเกิดขึ้น: {props[0]?.solution}
+            {quiz?.desc}
+            ผลลัพธ์ที่ควรเกิดขึ้น: {quiz?.solution}
             คำแนะน: {props[0].suggestion}
           </h3>
           <div className="flex gap-[10px]">
@@ -35,21 +150,26 @@ const QuizForm: React.FC<{ props: Quiz[]; param: string ,navigate: string,histor
                   <label className="flex items-center gap-2">
                     <input
                       type="radio"
-                      name="true"
+                      name={`question-${quiz?.quiz_id}`}
                       value="true"
+                      checked={isAnswered === true}
                       className="accent-[#B36868]"
-                    //   defaultChecked={isAnswered === true}
-                    //   disabled={isAnswered === true}
+                      onChange={() => {
+                        setIsAnswered(true);
+                      }}
                     />
                     ผ่าน
                   </label>
                   <label className="flex items-center gap-2">
                     <input
                       type="radio"
-                      name="true"
+                      name={`question-${quiz?.quiz_id}`}
                       value="true"
+                      checked={isAnswered === false}
                       className="accent-[#B36868]"
-                    //   disabled={isAnswered === true}
+                      onChange={() => {
+                        setIsAnswered(false);
+                      }}
                     />
                     ไม่ผ่าน
                   </label>
@@ -59,28 +179,25 @@ const QuizForm: React.FC<{ props: Quiz[]; param: string ,navigate: string,histor
           </div>
         </div>
       </div>
-      {props[0]?.quiz_id === Number(param) ? (
+      {quizNex === true ? (
         <div className="flex flex-row gap-[16px] justify-between max-sm:gap-3 max-sm:flex-col-reverse">
-        
-          <Link href={`${props[0]?.quiz_id - 1}`}>
-            <ButtonComponents6Size
-              title="ย้อนกลับ"
+          <ButtonComponents6Size
+            title="ย้อนกลับ"
+            textSize="text-[16px]"
+            boxSize="w-[180px] max-sm:w-full"
+            onClick={() => window.history.back()}
+          />
+          <Link href={`/user/form/${navigate}?babyid=${babyId}`} passHref>
+            <ButtonComponents5Size
+              title="ส่งคำตอบ"
               textSize="text-[16px]"
               boxSize="w-[180px] max-sm:w-full"
             />
           </Link>
-          <Link href={`/user/form/${navigate}`}>
-          <ButtonComponents5Size
-            title="ส่งคำตอบ"
-            textSize="text-[16px]"
-            boxSize="w-[180px] max-sm:w-full"
-          />
-            </Link>
         </div>
-        
-      ) : props[0]?.quiz_id === 1 ? (
+      ) : quiz?.quiz_id === 1 ? (
         <div className="flex flex-row gap-[16px] justify-end max-sm:gap-3 max-sm:flex-col-reverse">
-          <Link href={`${props[0]?.quiz_id + 1}`}>
+          <Link href={`${quiz?.quiz_id + 1}`}>
             <ButtonComponents5Size
               title="ต่อไป"
               textSize="text-[16px]"
@@ -90,20 +207,32 @@ const QuizForm: React.FC<{ props: Quiz[]; param: string ,navigate: string,histor
         </div>
       ) : (
         <div className="flex flex-row gap-[16px] justify-between max-sm:gap-3 max-sm:flex-col-reverse">
-          <Link href={`${props[0]?.quiz_id - 1}`}>
-            <ButtonComponents6Size
-              title="ย้อนกลับ"
-              textSize="text-[16px]"
-              boxSize="w-[180px] max-sm:w-full"
-            />
-          </Link>
-          <Link href={`${props[0]?.quiz_id + 1}`}>
+          <ButtonComponents6Size
+            title="ย้อนกลับ"
+            textSize="text-[16px]"
+            boxSize="w-[180px] max-sm:w-full"
+            onClick={() => window.history.back()}
+          />
+
+          {isAnswered !== null ? (
+            <Link href={`${index + 1}?babyid=${babyId}`} passHref>
+              <ButtonComponents5Size
+            title="ต่อไป"
+            textSize="text-[16px]"
+            boxSize="w-[180px] max-sm:w-full"
+            onClick={() => {
+              handleAnswer(isAnswered as boolean);
+            }}
+              />
+            </Link>
+          ) : (
             <ButtonComponents5Size
               title="ต่อไป"
               textSize="text-[16px]"
-              boxSize="w-[180px] max-sm:w-full"
+              boxSize="w-[180px] max-sm:w-full opacity-50 cursor-not-allowed"
+             
             />
-          </Link>
+          )}
         </div>
       )}
     </div>

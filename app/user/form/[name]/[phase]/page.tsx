@@ -2,10 +2,8 @@
 import React from "react";
 import Navbar from "../../../component/navbar";
 import { useParams } from "next/navigation";
-import ProgressBar from "@/app/user/component/progressbar";
-import FormCard from "@/app/user/component/FormCard";
+import  FormCard  from "@/app/user/component/FormCard"; 
 import { QuizHistory, Quiz, HistoryData } from "@/app/interface";
-
 import Link from "next/link";
 const page = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -35,10 +33,15 @@ const page = () => {
 
   const [quizHistory, setQuizHistory] = React.useState<HistoryData>();
   const [quizHistoryData, setQuizHistoryData] = React.useState<Quiz[]>();
-  const fetchQuizData = async (token: string,babyid: string) => {
+  const [quizHistoryData2, setQuizHistoryData2] = React.useState<Quiz[]>();
+  const [quizHistoryData3, setQuizHistoryData3] = React.useState<Quiz[]>();
+  const [quizHistoryData4, setQuizHistoryData4] = React.useState<Quiz[]>();
+  const [quizHistoryData5, setQuizHistoryData5] = React.useState<Quiz[]>();
+
+  const fetchQuizData = async (token: string, babyid: string,phase: number) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/history/result/evaluate/1/kid/${babyid}`,
+        `http://localhost:5000/history/result/evaluate/${phase}/kid/${babyid}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -55,22 +58,25 @@ const page = () => {
     }
   };
 
-  const fetchQuiz = async (id: number,token: string) => {
-    try {
-      const response = await fetch(`http://localhost:5000/quiz`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch quiz data");
-      }
-      const data = await response.json();
-      setQuizHistoryData(data.result); // Update the single quiz state
-    } catch (error) {
-      console.error("Error fetching quiz data:", error);
-    }
-  };
+  // const fetchQuiz = async (phase: number,category:number, token: string) => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:5000/quiz/period/${phase}/category/${category}/`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch quiz data");
+  //     }
+  //     const data = await response.json();
+  //     setQuizHistoryData(data.result); // Update the single quiz state
+  //   } catch (error) {
+  //     console.error("Error fetching quiz data:", error);
+  //   }
+  // };
 
   const resultArrayQuiz = quizHistory
     ? Object.entries(quizHistory).map(([key, value]) => {
@@ -81,16 +87,42 @@ const page = () => {
       })
     : [];
 
-    console.log(resultArrayQuiz);
-  
+  const fetchAllQuizzes = async () => {
+    const setters = [
+      setQuizHistoryData,
+      setQuizHistoryData2,
+      setQuizHistoryData3,
+      setQuizHistoryData4,
+      setQuizHistoryData5,
+    ];
+
+    for (let i = 1; i <= 5; i++) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/quiz/period/${decodedPhase}/category/${i}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch quiz data for category ${i}`);
+        }
+        const data = await response.json();
+        setters[i - 1](data.result); // Dynamically set the corresponding state
+      } catch (error) {
+        console.error(`Error fetching quiz data for category ${i}:`, error);
+      }
+    }
+  };
+  console.log(resultArrayQuiz);
 
   React.useEffect(() => {
-    fetchQuizData(token || "", babyId || ""); // Fetch quiz history
-    fetchQuiz(1,token || ""); // Fetch the first quiz
+    fetchQuizData(token || "", babyId || "",Number(decodedPhase)); // Fetch quiz history
+
+    fetchAllQuizzes();
   }, []);
-
- 
-
 
   return (
     <div className="flex flex-col">
@@ -107,12 +139,22 @@ const page = () => {
             <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
               {/* <ProgressBar {...combinedData} /> */}
               {resultArrayQuiz?.map((item, index) => (
-                <Link
+                <button
                   key={index}
-                  href={`/user/form/${decodedName}/${decodedPhase}/${item.Histories[0].quiz_id}?babyid=${babyId}`}
-                  >
-                    <FormCard  {...item} />
-                  </Link>
+                  onClick={() => {
+                  const quizId = (() => {
+                    if (index === 0) return quizHistoryData?.[0]?.quiz_id;
+                    else if (index === 1) return quizHistoryData2?.[0]?.quiz_id;
+                    else if (index === 2) return quizHistoryData3?.[0]?.quiz_id;
+                    else if (index === 3) return quizHistoryData4?.[0]?.quiz_id;
+                    else if (index === 4) return quizHistoryData5?.[0]?.quiz_id;
+                  })();
+                  window.location.href = `/user/form/${decodedName}/${decodedPhase}/${index + 1}/${quizId}?babyid=${babyId}`;
+                  }}
+                  className="w-full text-left"
+                >
+                  <FormCard {...item} />
+                </button>
               ))}
             </div>
           </div>
