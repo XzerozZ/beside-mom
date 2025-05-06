@@ -19,7 +19,7 @@ const page = () => {
       );
       if (res.status === 200) {
         const data = await res.json();
-        setVideos(data.result);
+        setVideos(data?.result || []);
       } else {
         console.error("Failed to fetch kid data");
       }

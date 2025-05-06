@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import Image from "next/image";
 import { ButtonComponents6Size, ButtonComponents5Size } from "./button";
 import { Quiz, QuizHistory } from "@/app/interface";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const QuizForm: React.FC<{
   props: Quiz[];
@@ -12,10 +13,14 @@ const QuizForm: React.FC<{
   history: Quiz[];
   index: number;
   babyId: string;
-}> = ({ props, param, navigate, history, index ,babyId}) => {
+}> = ({ props, param, navigate, index ,babyId}) => {
   console.log("thisis ", props);
   console.log("thisis param ", param);
   console.log("thisis index ", index);
+  console.log("thisis babyId ", babyId);
+  console.log("thisis navigate ", navigate);
+  
+  const useParam = useParams();
   // const isAnswered = history[Number(param)-1]?.answer;
 
   const [isAnswered, setIsAnswered] = React.useState<boolean | null>(null);
@@ -23,10 +28,10 @@ const QuizForm: React.FC<{
   const [quiz, setQuiz] = React.useState<Quiz>();
   const [quizNex, setQuizNext] = React.useState<boolean>(false);
 
-  const fetchQuizById = async (id: number, token: string) => {
+  const fetchQuizById = async (id: number, token: string,phase:number,category:number) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/quiz/period/2/category/1/question/${id}`,
+        `http://localhost:5000/quiz/period/${phase}/category/${category}/question/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,10 +47,10 @@ const QuizForm: React.FC<{
       console.error("Error fetching quiz data:", error);
     }
   };
-  const fetchQuizByIdInNext = async (id: number, token: string) => {
+  const fetchQuizByIdInNext = async (id: number, token: string,phase:number,category:number) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/quiz/period/2/category/1/question/${id + 1}`,
+        `http://localhost:5000/quiz/period/${phase}/category/${category}/question/${id + 1}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,9 +63,9 @@ const QuizForm: React.FC<{
     } catch (error) {}
   };
 
-  const handleAnswer = (value: boolean) => {
+  const handleAnswer = (value: boolean,phase:number,category:number) => {
     const storedAnswers = JSON.parse(
-      localStorage.getItem("quizAnswers") || "[]"
+      localStorage.getItem(`quizAnswers${phase}+${category}`) || "[]"
     );
     const quizId = Number(quiz?.quiz_id);
 
@@ -68,27 +73,36 @@ const QuizForm: React.FC<{
     while (storedAnswers.length < quizId) storedAnswers.push(null);
 
     storedAnswers[quizId - 1] = value;
-    localStorage.setItem("quizAnswers", JSON.stringify(storedAnswers));
+    localStorage.setItem(`quizAnswers${phase}+${category}`, JSON.stringify(storedAnswers));
   };
 
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (phase:number,category:number,babyid:string) => {
     const storedAnswers = JSON.parse(
-      localStorage.getItem("quizAnswers") || "[]"
+      localStorage.getItem(`quizAnswers${phase}+${category}`) || "[]"
     );
+    console.log("this is storedAnswers", storedAnswers);
     const token = localStorage.getItem("key");
     const filteredAnswers = storedAnswers.filter((ans: boolean) => ans !== null);
+    console.log("this is filteredAnswers", filteredAnswers);
     const formData = new FormData();
-    filteredAnswers.forEach((answer: boolean) => {
-      formData.append(`answer`, answer.toString());
-    });
+    // filteredAnswers.forEach((answer: boolean) => {
+    //   formData.append(`answer`, answer.toString());
+    //   console.log("this is formData", Array.from(formData.entries()));
+    // });
+    for (const answer of filteredAnswers) {
+      formData.append("answer", answer);
+    }
+
+    
     if (token) {
       try {
-        const formData = new FormData();
-        formData.append("answer", isAnswered?.toString() || "");
-
+       
+        if (!token) {
+          throw new Error("Authorization token not found");
+        }
         const response = await fetch(
-          `http://localhost:5000/quiz/period/2/category/1/question/${index}/answer`,
+          `http://localhost:5000/history/evaluate/${phase}/category/${category}/kid/${babyid}`,
           {
             method: "POST",
             headers: {
@@ -96,7 +110,9 @@ const QuizForm: React.FC<{
             },
             body: formData,
           }
+         
         );
+        console.log("this is response", response);
         if (!response.ok) {
           throw new Error("Failed to submit answer");
         }
@@ -109,7 +125,7 @@ const QuizForm: React.FC<{
   useEffect(() => {
     const token = localStorage.getItem("key");
     if (token && index) {
-      fetchQuizById(Number(index), token);
+      fetchQuizById(Number(index), token,Number(useParam.phase),Number(useParam.category));
     } else {
       console.error("Token not found in local storage");
     }
@@ -122,7 +138,7 @@ const QuizForm: React.FC<{
       setIsAnswered(previousAnswer);
     }
     try {
-      fetchQuizByIdInNext(Number(index), localStorage.getItem("key") || "");
+      fetchQuizByIdInNext(Number(index), localStorage.getItem("key") || "",Number(useParam.phase),Number(useParam.category));
     } catch (error) {
       console.log("hello");
     }
@@ -187,13 +203,17 @@ const QuizForm: React.FC<{
             boxSize="w-[180px] max-sm:w-full"
             onClick={() => window.history.back()}
           />
-          <Link href={`/user/form/${navigate}?babyid=${babyId}`} passHref>
+          {/* <Link href={`/user/baby?babyid=${babyId}`} passHref> */}
             <ButtonComponents5Size
               title="ส่งคำตอบ"
               textSize="text-[16px]"
               boxSize="w-[180px] max-sm:w-full"
+              onClick={() => {
+                handleAnswer(isAnswered as boolean,Number(useParam.phase),Number(useParam.category));
+                handleSubmit(Number(useParam.phase),Number(useParam.category),babyId);
+              }}
             />
-          </Link>
+          {/* </Link> */}
         </div>
       ) : quiz?.quiz_id === 1 ? (
         <div className="flex flex-row gap-[16px] justify-end max-sm:gap-3 max-sm:flex-col-reverse">
@@ -202,6 +222,9 @@ const QuizForm: React.FC<{
               title="ต่อไป"
               textSize="text-[16px]"
               boxSize="w-[180px] max-sm:w-full"
+              onClick={() => {
+                handleAnswer(isAnswered as boolean,Number(useParam.phase),Number(useParam.category));
+              }}
             />
           </Link>
         </div>
@@ -221,7 +244,7 @@ const QuizForm: React.FC<{
             textSize="text-[16px]"
             boxSize="w-[180px] max-sm:w-full"
             onClick={() => {
-              handleAnswer(isAnswered as boolean);
+              handleAnswer(isAnswered as boolean,Number(useParam.phase),Number(useParam.category));
             }}
               />
             </Link>

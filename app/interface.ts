@@ -262,3 +262,12 @@ export  interface QuizCategory {
     solution_status: string;
     DoneAt: string;
   }
+
+  export interface GrowthEdit {
+    G_id: string;
+    length: number;      // in cm
+    weight: number;      // in kg
+    months: number;      // age in months
+    created_at: string;  // ISO 8601 date string
+    updated_at: string;  // ISO 8601 date string
+  }

@@ -31,7 +31,7 @@ const LocalStoragePage: React.FC = () => {
                     />
                 </label>
                 <label>
-                    Key:
+                    Uid:
                     <input
                         type="text"
                         value={value2}
@@ -42,7 +42,7 @@ const LocalStoragePage: React.FC = () => {
             </div>
             <div style={{ marginBottom: '10px' }}>
                 <label>
-                    Value:
+                    Token:
                     <input
                         type="text"
                         value={value}

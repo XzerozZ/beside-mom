@@ -36,29 +36,29 @@ const page = () => {
     typeof phase === "string" ? phase : undefined
   );
 
-  const [quiz, setQuiz] = React.useState<Quiz[]>();
+  // const [quiz, setQuiz] = React.useState<Quiz[]>();
   const [quizHistoryData, setQuizHistoryData] = React.useState<Quiz[]>();
-  const fetchQuiz = async (id: number, token: string) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/quiz/period/2/category/1/`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch quiz data");
-      }
-      const data = await response.json();
-      setQuiz(data.result);
-    } catch (error) {
-      console.error("Error fetching quiz data:", error);
-    }
-  };
+  // const fetchQuiz = async (id: number, token: string) => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:5000/quiz/period/2/category/1/`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch quiz data");
+  //     }
+  //     const data = await response.json();
+  //     setQuiz(data.result);
+  //   } catch (error) {
+  //     console.error("Error fetching quiz data:", error);
+  //   }
+  // };
 
-  const fetchQuizArray = async (token: string) => {
+  const fetchQuizArray = async (token: string,phase:number,category:number) => {
     try {
       const response = await fetch(
         `http://localhost:5000/quiz/period/2/category/1`,
@@ -78,11 +78,10 @@ const page = () => {
     }
   };
   React.useEffect(() => {
-    fetchQuiz(numericId, token!);
-    fetchQuizArray(token!);
+    // fetchQuiz(numericId, token!);
+    fetchQuizArray(token!,Number(param.phase),Number(param.category));
   }, []);
   console.log("test", quizHistoryData);
-  console.log(quiz);
 
   return (
     <div className="flex flex-col">
@@ -101,9 +100,9 @@ const page = () => {
                 {/* <ProgressBar {...combinedData} /> */}
               </div>
 
-              {quiz && (
+              {quizHistoryData && (
                 <QuizForm
-                  props={quiz}
+                  props={quizHistoryData}
                   param={`${quizHistoryData?.length}`}
                   navigate={`${name}/${phase}/1`}
                   history={quizHistoryData ?? []}

@@ -142,7 +142,7 @@ const Navbar = () => {
           <a href="/user/contact">ติดต่อพยาบาล</a>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/user/contact">โปรไฟล์</a>
+          <a href="/user/profile">โปรไฟล์</a>
         </li>
         </ul>
       </div>

@@ -171,7 +171,7 @@ const page = () => {
                title="เพิ่มข้อมูล" 
                textSize="text-[15px] font-bold" 
                onClick={() => {
-               window.location.href = "/user/baby/1/edit";
+               window.location.href = `/user/baby/1/edit?babyid=${param.id}`;
                }}
              />
              </div>
