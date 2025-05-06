@@ -1,10 +1,10 @@
 "use client";
-import React from "react";
-import Navbar from "../../../component/navbar";
+import React, { useEffect } from "react";
 import { useParams } from "next/navigation";
-import  FormCard  from "@/app/user/component/FormCard"; 
-import { QuizHistory, Quiz, HistoryData } from "@/app/interface";
-import Link from "next/link";
+import FormCard from "@/app/user/component/FormCard";
+import { Quiz, HistoryData } from "@/app/interface";
+import Swal from "sweetalert2";
+import "@/app/user/component/css/loader.css";
 const page = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const babyId = searchParams.get("babyid");
@@ -38,7 +38,11 @@ const page = () => {
   const [quizHistoryData4, setQuizHistoryData4] = React.useState<Quiz[]>();
   const [quizHistoryData5, setQuizHistoryData5] = React.useState<Quiz[]>();
 
-  const fetchQuizData = async (token: string, babyid: string,phase: number) => {
+  const fetchQuizData = async (
+    token: string,
+    babyid: string,
+    phase: number
+  ) => {
     try {
       const response = await fetch(
         `http://localhost:5000/history/result/evaluate/${phase}/kid/${babyid}`,
@@ -57,26 +61,6 @@ const page = () => {
       console.error("Error fetching data:", error);
     }
   };
-
-  // const fetchQuiz = async (phase: number,category:number, token: string) => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:5000/quiz/period/${phase}/category/${category}/`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch quiz data");
-  //     }
-  //     const data = await response.json();
-  //     setQuizHistoryData(data.result); // Update the single quiz state
-  //   } catch (error) {
-  //     console.error("Error fetching quiz data:", error);
-  //   }
-  // };
 
   const resultArrayQuiz = quizHistory
     ? Object.entries(quizHistory).map(([key, value]) => {
@@ -118,30 +102,54 @@ const page = () => {
   };
   console.log(resultArrayQuiz);
 
-  React.useEffect(() => {
-    fetchQuizData(token || "", babyId || "",Number(decodedPhase)); // Fetch quiz history
+  const [loading, setLoading] = React.useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("key");
+      if (!token) {
+        console.error("Token is missing. Please log in.");
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+        });
+        window.location.href = "/user/auth/login";
+        return;
+      }
+    };
+    if (token) {
+      fetchQuizData(token || "", babyId || "", Number(decodedPhase)); // Fetch quiz history
 
-    fetchAllQuizzes();
-  }, []);
+      fetchAllQuizzes();
+    } else {
+      console.error("Invalid or missing parameter: id");
+    }
+    setLoading(false);
 
-  return (
-    <div className="flex flex-col">
-      <header className="fixed top-0 left-0 w-full">
-        <Navbar />
-      </header>
-      <main className="mt-[112px] max-sm:mt-[112px]">
-        <div className="">
-          <div className="flex flex-col items-center gap-[30px]">
-            <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
-              การตรวจตามนัด {">>"} {decodedName} {">>"} {decodedPhase}
-            </h1>
+    fetchData();
+  }, [token]);
 
-            <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
-              {/* <ProgressBar {...combinedData} /> */}
-              {resultArrayQuiz?.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen mt-[-160px] max-sm:mt-[-112px]">
+        <div className="loader"></div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="">
+        <div className="flex flex-col items-center gap-[30px]">
+          <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
+            การตรวจตามนัด {">>"} {decodedName} {">>"} {decodedPhase}
+          </h1>
+
+          <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
+            {/* <ProgressBar {...combinedData} /> */}
+            {resultArrayQuiz?.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => {
                   const quizId = (() => {
                     if (index === 0) return quizHistoryData?.[0]?.quiz_id;
                     else if (index === 1) return quizHistoryData2?.[0]?.quiz_id;
@@ -149,19 +157,20 @@ const page = () => {
                     else if (index === 3) return quizHistoryData4?.[0]?.quiz_id;
                     else if (index === 4) return quizHistoryData5?.[0]?.quiz_id;
                   })();
-                  window.location.href = `/user/form/${decodedName}/${decodedPhase}/${index + 1}/${quizId}?babyid=${babyId}`;
-                  }}
-                  className="w-full text-left"
-                >
-                  <FormCard {...item} />
-                </button>
-              ))}
-            </div>
+                  window.location.href = `/user/form/${decodedName}/${decodedPhase}/${
+                    index + 1
+                  }/${quizId}?babyid=${babyId}`;
+                }}
+                className="w-full text-left"
+              >
+                <FormCard {...item} />
+              </button>
+            ))}
           </div>
         </div>
-      </main>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default page;

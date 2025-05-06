@@ -1,54 +1,90 @@
-import React from 'react'
-import { ButtonComponents } from '../component/button'
-import Image from 'next/image'
-import Navbar from '../component/navbar'
+import React, { useEffect } from "react";
+import Image from "next/image";
+import { User } from "@/app/interface";
+import Swal from "sweetalert2";
+import "@/app/user/component/css/loader.css";
 
 const page = () => {
-
-   
+  const token = localStorage.getItem("key");
+  const uid = localStorage.getItem("u_id");
+  const [momData, setMomData] = React.useState<User>();
+  const fetchMomData = async (id: string, key: string) => {
+    const res = await fetch(`http://localhost:5000/user/info/${id}`, {
+      headers: {
+        Authorization: `Bearer ${key}`,
+      },
+    });
+    if (res.status === 200) {
+      const data = await res.json();
+      setMomData(data.result);
+    } else {
+      console.error("Failed to fetch mom data");
+    }
+  };
+   const [loading, setLoading] = React.useState<boolean>(true);
+    useEffect(() => {
+      const fetchData = async () => {
+        const token = localStorage.getItem("key");
+        if (!token) {
+          console.error("Token is missing. Please log in.");
+          await Swal.fire({
+            title: "Please login again your token is expired!",
+            icon: "error",
+            showCancelButton: false,
+            confirmButtonText: "OK",
+          });
+          window.location.href = "/user/auth/login";
+          return;
+        }
+      };
+      if (token) {
+        fetchMomData(uid!,token!);
+      } else {
+        console.error("Invalid or missing parameter: id");
+      }
+      setLoading(false);
+  
+      fetchData();
+    }, [token]);
+  
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-screen mt-[-160px] max-sm:mt-[-112px]">
+          <div className="loader"></div>
+        </div>
+      );
+    } else {
   return (
-    <div className="flex flex-col">
-      <header className="fixed top-0 left-0 w-full">
-        <Navbar />
-      </header>
-      <main className="mt-[120px]">
-        <div className="">
-          <div className="flex flex-col items-center gap-[30px]">
-           
-              <div className="  flex-col justify-between h-full xl:hidden text-[20px] text-left max-xl:w-[770px]  max-sm:w-[324px]">
-                            <div className="flex flex-row justify-between ">
-                              <h1 className="font-bold">โปรไฟล์</h1>
-                             
-                            </div>
-                            <div className='flex flex-col gap-[40px] mt-[40px]'>
-                            <div className="flex flex-col gap-[24px] mx-auto w-[180px]">
-                              <Image
-                                src="/profilepicture.png"
-                                width={96}
-                                height={96}
-                                alt="profilepicture"
-                                className='mx-auto'
-                              ></Image>
-                              <h1 className="font-bold text-[16px] text-center">ชิณภัทร สุขทอง</h1>
-                              <ButtonComponents title="แก้ไขโปรไฟล์" textSize="text-[14px]" />
-                               
-                            </div>
+    <div className="">
+      <div className="flex flex-col items-center gap-[30px]">
+        <div className="  flex-col justify-between h-full xl:hidden text-[20px] text-left max-xl:w-[770px]  max-sm:w-[324px]">
+          <div className="flex flex-row justify-between ">
+            <h1 className="font-bold">โปรไฟล์</h1>
+          </div>
+          <div className="flex flex-col gap-[40px] mt-[40px]">
+            <div className="flex flex-col gap-[24px] mx-auto w-[180px]">
+              <Image
+                src={momData?.image_link || ""}
+                width={96}
+                height={96}
+                alt="profilepicture"
+                className="mx-auto"
+              ></Image>
+              <h1 className="font-bold text-[16px] text-center">
+                {momData?.fname + " " + momData?.lname}
+              </h1>
             
-                        
-                            </div>
-                            <div className='mt-[40px]'>
-                              <h1 className="font-bold text-[16px] text-[#B36868] text-center">
-                                ออกจากระบบ
-                              </h1>
-                            </div>
-                          </div>
-          
+            </div>
+          </div>
+          <div className="mt-[40px]">
+            <h1 className="font-bold text-[16px] text-[#B36868] text-center">
+              ออกจากระบบ
+            </h1>
           </div>
         </div>
-      </main>
+      </div>
     </div>
-                    
-  )
-}
+  );
+};}
 
-export default page
+export default page;

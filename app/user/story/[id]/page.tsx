@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
-import Navbar from "../../component/navbar";
 import { Card } from "../../component/card";
 import { useParams } from "next/navigation";
 import { VideoClip } from "@/app/interface";
 import Image from "next/image";
+import Swal from "sweetalert2";
+import "@/app/user/component/css/loader.css";
 
 const page = () => {
   const param = useParams();
@@ -31,7 +32,7 @@ const page = () => {
     }
   };
 
-  const fetchVideo = async (id: String,token: string) => {
+  const fetchVideo = async (id: String, token: string) => {
     try {
       const res = await fetch(`http://localhost:5000/video/${id}`, {
         headers: {
@@ -70,7 +71,7 @@ const page = () => {
     return `${day} ${month} ${year}`;
   };
 
-  const postLike = async (id: String,token:string) => {
+  const postLike = async (id: String, token: string) => {
     try {
       const formData = new FormData();
       formData.append("videoid", id.toString());
@@ -93,7 +94,7 @@ const page = () => {
     }
   };
 
-  const deleteLike = async (id: String,token: string) => {
+  const deleteLike = async (id: String, token: string) => {
     try {
       const res = await fetch(`http://localhost:5000/like/${id}`, {
         method: "DELETE",
@@ -112,7 +113,7 @@ const page = () => {
     }
   };
 
-  const checkLike = async (id: String,token:string) => {
+  const checkLike = async (id: String, token: string) => {
     try {
       const res = await fetch(`http://localhost:5000/like/${id}`, {
         headers: {
@@ -127,8 +128,6 @@ const page = () => {
         setLike(false);
         console.error("Failed to check like status");
         return false;
-       
-        
       }
     } catch (error) {
       console.error("An error occurred while checking like status:", error);
@@ -139,13 +138,6 @@ const page = () => {
   const formattedDate = formatDate(video?.publish_at || "");
 
   useEffect(() => {
-   
-    if (param.id) {
-      fetchVideo(param.id.toString(),token || "");
-      fetchVideos(token || "");
-    }
-  }, []);
-  useEffect(() => {
     const interval = setInterval(() => {
       checkLike(video?.id || "", token || "");
     }, 1000); // 1 minute interval
@@ -154,37 +146,68 @@ const page = () => {
   }, [like]);
   console.log(like);
 
-  return (
-    <div className="flex flex-col">
-      <header className="fixed top-0 left-0 w-full z-50">
-        <Navbar />
-      </header>
-      <main className="mt-[160px] max-sm:mt-[112px]">
-        <div className="flex flex-col items-center gap-[30px]">
-          <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px]">
-            <div className="flex flex-row gap-[31px] max-xl:flex-col">
-              <div className="w-4/5 flex flex-col gap-[36px] max-xl:w-full">
-                <h1 className="font-bold text-[20px] text-left ">
-                  เรื่องเล่าของคุณแม่
-                </h1>
-                <div className="relative z-0">
-                  <div className="absolute top-0 left-0 w-full h-full bg-transparent pointer-events-none"></div>
-                  <video
-                    className="relative z-0 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px]"
-                    width="100%"
-                    controls
-                  >
-                    <source src={video?.link} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <div className="flex flex-col gap-[16px] mt-[20px">
-                  <div className="flex justify-between ">
-                 
-                   <h1 className="text-[20px] font-bold">{video?.title} </h1>
-                   <div className="flex hover:bg-[#f2f2f2] gap-4 p-1 rounded-[4px]">
+  const [loading, setLoading] = React.useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("key");
+      if (!token) {
+        console.error("Token is missing. Please log in.");
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+        });
+        window.location.href = "/user/auth/login";
+        return;
+      }
+    };
+    if (token) {
+      if (param.id) {
+        fetchVideo(param.id.toString(), token || "");
+        fetchVideos(token || "");
+      }
+    } else {
+      console.error("Invalid or missing parameter: id");
+    }
+    setLoading(false);
+
+    fetchData();
+  }, [token]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen mt-[-160px] max-sm:mt-[-112px]">
+        <div className="loader"></div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="flex flex-col items-center gap-[30px]">
+        <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px]">
+          <div className="flex flex-row gap-[31px] max-xl:flex-col">
+            <div className="w-4/5 flex flex-col gap-[36px] max-xl:w-full">
+              <h1 className="font-bold text-[20px] text-left ">
+                เรื่องเล่าของคุณแม่
+              </h1>
+              <div className="relative z-0">
+                <div className="absolute top-0 left-0 w-full h-full bg-transparent pointer-events-none"></div>
+                <video
+                  className="relative z-0 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px]"
+                  width="100%"
+                  controls
+                >
+                  <source src={video?.link} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div className="flex flex-col gap-[16px] mt-[20px">
+                <div className="flex justify-between ">
+                  <h1 className="text-[20px] font-bold">{video?.title} </h1>
+                  <div className="flex hover:bg-[#f2f2f2] gap-4 p-1 rounded-[4px]">
                     <div className="flex  gap-2">
-                        <Image
+                      <Image
                         src={like ? "/mdi_like.svg" : "/like_default.svg"}
                         alt="like"
                         width={24}
@@ -192,72 +215,67 @@ const page = () => {
                         className="inline-block mr-2 cursor-pointer"
                         onClick={() => {
                           if (like) {
-                          deleteLike(video?.id || "", token || "");
-                          setLike(false);
+                            deleteLike(video?.id || "", token || "");
+                            setLike(false);
                           } else {
-                          postLike(video?.id || "", token || "");
-                          setLike(true);
+                            postLike(video?.id || "", token || "");
+                            setLike(true);
                           }
                         }}
-                        ></Image>
+                      ></Image>
                       <div className="my-auto">{video?.count_like}</div>
                     </div>
-                   </div>
                   </div>
-                 
-                  <div>
-                  <div>
-                    {video?.view} views
-                  </div>
-                    {isToggle ? (
-                      <div id="toggleContent">
-                        <h2 className="text-[16px]">{video?.description}</h2>
-                      </div>
-                    ) : (
-                      <p className="text-[16px] line-clamp-1" id="main">
-                        {video?.description}
-                      </p>
-                    )}
-                    <button
-                      className="font-bold"
-                      onClick={() => setIsToggle(!isToggle)}
-                      id="toggleButton"
-                    >
-                      {isToggle ? "ซ่อน" : "เพิ่มเติม"}
-                    </button>
-                  </div>
+                </div>
 
-                  <h2 className="text-[16px]">{formattedDate}</h2>
+                <div>
+                  <div>{video?.view} views</div>
+                  {isToggle ? (
+                    <div id="toggleContent">
+                      <h2 className="text-[16px]">{video?.description}</h2>
+                    </div>
+                  ) : (
+                    <p className="text-[16px] line-clamp-1" id="main">
+                      {video?.description}
+                    </p>
+                  )}
+                  <button
+                    className="font-bold"
+                    onClick={() => setIsToggle(!isToggle)}
+                    id="toggleButton"
+                  >
+                    {isToggle ? "ซ่อน" : "เพิ่มเติม"}
+                  </button>
                 </div>
+
+                <h2 className="text-[16px]">{formattedDate}</h2>
               </div>
-              <div className="w-1/5 flex flex-col gap-[36px] max-xl:w-full ">
-                <h1 className="font-bold text-[20px] text-left ">
-                  วีดิโออื่นๆ
-                </h1>
-                <div className="grid grid-cols-1 gap-y-[20px] max-xl:hidden max-sm:grid max-sm:grid-cols-1">
-                    {videos.slice(0, 7).map((video: VideoClip, index: number) => (
-                    <Card key={index} {...video} />
-                    ))}
-                </div>
-                <div className="hidden max-xl:flex max-xl:overflow-x-auto max-xl:gap-[20px] max-sm:hidden max-xl:snap-x max-xl:snap-mandatory px-4">
-                  <div className="flex space-x-5">
-                    {videos.slice(0, 7).map((video: VideoClip, index: number) => (
-                      <div
+            </div>
+            <div className="w-1/5 flex flex-col gap-[36px] max-xl:w-full ">
+              <h1 className="font-bold text-[20px] text-left ">วีดิโออื่นๆ</h1>
+              <div className="grid grid-cols-1 gap-y-[20px] max-xl:hidden max-sm:grid max-sm:grid-cols-1">
+                {videos.slice(0, 7).map((video: VideoClip, index: number) => (
+                  <Card key={index} {...video} />
+                ))}
+              </div>
+              <div className="hidden max-xl:flex max-xl:overflow-x-auto max-xl:gap-[20px] max-sm:hidden max-xl:snap-x max-xl:snap-mandatory px-4">
+                <div className="flex space-x-5">
+                  {videos.slice(0, 7).map((video: VideoClip, index: number) => (
+                    <div
                       key={index}
                       className="w-[calc(100%/20px)] flex-shrink-0 snap-start"
-                      >
+                    >
                       <Card {...video} />
-                      </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </main>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default page;

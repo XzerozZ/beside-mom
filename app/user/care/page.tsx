@@ -1,10 +1,10 @@
 "use client";
 import React, { use, useEffect } from "react";
-import Navbar from "../component/navbar";
 import Image from "next/image";
-import { FaAngleDown } from "react-icons/fa6";
-import { Card, CardCare } from "../component/card";
+import { CardCare } from "../component/card";
 import { CareItem } from "@/app/interface";
+import "@/app/user/component/css/loader.css";
+import Swal from "sweetalert2";
 
 const page = () => {
   const token = localStorage.getItem("key");
@@ -25,90 +25,92 @@ const page = () => {
       console.error("Error fetching quiz data:", error);
     }
   };
-  useEffect(() => {
-    fetchCare(token!);
-  }, []);
 
-  return (
-    <div className="flex flex-col">
-      <header className="fixed top-0 left-0 w-full">
-        <Navbar />
-      </header>
-      <main className="mt-[112px] max-sm:mt-[112px]">
-        <div className="">
-          <div className="flex flex-col items-center gap-[30px]">
-            <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
-              การดูแลทารก
-            </h1>
-            <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[358px] flex flex-col gap-[40px]">
-              <div className="flex flex-row gap-[20px] bg-[#FFF4F4] p-[67px]">
-                <div className="flex flex-col gap-[32px]  w-2/5 justify-center">
-                  <h1 className="text-right font-bold text-[20px] text-[#B36868]">
-                    แนะนำ
-                  </h1>
-                  <div className="flex flex-col gap-[20px]">
-                    <h2 className="text-right font-bold text-[20px]">
-                      {care?.[0]?.title}
-                    </h2>
-                    <h3 className="text-right text-[16px] ">
-                     {care?.[0]?.desc}
-                    </h3>
-                    <div className="flex flex-row justify-end gap-[5px]">
-                      <h1 className="text-[14px] font-bold">ดูเพิ่มเติม</h1>
-                      <Image
-                        src="/nexticon.svg"
-                        alt="next"
-                        width={8}
-                        height={20}
-                      ></Image>
-                    </div>
+  const [loading, setLoading] = React.useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("key");
+      if (!token) {
+        console.error("Token is missing. Please log in.");
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+        });
+        window.location.href = "/user/auth/login";
+        return;
+      }
+    };
+    if (token) {
+      fetchCare(token);
+    } else {
+      console.error("Invalid or missing parameter: id");
+    }
+    setLoading(false);
+
+    fetchData();
+  }, [token]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen mt-[-160px] max-sm:mt-[-112px]">
+        <div className="loader"></div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="">
+        <div className="flex flex-col items-center gap-[30px]">
+          <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
+            การดูแลทารก
+          </h1>
+          <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[358px] flex flex-col gap-[40px]">
+            <div className="flex flex-row gap-[20px] bg-[#FFF4F4] p-[67px] max-sm:hidden">
+              <div className="flex flex-col gap-[32px]  w-2/5 justify-center">
+                <h1 className="text-right font-bold text-[20px] text-[#B36868]">
+                  แนะนำ
+                </h1>
+                <div className="flex flex-col gap-[20px]">
+                  <h2 className="text-right font-bold text-[20px]">
+                    {care?.[0]?.title}
+                  </h2>
+                  <h3 className="text-right text-[16px] ">{care?.[0]?.desc}</h3>
+                  <div className="flex flex-row justify-end gap-[5px]">
+                    <h1 className="text-[14px] font-bold">ดูเพิ่มเติม</h1>
+                    <Image
+                      src="/nexticon.svg"
+                      alt="next"
+                      width={8}
+                      height={20}
+                    ></Image>
                   </div>
                 </div>
-                <div className="w-3/5">
-                  <Image
-                    src={care?.[0]?.banner || "/baby.png"}
-                    alt="baby"
-                    layout="responsive"
-                    width={500}
-                    height={500}
-                  ></Image>
-                </div>
               </div>
-             
-              <div className="grid grid-cols-4 gap-[40px] max-xl:hidden max-sm:grid max-sm:grid-cols-1">
-                {care?.map((item) => (
-                  <div key={item.c_id} className="flex flex-col gap-[20px]">
-                    <CardCare
-                      {...item}
-                    />
-                  </div>
-                ))}
+              <div className="w-3/5">
+                <Image
+                  src={care?.[0]?.banner || "/baby.png"}
+                  alt="baby"
+                  layout="responsive"
+                  width={500}
+                  height={500}
+                ></Image>
               </div>
-              {/* <div className="flex justify-between mt-[40px]">
-                <button className="px-[16px] py-[8px] text-white">
-                 <Image src="/left.svg" alt="left" width={8} height={8}></Image>
-                </button>
-                <div>
-                <button className="px-[16px] py-[8px] text-[16px] text-[#4D4D4D] rounded-[4px]  border-b">
-                  1
-                </button>
-                <button className="px-[16px] py-[8px] text-[16px] text-[#999999] rounded-[4px] mx-[4px]">
-                  2
-                </button>
-                <button className="px-[16px] py-[8px] text-[16px] text-[#999999] rounded-[4px] mx-[4px]">
-                  3
-                </button>
+            </div>
+
+            <div className="grid grid-cols-4 gap-[40px] max-xl:grid-cols-3 max-sm:grid max-sm:grid-cols-1">
+              {care?.map((item) => (
+                <div key={item.c_id} className="flex flex-col gap-[20px]">
+                  <CardCare {...item} />
                 </div>
-                <button className="px-[16px] py-[8px] text-white">
-                 <Image src="/right.svg" alt="left" width={8} height={8}></Image>
-                </button>
-              </div> */}
+              ))}
             </div>
           </div>
         </div>
-      </main>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default page;

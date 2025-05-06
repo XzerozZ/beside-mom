@@ -1,18 +1,21 @@
 "use client";
 import React, { useEffect } from "react";
-import Navbar from "../component/navbar";
 import CalendarCard from "../component/calendarcard";
 import { Appointment } from "@/app/interface";
+import Swal from "sweetalert2";
+import "@/app/user/component/css/loader.css";
+import { ButtonComponents } from "../component/button";
 
 const page = () => {
   const [calendar, setCalendar] = React.useState<Appointment[]>();
-  const fetchCalendar = async () => {
+  const token = localStorage.getItem("key");
+  const fetchCalendar = async (token: string) => {
     try {
       const res = await fetch(
         `http://localhost:5000/appoint/history/progress`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNmFjMDQ4OGQtYWFiMS00YjhiLWJhYzUtMTgxNjg2M2JhOWYwIn0.IOe-r5myKw2a3SnU-1AVNWjqtUg0Eqgs_TCZPHXbt1U`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -26,43 +29,76 @@ const page = () => {
       console.error("An error occurred while fetching kid data:", error);
     }
   };
-  console.log(calendar);
+
+  const [loading, setLoading] = React.useState<boolean>(true);
+
   useEffect(() => {
-    fetchCalendar();
-  }, []);
+    const fetchData = async () => {
+      const token = localStorage.getItem("key");
+      if (!token) {
+        console.error("Token is missing. Please log in.");
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+        });
+        window.location.href = "/user/auth/login";
+        return;
+      }
+    };
+    if (token) {
+      fetchCalendar(token!);
+    } else {
+      console.error("Invalid or missing parameter: id");
+    }
+    setLoading(false);
 
-  // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4iLCJ1c2VyX2lkIjoiNjY4ZDZmZmItZWI5OC00MjdiLWIwNDctOTBkZWM4NGFjNGY1In0.IyCYJqW1TShqVKqpSG9K1_ggape5U7yexNH6SWqnNRs
-  return (
-    <div className="flex flex-col">
-      <header className="fixed top-0 left-0 w-full">
-        <Navbar />
-      </header>
-      <main className="mt-[112px] max-sm:mt-[112px]">
-        <div className="">
-          <div className="flex flex-col items-center gap-[30px]">
-            <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
-              การตรวจตามนัด
-            </h1>
+    fetchData();
+  }, [token]);
 
-            <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
-              <h2 className="font-bold text-[16px] text-left">
-                การนัดหมายครั้งถัดไป
-              </h2>
-              <div className="max-sm:hidden">
-                {calendar?.map((appointment) => (
-                  <CalendarCard key={appointment.id} {...appointment} />
-                ))}
-              </div>
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen mt-[-160px] max-sm:mt-[-112px]">
+        <div className="loader"></div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="">
+        <div className="flex flex-col items-center gap-[30px]">
+        <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
+          <div className="flex  justify-between">
+            <h1 className="font-bold text-[20px] text-left">การตรวจตามนัด</h1>
+            <div className="w-[180px] max-sm:w-[120px]">
+              <ButtonComponents
+                title="ดูประวัติการนัดหมาย"
+                onClick={() => {
+                  window.location.href = "/user/calendar/history";
+                }}
+              />
+            </div>
+          </div>
+            </div>
+          <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
+            <h2 className="font-bold text-[16px] text-left my">
+              การนัดหมายครั้งถัดไป
+            </h2>
 
-              <div className="sm:hidden">
-                {calendar && calendar[0] && <CalendarCard {...calendar[0]} />}
-              </div>
+            <div className="max-sm:hidden">
+              {calendar?.map((appointment) => (
+                <CalendarCard key={appointment.id} {...appointment} />
+              ))}
+            </div>
+
+            <div className="sm:hidden">
+              {calendar && calendar[0] && <CalendarCard {...calendar[0]} />}
             </div>
           </div>
         </div>
-      </main>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default page;
