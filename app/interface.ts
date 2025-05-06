@@ -154,22 +154,6 @@ export interface WeightGrowth {
     updated_at: string;
   }
 
-  export interface Asset {
-    asset_id: string;
-    link: string;
-  }
-  
-  export interface CareItem {
-    c_id: string;
-    type: string;
-    title: string;
-    desc: string;
-    banner: string;
-    user_id: string;
-    assets: Asset[];
-    created_at: string; // ISO 8601 date string
-    updated_at: string; // ISO 8601 date string
-  }
 
 export  interface QuizCategory {
     ID: number;
@@ -270,4 +254,21 @@ export  interface QuizCategory {
     months: number;      // age in months
     created_at: string;  // ISO 8601 date string
     updated_at: string;  // ISO 8601 date string
+  }
+
+  export interface Asset {
+    asset_id: string;
+    link: string;
+  }
+  
+  export interface CareItem {
+    c_id: string;
+    type: string;
+    title: string;
+    desc: string;
+    banner: string;
+    user_id: string;
+    assets: Asset[];
+    created_at: string;
+    updated_at: string;
   }

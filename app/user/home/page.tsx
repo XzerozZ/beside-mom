@@ -38,34 +38,8 @@ const home = () => {
               </h3>
               <h3>เพื่อลดความเสี่ยงในการเจ็บครรภ์คลอดก่อนกำหนด</h3>
             </div>
-            <div className="w-[240px] mt-[12px] max-xl:hidden">
-              <ButtonComponents2
-                title="เริ่มต้นกรอกข้อมูลทารก"
-                textSize="text-[20px]"
-              />
-            </div>
-            <div className="w-[240px] mt-[12px] xl:hidden">
-              <ButtonComponents2
-                title="เริ่มต้นกรอกข้อมูลทารก"
-                textSize="text-[16px]"
-              />
-            </div>
-            <div className="mt-[24px] flex flex-row gap-[29px]">
-              <div className="flex flex-row gap-[12px]">
-                <div className="w-[21px]  rounded-[4px] bg-[#B36868]"></div>
-                <div className="h-[67px]">
-                  <h2 className="xl:text-[32px] text-[24px] font-bold ">20 K</h2>
-                  <h3 className="xl:text-[20px] text-[16px]">User</h3>
-                </div>
-              </div>
-              <div className="flex flex-row gap-[12px]">
-                <div className="w-[21px] rounded-[4px] bg-[#FF9494]"></div>
-                <div>
-                  <h2 className="xl:text-[32px] text-[24px] font-bold ">20 K</h2>
-                  <h3 className="xl:text-[20px] text-[16px]">Download</h3>
-                </div>
-              </div>
-            </div>
+         
+           
           </div>
         </div>
       </main>

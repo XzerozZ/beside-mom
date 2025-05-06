@@ -10,7 +10,7 @@ const Navbar = () => {
       <div className="flex flex-row justify-between h-[80px] w-[1312px] items-center max-xl:w-[770px] max-sm:w-[324px]">
       <div className="flex flex-row gap-4 items-center">
         <Image src="/logo.png" width={48} height={48} alt="Logor"></Image>
-        <h1 className="text-[20px] font-bold text-[#4D4D4D]">Beside Mom</h1>
+        <a href="/user/home" className="text-[20px] font-bold text-[#4D4D4D]">Beside Mom</a>
       </div>
       <div className="max-xl:hidden">
         <ul className="flex flex-row gap-[44px]">
