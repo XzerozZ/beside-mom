@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import {
   TextField,
   Button,
-  Select,
-  MenuItem,
   Box,
   InputAdornment,
   Typography,
@@ -23,7 +21,7 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
   title,
   searchTerm,
   onSearchChange,
-  onAddClick,
+
 }) => {
   const [showBox, setShowBox] = useState(false);
   const router = useRouter();

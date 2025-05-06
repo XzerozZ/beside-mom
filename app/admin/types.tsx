@@ -5,7 +5,33 @@ export interface MomInfo {
   firstName?: string;
   lastName?: string;
 }
+export interface MomRawItem {
+  u_id: string;
+  email: string;
+  fname: string;
+  lname: string;
+}
+export interface MomMappedItem {
+  id: string;
+  email: string;
+  name: string;
+}
+export interface ContentBabycareItem {
+  c_id: string;
+  title: string;
+  updated_at: string;
+  type: string;
+  banner: string;
+}
 
+
+export interface MappedBabycareItem {
+  id: string;
+  title: string;
+  date: string;
+  type: string;
+  thumbnail: string;
+}
 export interface BabyInfo {
   id: string;
   img: string;
@@ -24,7 +50,7 @@ export interface BabyInfo {
 export interface GrowthData {
   date: string;
   weight: number;
-  height: number;
+  length: number;
 }
 
 export interface Appointment {
@@ -41,3 +67,11 @@ export interface Appointment {
   location: string;
   info: string;
 }
+
+export   const doctors = [
+  { id: "1", name: "นพ. สมชาย ใจดี" },
+  { id: "2", name: "พญ. สมหญิง รักษาดี" },
+  { id: "3", name: "นพ. วิชัย สุขภาพดี" },
+  { id: "4", name: "พญ. นงนุช ชำนาญการ" },
+  { id: "5", name: "ชิณภัทร สุขทอง" },
+];

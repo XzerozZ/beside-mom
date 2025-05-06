@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import type { SelectChangeEvent } from "@mui/material/Select";
+import { useState, useEffect } from "react";
 import {
   Container,
   Table,
@@ -10,77 +10,46 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
-  Button,
-  TextField,
-  Box,
-  TableSortLabel,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { useRouter, useSearchParams } from "next/navigation";
 import TopBarSection from "../components/Topbar";
-
+import { doctors } from "../types";
 type AppointmentStatus = "สำเร็จ" | "ยกเลิก" | "เลื่อน" | "นัดแล้ว";
 
-const appointments: {
-  id: string;
+const statusMap: Record<number, AppointmentStatus> = {
+  1: "นัดแล้ว",
+  2: "สำเร็จ",
+  3: "ยกเลิก",
+  4: "เลื่อน",
+};
+
+const statusColors = {
+  สำเร็จ: "text-[#409261]",
+  ยกเลิก: "text-gray-400",
+  เลื่อน: "text-[#9494FF]",
+  นัดแล้ว: "text-primary5",
+};
+
+const statusDots = {
+  สำเร็จ: "bg-[#409261]",
+  ยกเลิก: "bg-gray-400",
+  เลื่อน: "bg-[#9494FF]",
+  นัดแล้ว: "bg-primary5",
+};
+
+interface Appointment {
+  a_id: string;
+  user_id: string;
   name: string;
   date: string;
   time: string;
   doctor: string;
   status: AppointmentStatus;
-}[] = [
-  {
-    id: "65090500435",
-    name: "ณัฐฐ อัมพรชัยจรัส",
-    date: "02/25/2025",
-    time: "13:00",
-    doctor: "ณัฐฐนิษา อัมพรชัยจรัส",
-    status: "สำเร็จ",
-  },
-  {
-    id: "65090500436",
-    name: "นิษา อัมพรชัยจรัส",
-    date: "02/24/2025",
-    time: "13:00",
-    doctor: "ณัฐฐนิษา อัมพรชัยจรัส",
-    status: "ยกเลิก",
-  },
-  {
-    id: "65090500437",
-    name: "ษา อัมพรชัยจรัส",
-    date: "02/23/2025",
-    time: "13:00",
-    doctor: "ณัฐฐนิษา อัมพรชัยจรัส",
-    status: "เลื่อน",
-  },
-  {
-    id: "65090500438",
-    name: "ณัฐฐนิ อัมพรชัยจรัส",
-    date: "02/22/2025",
-    time: "13:00",
-    doctor: "ณัฐฐนิษา อัมพรชัยจรัส",
-    status: "นัดแล้ว",
-  },
-];
-
-const statusColors = {
-  สำเร็จ: "text-green-500",
-  ยกเลิก: "text-gray-400",
-  เลื่อน: "text-purple-400",
-  นัดแล้ว: "text-red-500",
-};
-
-const statusDots = {
-  สำเร็จ: "bg-green-500",
-  ยกเลิก: "bg-gray-400",
-  เลื่อน: "bg-purple-400",
-  นัดแล้ว: "bg-red-500",
-};
+}
 
 export default function AppointmentPage() {
   const searchParams = useSearchParams();
@@ -88,27 +57,71 @@ export default function AppointmentPage() {
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [selectedDoctor, setSelectedDoctor] = useState<string>("");
   const [doctorDropdownOpen, setDoctorDropdownOpen] = useState(false);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof (typeof appointments)[0];
+    key: keyof Appointment;
     direction: "asc" | "desc";
   } | null>(null);
-  const doctors = [
-    { id: "1", name: "นพ. สมชาย ใจดี" },
-    { id: "2", name: "พญ. สมหญิง รักษาดี" },
-    { id: "3", name: "นพ. วิชัย สุขภาพดี" },
-    { id: "4", name: "พญ. นงนุช ชำนาญการ" },
-    { id: "5", name: "ณัฐฐนิษา อัมพรชัยจรัส" },
-  ];
+
+
 
   const router = useRouter();
+
+  // Fetch appointments from API
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("กรุณาเข้าสู่ระบบใหม่");
+          router.push("/user/auth/login");
+          return;
+        }
+        const apiUrl = process.env.NEXT_PUBLIC_api_appointment;
+        if (!apiUrl) throw new Error("API URL not defined");
+
+        const response = await fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("API error");
+        const data = await response.json();
+        if (data.status !== "Success") throw new Error(data.message || "Error");
+
+        // Map API data to Appointment[]
+        const mapped: Appointment[] = (data.result || []).map((item: any) => ({
+          a_id: item.id,
+          user_id: item.user_id,
+          name: item.name,
+          date: item.date ? new Date(item.date).toLocaleDateString("th-TH") : "",
+          time: item.start_time
+            ? new Date(item.start_time).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })
+            : "",
+          doctor: item.doctor,
+          status: statusMap[item.status as number] || "นัดแล้ว",
+        }));
+        setAppointments(mapped);
+      } catch (err: any) {
+        setError(err.message || "เกิดข้อผิดพลาดในการโหลดข้อมูล");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAppointments();
+  }, [router]);
 
   // Handle row selection/click
   const handleRowClick = (appointmentId: string) => {
     router.push(`/admin/appointment/${appointmentId}`);
   };
 
-  const handleSort = (key: keyof (typeof appointments)[0]) => {
+  const handleSort = (key: keyof Appointment) => {
     setSortConfig((prev) => {
       if (prev?.key === key) {
         return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
@@ -128,7 +141,7 @@ export default function AppointmentPage() {
 
   const filteredAppointments = sortedAppointments.filter(
     (appointment) =>
-      (appointment.id.includes(searchTerm) ||
+      (appointment.user_id.includes(searchTerm) ||
         appointment.name.includes(searchTerm) ||
         appointment.doctor.includes(searchTerm)) &&
       (selectedDoctor === "" || appointment.doctor === selectedDoctor)
@@ -141,32 +154,7 @@ export default function AppointmentPage() {
 
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "5") {
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="5"
+      <Sidebar selectedItem="5"
       />
       <div className="flex-1 p-6 h-full">
         <Container className="h-full">
@@ -177,191 +165,131 @@ export default function AppointmentPage() {
             onAddClick={() => console.log("Add appointment clicked")}
           />
 
-          <TableContainer className="h-full overflow-visible">
-            <Table className="h-full overflow-visible">
-              <TableHead className="h-full">
-                <TableRow className="h-full">
-                  <TableCell
-                    className="font-bold text-center cursor-pointer"
-                    onClick={() => handleSort("id")}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      ID
-                      <span className="w-4 h-4 inline-flex">
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
-                            stroke="#4D4D4D"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell
-                    className="font-bold text-center cursor-pointer"
-                    onClick={() => handleSort("name")}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      ชื่อ นามสกุล
-                      <span className="w-4 h-4 inline-flex">
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
-                            stroke="#4D4D4D"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell
-                    className="font-bold text-center cursor-pointer"
-                    onClick={() => handleSort("date")}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      วันที่
-                      <span className="w-4 h-4 inline-flex">
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
-                            stroke="#4D4D4D"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-bold text-center">เวลา</TableCell>
-
-                  <TableCell
-                    className="font-bold text-center cursor-pointer relative overflow-visible"
-                    onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      แพทย์
-                      <span className="w-4 h-4 inline-flex">
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
-                            stroke="#4D4D4D"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                    {doctorDropdownOpen && (
-                      <div className="absolute z-10 mt-2 right-0 min-w-[150px] bg-white shadow-lg rounded-md border border-gray-200">
-                        <div className="p-2">
-                          <div
-                            className={`px-4 py-2 cursor-pointer rounded-md hover:bg-gray-100 ${
-                              selectedDoctor === ""
-                                ? "bg-gray-100 font-medium"
-                                : ""
-                            }`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDoctorChange("");
-                            }}
-                          >
-                            ทั้งหมด
-                          </div>
-                          {doctors.map((doctor) => (
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <CircularProgress />
+            </div>
+          ) : (
+            <TableContainer className="h-full overflow-visible">
+              <Table className="h-full overflow-visible">
+                <TableHead className="h-full">
+                  <TableRow className="h-full">
+                    <TableCell
+                      className="font-bold text-center cursor-pointer"
+                      onClick={() => handleSort("user_id")}
+                    >
+                      <div className="flex items-center justify-center gap-1">
+                        ID
+                        {/* ...sort icon... */}
+                      </div>
+                    </TableCell>
+                    <TableCell
+                      className="font-bold text-center cursor-pointer"
+                      onClick={() => handleSort("name")}
+                    >
+                      <div className="flex items-center justify-center gap-1">
+                        ชื่อ นามสกุล
+                        {/* ...sort icon... */}
+                      </div>
+                    </TableCell>
+                    <TableCell
+                      className="font-bold text-center cursor-pointer"
+                      onClick={() => handleSort("date")}
+                    >
+                      <div className="flex items-center justify-center gap-1">
+                        วันที่
+                        {/* ...sort icon... */}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-bold text-center">เวลา</TableCell>
+                    <TableCell
+                      className="font-bold text-center cursor-pointer relative overflow-visible"
+                      onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
+                    >
+                      <div className="flex items-center justify-center gap-1">
+                        แพทย์
+                        {/* ...sort icon... */}
+                      </div>
+                      {doctorDropdownOpen && (
+                        <div className="absolute z-10 mt-2 right-0 min-w-[150px] bg-white shadow-lg rounded-md border border-gray-200">
+                          <div className="p-2">
                             <div
-                              key={doctor.id}
                               className={`px-4 py-2 cursor-pointer rounded-md hover:bg-gray-100 ${
-                                selectedDoctor === doctor.name
+                                selectedDoctor === ""
                                   ? "bg-gray-100 font-medium"
                                   : ""
                               }`}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDoctorChange(doctor.name);
+                                handleDoctorChange("");
                               }}
                             >
-                              {doctor.name}
+                              ทั้งหมด
                             </div>
-                          ))}
+                            {doctors.map((doctor) => (
+                              <div
+                                key={doctor.id}
+                                className={`px-4 py-2 cursor-pointer rounded-md hover:bg-gray-100 ${
+                                  selectedDoctor === doctor.name
+                                    ? "bg-gray-100 font-medium"
+                                    : ""
+                                }`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDoctorChange(doctor.name);
+                                }}
+                              >
+                                {doctor.name}
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </TableCell>
-
-                  <TableCell className="font-bold text-center">สถานะ</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredAppointments.map((appointment, index) => (
-                  <TableRow
-                    key={index}
-                    onClick={() => handleRowClick(appointment.id)}
-                    className="cursor-pointer"
-                  >
-                    <TableCell className="text-center">
-                      {appointment.id}
+                      )}
                     </TableCell>
-                    <TableCell className="text-center">
-                      {appointment.name}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {appointment.date}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {appointment.time}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {appointment.doctor}
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex gap-2 items-center justify-center">
-                        <span
-                          className={`w-3 h-3 rounded-full ${
-                            statusDots[appointment.status]
-                          }`}
-                        ></span>
-                        <span className={statusColors[appointment.status]}>
-                          {appointment.status}
-                        </span>
-                      </div>
-                    </TableCell>
+                    <TableCell className="font-bold text-center">สถานะ</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {filteredAppointments.map((appointment) => (
+                    <TableRow
+                      key={appointment.a_id}
+                      onClick={() => handleRowClick(appointment.user_id)}
+                      className="cursor-pointer"
+                    >
+                      <TableCell className="text-center">
+                        {appointment.user_id}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {appointment.name}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {appointment.date}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {appointment.time}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {appointment.doctor}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2 items-center justify-center">
+                          <span
+                            className={`w-3 h-3 rounded-full ${
+                              statusDots[appointment.status]
+                            }`}
+                          ></span>
+                          <span className={statusColors[appointment.status]}>
+                            {appointment.status}
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Container>
       </div>
     </div>

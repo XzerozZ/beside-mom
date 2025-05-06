@@ -1,22 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
-  Container,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+ 
   Box,
   Button,
   TextField,
-  Select,
-  MenuItem,
+
   FormLabel,
 } from "@mui/material";
 import Sidebar from "../../components/SideBarAdmin";
@@ -27,52 +18,54 @@ const AddFag: React.FC = () => {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
 
-  // State for storing multiple Q&A entries
-  const [qaList, setQaList] = useState<{ question: string; answer: string }[]>(
-    []
-  );
+
 
   // Function to add Q&A to the list
-  const handleAddQA = () => {
-    if (question.trim() !== "" && answer.trim() !== "") {
-      setQaList([...qaList, { question, answer }]);
+ 
+  const handleSubmit = async () => {
+    if (question.trim() === "" || answer.trim() === "") return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("กรุณาเข้าสู่ระบบใหม่");
+      router.push("/user/auth/login");
+      return;
+    }
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_api_question;
+      if (!apiUrl) throw new Error("API URL not defined");
+
+      const formData = new FormData();
+      formData.append("question", question);
+      formData.append("answer", answer);
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("API error");
+
+      alert("เพิ่มคำถามสำเร็จ");
       setQuestion("");
       setAnswer("");
+      router.push("/admin/faq");
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการเพิ่มคำถาม");
+      console.error(err);
     }
-  };
-
-  // Function to remove a Q&A entry
-  const handleDeleteQA = (index: number) => {
-    setQaList(qaList.filter((_, i) => i !== index));
   };
 
   return (
     <div className="flex bg-white ">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "4") {
-            // Navigate to other pages based on sidebar selection
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="4"
+      <Sidebar 
+      selectedItem="4"
       />
+     
       <div className="flex-1 p-6">
         <h1 className="text-neutral05 font-bold">เพิ่มข้อมูล</h1>
         <Box className="mt-8">
@@ -128,7 +121,7 @@ const AddFag: React.FC = () => {
             }}
             size="small"
             className="w-40"
-            onClick={handleAddQA}
+            onClick={handleSubmit}
           >
             เพิ่ม
           </Button>

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -9,7 +11,6 @@ import {
   Box,
   Typography,
   Grid,
-  Paper,
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -18,7 +19,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
-import { MomInfo, BabyInfo, GrowthData } from "@/app/admin/types";
+import { MomInfo, BabyInfo} from "@/app/admin/types";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 export default function MomInfoId() {
   const params = useParams();
@@ -36,53 +38,53 @@ export default function MomInfoId() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const momdata = {
-        id: params.id as string, // mock data
-        img: "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0",
-        firstName: "ณัฐฐนิษา",
-        lastName: "อัมพรชัยจรัส",
-        email: "lovely@gmail.com",
-      };
-      setMomInfo(momdata);
-      const babydata = [
-        {
-          id: "1",
-          img: "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg",
-          firstName: "อรดี",
-          lastName: "แสงทอง1",
-          nickname: "อร",
-          gender: "female",
-          birthDate: "2021-10-01",
-          bloodType: "O",
-          birthWeight: "18.6",
-          birthHeight: "50",
-          note: "เด็กเป็นปกติหลังคลอด",
-          growthData: [
-            { date: "2025-01-25", weight: 31.8, height: 63.5 },
-            { date: "2025-02-25", weight: 31.8, height: 63.5 },
-          ],
-        },
-        {
-          id: "2",
-          img: "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg",
-          firstName: "อรดี",
-          lastName: "แสงทอง2",
-          nickname: "อร",
-          gender: "female",
-          birthDate: "2021-10-01",
-          bloodType: "O",
-          birthWeight: "18.6",
-          birthHeight: "50",
-          note: "เด็กเป็นปกติหลังคลอด",
-          growthData: [
-            { date: "2025-01-25", weight: 31.8, height: 63.5 },
-            { date: "2025-02-25", weight: 31.8, height: 63.8 },
-          ],
-        },
-      ];
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_api_mominfo_personal}/${params.id}`,
+          {
+            cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+            },
+          }
+        );
+        if (!res.ok) throw new Error("Failed to fetch mom info");
+        const data = await res.json();
+        const mom = data.result;
+        setMomInfo({
+          id: mom.u_id,
+          img: mom.image_link,
+          firstName: mom.fname,
+          lastName: mom.lname,
+          email: mom.email,
+        });
 
-      setBabyInfo(babydata);
-      setSelectedBabyId(babydata[0].id); // Set the first baby as the default selected baby
+        const babydata = (mom.kids || []).map((kid: any) => ({
+          id: kid.u_id,
+          img: kid.image_link,
+          firstName: kid.fname,
+          lastName: kid.lname,
+          nickname: kid.uname,
+          gender: kid.sex === "ชาย" ? "male" : "female",
+          birthDate: kid.birth_date?.slice(0, 10) || "",
+          bloodType: kid.blood_type,
+          birthWeight: kid.weight?.toString() || "",
+          birthHeight: kid.length?.toString() || "",
+          note: kid.note,
+          growthData: (kid.growth || []).map((g: any) => ({
+            id: g.G_id,
+            date: g.created_at.slice(0, 10),
+            months: g.months,
+            weight: g.weight,
+            length: g.length,
+          })),
+        }));
+        setBabyInfo(babydata);
+        if (babydata.length > 0) setSelectedBabyId(babydata[0].id);
+      } catch (error) {
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        console.error("Error fetching mom info:", error);
+      }
     };
 
     fetchData();
@@ -92,34 +94,14 @@ export default function MomInfoId() {
     setSelectedBabyId(id);
   };
 
+  // Get selected baby's growth data for chart
+  const selectedBaby = babyInfo.find((b) => b.id === selectedBabyId);
+  const growthData = selectedBaby?.growthData || [];
+
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "0") {
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="1" // Keep this fixed since we're in the mom info section
+    <Sidebar 
+       selectedItem="1"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -193,7 +175,7 @@ export default function MomInfoId() {
                 ข้อมูลทารก
               </Typography>
               {babyInfo.length > 1 && (
-                <div className="flex gap-4">
+                <div className="flex gap-4 ">
                   {babyInfo.map((baby, index) => (
                     <button
                       key={baby.id}
@@ -208,21 +190,15 @@ export default function MomInfoId() {
                       ทารกคนที่ {index + 1}
                     </button>
                   ))}
-                  <button
-                    type="button"
-                    className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
-
-                    // onClick={() => handleBabyShelect()}
-                  >
-                    เพิ่มทารก
-                  </button>
+                  
                 </div>
               )}
+              
             </div>
             {selectedBabyId &&
               babyInfo
                 .filter((baby) => baby.id === selectedBabyId)
-                .map((baby, index) => (
+                .map((baby) => (
                   <Grid container spacing={3} key={baby.id}>
                     <Grid item xs={12} sm={2.4} className="relative">
                       <div className="relative w-44 h-44">
@@ -278,6 +254,7 @@ export default function MomInfoId() {
                         type="date"
                       />
                     </Grid>
+                    
                     <Grid item xs={12} sm={0.7}>
                       <FormLabel>เพศ</FormLabel>
                     </Grid>
@@ -360,7 +337,19 @@ export default function MomInfoId() {
                         rows={3}
                       />
                     </Grid>
-                  </Grid>
+                   
+                    <div style={{ display: "flex", justifyContent: "center", width: "100%" }} className="mt-4">
+                      <Button
+                        variant="contained"
+                        onClick={() => router.push(`/admin/mominfo/${momInfo.id}/evaluate/${baby.id}`)}
+                        sx={{ backgroundColor: "#B36868", "&:hover": { backgroundColor: "#a05555" } }}
+                      >
+                        แบบประเมินพัฒนาการ
+                      </Button>
+                    </div>
+                        </Grid>
+
+                 
                 ))}
           </Box>
           <Box sx={{ mt: 3 }}>
@@ -373,26 +362,17 @@ export default function MomInfoId() {
                 >
                   กราฟการเจริญเติบโตด้านน้ำหนัก
                 </Typography>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "200px",
-                    backgroundColor: "#f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mt: 2,
-                  }}
-                >
-                  <img
-                    src="https://via.placeholder.com/150"
-                    alt="Weight Growth Chart"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
+                <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <LineChart data={growthData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="months" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
+                      <YAxis label={{ value: "กก.", angle: -90, position: "insideLeft" }} />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="weight" name="น้ำหนัก (กก.)" stroke="#B36868" activeDot={{ r: 8 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </Box>
                 <TextField
                   fullWidth
@@ -411,26 +391,17 @@ export default function MomInfoId() {
                 >
                   กราฟการเจริญเติบโตด้านส่วนสูง
                 </Typography>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "200px",
-                    backgroundColor: "#f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mt: 2,
-                  }}
-                >
-                  <img
-                    src="https://via.placeholder.com/150"
-                    alt="Height Growth Chart"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
+                <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <LineChart data={growthData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="months" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
+                      <YAxis label={{ value: "ซม.", angle: -90, position: "insideLeft" }} />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="length" name="ส่วนสูง (ซม.)" stroke="#68A3B3" activeDot={{ r: 8 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </Box>
                 <TextField
                   fullWidth
@@ -480,8 +451,8 @@ export default function MomInfoId() {
                         <TextField
                           fullWidth
                           size="small"
-                          name="height"
-                          value={data.height}
+                          name="length"
+                          value={data.length}
                           disabled
                         />
                       </Grid>

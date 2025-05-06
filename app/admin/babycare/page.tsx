@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -9,19 +10,17 @@ import {
   CardContent,
   Box,
   Button,
-  TextField,
-  Select,
-  MenuItem,
   Grid,
   CardMedia,
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
+import { useEffect } from "react";
+import { ContentBabycareItem} from "../types";
 
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("all");
   const handleAddClick = () => {
     console.log("Add button clicked");
   };
@@ -29,85 +28,93 @@ const MomstoryPage: React.FC = () => {
     console.log("Edit button clicked", id);
     router.push(`/admin/babycare/edit/${id}/${type}`);
   };
-  const [data, setData] = useState([
-    {
-      id: 1,
-      type: "video",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-    {
-      id: 2,
-      type: "video",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-    {
-      id: 3,
-      type: "picture",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-    {
-      id: 4,
-      type: "picture",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-    {
-      id: 5,
-      type: "video",
-      url: "https://youtu.be/uefcQzHmA_Y?si=jWn5kCXoZcl5FQXP",
-      title: "ชื่อหัวข้อการดูแลทารก",
-      date: "12 มิถุนายน 2566",
-      thumbnail:
-        "https://th.bing.com/th/id/OIP.3WQYua7b8QwCrjyuBKy-kAHaEK?w=309&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-    },
-  ]);
+  type BabyCareItem = {
+    id: number;
+    title: string;
+    date: string;
+    type: string;
+    thumbnail: string;
+  };
+  const [data, setData] = useState<BabyCareItem[]>([]);
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const res = await fetch(process.env.NEXT_PUBLIC_api_babycare as string, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await res.json();
+          if (Array.isArray(data.result)) {
+            const result: ContentBabycareItem[] = data.result;
+            const mapped: BabyCareItem[] = result.map(item => ({
+              id: Number(item.c_id),
+              title: item.title,
+              date: item.updated_at,
+              type: item.type,
+              thumbnail: item.banner,
+            }));
+            setData(mapped);
+          }
+        } catch (error) {
+          console.log("Error fetching data:", error);
+          alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        } 
+      };
+      fetchData();
+    }, []);
+
+  
   const filteredData = data.filter(
     (item) =>
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.date.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("คุณต้องการลบข้อมูลนี้ใช่หรือไม่?")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("กรุณาเข้าสู่ระบบใหม่");
+        router.push('/user/auth/login');
+        return;
+      }
+
+      const apiUrl = `${process.env.NEXT_PUBLIC_api_babycare}/${id}`;
+      const response = await fetch(apiUrl, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.status !== "Success") {
+        throw new Error(result.message || "Failed to delete item");
+      }
+
+      setData(prev => prev.filter(item => item.id.toString() !== id));
+      alert("ลบข้อมูลสำเร็จ");
+    } catch (err) {
+      console.error("Error deleting item:", err);
+      alert("เกิดข้อผิดพลาดในการลบข้อมูล");
+    }
+  };
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "3") {
-            // Navigate to other pages based on sidebar selection
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="3"
+      <Sidebar 
+      selectedItem="3"
+      
       />
       <div className="flex-1 p-6">
         <Container>
@@ -121,11 +128,27 @@ const MomstoryPage: React.FC = () => {
             {filteredData.map((item) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                 <Card>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={item.thumbnail}
-                  />
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: 140,
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#f5f5f5",
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      image={item.thumbnail}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
                   <CardContent>
                     <Typography
                       variant="h6"
@@ -135,7 +158,10 @@ const MomstoryPage: React.FC = () => {
                       {item.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      {item.date}
+                     
+                      {item.date
+                          ? new Date(item.date).toLocaleDateString("th-TH")
+                          : ""}
                     </Typography>
                     <Box display="flex" justifyContent="space-between" mt={2}>
                       <Button
@@ -180,7 +206,7 @@ const MomstoryPage: React.FC = () => {
                             />
                           </svg>
                         }
-                        // onClick={() => handleDelete(data.id)}
+                        onClick={() => handleDelete(item.id.toString())}
                       >
                         ลบ
                       </Button>
@@ -197,3 +223,4 @@ const MomstoryPage: React.FC = () => {
 };
 
 export default MomstoryPage;
+

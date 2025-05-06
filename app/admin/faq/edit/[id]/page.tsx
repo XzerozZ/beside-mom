@@ -1,85 +1,89 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Container,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Box,
   Button,
   TextField,
-  Select,
-  MenuItem,
   FormLabel,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
 
-const AddFag: React.FC = () => {
+const EditFaq: React.FC = () => {
   const router = useRouter();
   const params = useParams();
-  const id = typeof params.id === "string" ? parseInt(params.id) - 1 : 0;
-  const mockData = [
-    {
-      id: 1,
-      question: "ทำไมลูกน้อยไม่ถ่ายอุจจาระ",
-      answer:
-        "สาเหตุของอาการท้องผูกในเด็ก 90% เกิดจากปัญหาพฤติกรรมของเด็ก เด็กมักมีพฤติกรรมการอั้นอุจจาระ ซึ่งเกิดจากการมีประสบการณ์ที่ไม่ดีกับการขับถ่าย อาจมีอาการเจ็บขณะขับถ่าย ซึ่งมักเกิดตามหลังจากการเจ็บป่วย หรือการดูแลเด็กที่มีการเปลี่ยนแปลงบางอย่าง เช่น การเปลี่ยนนมไปเป็นอาหารเสริม การเปลี่ยนพฤติกรรมจากเดิมที่เคยอยู่บ้าน เข้าสู่โรงเรียน อาจส่งผลให้เด็กมีพฤติกรรมการอั้นอุจจาระได้",
-    },
-  ];
+  const id = params.id as string;
 
-  // State for individual question and answer inputs
-  const [question, setQuestion] = useState(mockData[id]?.question ?? "");
-  const [answer, setAnswer] = useState(mockData[id]?.answer ?? "");
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // State for storing multiple Q&A entries
-  const [qaList, setQaList] = useState<{ question: string; answer: string }[]>(
-    []
-  );
+  // Fetch FAQ data by id
+  useEffect(() => {
+    const fetchFaq = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("กรุณาเข้าสู่ระบบใหม่");
+        router.push("/user/auth/login");
+        return;
+      }
+      try {
+        const apiUrl = `${process.env.NEXT_PUBLIC_api_question}/${id}`;
+        const response = await fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("API error");
+        const data = await response.json();
+        if (data.status !== "Success") throw new Error(data.message || "Error");
+        setQuestion(data.result.question);
+        setAnswer(data.result.answer);
+      } catch (err) {
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFaq();
+  }, [id, router]);
 
-  // Function to add Q&A to the list
-  const handleAddQA = () => {
-    if (question.trim() !== "" && answer.trim() !== "") {
-      setQaList([...qaList, { question, answer }]);
-      setQuestion("");
-      setAnswer("");
+  // Update FAQ
+  const handleUpdate = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("กรุณาเข้าสู่ระบบใหม่");
+      router.push("/user/auth/login");
+      return;
+    }
+    try {
+      const apiUrl = `${process.env.NEXT_PUBLIC_api_question}/${id}`;
+      const formData = new FormData();
+      formData.append("question", question);
+      formData.append("answer", answer);
+
+      const response = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      if (!response.ok) throw new Error("API error");
+      alert("แก้ไขข้อมูลสำเร็จ");
+      router.push("/admin/faq");
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการแก้ไขข้อมูล");
+      console.error(err);
     }
   };
 
-  // Function to remove a Q&A entry
-
   return (
     <div className="flex bg-white ">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "4") {
-            // Navigate to other pages based on sidebar selection
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="4"
+      <Sidebar 
+      selectedItem="4"
       />
       <div className="flex-1 p-6">
         <h1 className="text-neutral05 font-bold">เเก้ไขข้อมูล</h1>
@@ -91,10 +95,9 @@ const AddFag: React.FC = () => {
             size="small"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
+            disabled={loading}
           />
         </Box>
-
-        {/* Answer Input */}
         <Box className="mt-4">
           <FormLabel>คำตอบ</FormLabel>
           <TextField
@@ -105,10 +108,9 @@ const AddFag: React.FC = () => {
             maxRows={8}
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
+            disabled={loading}
           />
         </Box>
-
-        {/* Buttons */}
         <div className="flex justify-end mt-4">
           <Button
             variant="outlined"
@@ -122,10 +124,10 @@ const AddFag: React.FC = () => {
             onClick={() => {
               router.push("/admin/faq");
             }}
+            disabled={loading}
           >
             ยกเลิก
           </Button>
-
           <Button
             variant="contained"
             sx={{
@@ -134,9 +136,10 @@ const AddFag: React.FC = () => {
             }}
             size="small"
             className="w-40"
-            onClick={handleAddQA}
+            onClick={handleUpdate}
+            disabled={loading}
           >
-            เพิ่ม
+            บันทึก
           </Button>
         </div>
       </div>
@@ -144,4 +147,4 @@ const AddFag: React.FC = () => {
   );
 };
 
-export default AddFag;
+export default EditFaq;

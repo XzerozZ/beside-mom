@@ -11,15 +11,17 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+
   Box,
   Button,
-  TextField,
-  Select,
-  MenuItem,
+
+
+
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
+import { useEffect } from "react";
+import { MomMappedItem, MomRawItem } from "../types";
 
 interface MomData {
   id: string;
@@ -30,7 +32,7 @@ interface MomData {
 const AllMomInfoPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("all");
+
   const handleEdit = (id: string) => {
     router.push(`/admin/mominfo/${id}/edit`);
   };
@@ -38,21 +40,58 @@ const AllMomInfoPage: React.FC = () => {
     router.push(`/admin/mominfo/${id}`);
   };
 
-  const [momData, setMomData] = useState<MomData[]>([
-    {
-      id: "1",
-      email: "mom1@email.com",
-      name: "mom 1",
-    },
-    {
-      id: "2",
-      email: "mom2@email.com",
-      name: "mom 2",
-    },
-  ]);
+  const [momData, setMomData] = useState<MomData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMomData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(process.env.NEXT_PUBLIC_api_mominfo as string, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (Array.isArray(data.result)) {
+          const result: MomRawItem[] = data.result;
+          const mapped: MomMappedItem[] = result.map(item => ({
+            id: item.u_id,
+            email: item.email,
+            name: `${item.fname} ${item.lname}`,
+          }));
+          setMomData(mapped);
+        }
+      } catch (error) {
+        console.error("Error fetching mom data:", error);
+        // Optionally handle error, e.g., show notification
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMomData();
+  }, []);
 
   const handleDelete = (id: string) => {
     setMomData(momData.filter((mom) => mom.id !== id));
+    const token = localStorage.getItem("token");
+    fetch(`${process.env.NEXT_PUBLIC_api_mominfo}/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to delete mom info");
+        }
+      })
+      .catch((error) => {
+        // Optionally handle error, e.g., show notification
+        console.error(error);
+      });
   };
 
   const handleAddClick = () => {
@@ -103,31 +142,30 @@ const AllMomInfoPage: React.FC = () => {
   );
 
   return (
+    
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "1") {
-            // Navigate to other pages based on sidebar selection
-            switch (id) {
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
+      {loading && (
+      <Box
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          bgcolor: "rgba(255,255,255,0.7)",
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-        selectedItem="1" // Keep this fixed since we're in the mom info section
+      >
+        <Typography variant="h6" color="primary">
+          กำลังโหลดข้อมูล...
+        </Typography>
+      </Box>
+    )}
+    <Sidebar 
+      selectedItem="1"
       />
       <div className="flex-1 p-6">
         <Container>

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   FaRegCalendarAlt,
@@ -8,145 +9,153 @@ import {
   FaMapMarkerAlt,
   FaNotesMedical,
   FaUserMd,
-  FaBookMedical,
 } from "react-icons/fa";
 import {
   Container,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
   Button,
-  TextField,
-  Select,
-  MenuItem,
-  Card,
-  CardContent,
-  IconButton,
 } from "@mui/material";
 import TopBarSection from "../../components/Topbar";
 import Sidebar from "../../components/SideBarAdmin";
-import { Appointment } from "../../types";
+
+type AppointmentStatus = "สำเร็จ" | "ยกเลิก" | "เลื่อน" | "นัดแล้ว";
+const statusMap: Record<number, AppointmentStatus> = {
+  1: "นัดแล้ว",
+  2: "สำเร็จ",
+  3: "ยกเลิก",
+  4: "เลื่อน",
+};
+
+const statusColors = {
+  สำเร็จ: "text-[#409261]",
+  ยกเลิก: "text-gray-400",
+  เลื่อน: "text-[#9494FF]",
+  นัดแล้ว: "text-primary5",
+};
+
+const statusDots = {
+  สำเร็จ: "bg-[#409261]",
+  ยกเลิก: "bg-gray-400",
+  เลื่อน: "bg-[#9494FF]",
+  นัดแล้ว: "bg-primary5",
+};
+
+interface Appointment {
+  id: string;
+  momname: string;
+  topic: string;
+  date: string;
+  day: string;
+  daydate: string;
+  doctor: string;
+  status: AppointmentStatus;
+  number: string;
+  time: string;
+  location: string;
+  info: string;
+}
+
 const AppointmentsPage: React.FC = () => {
   const router = useRouter();
   const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("all");
-  const handleAddClick = () => {
-    console.log("Add appointment clicked");
-  };
-  const handleEdit = (id: number) => {
-    console.log("Edit appointment clicked", id);
-    router.push(`/admin/appointment/${id}/edit`);
-  };
-  const appointments: Appointment[] = [
-    {
-      id: 1,
-      momname: "ณัฐฐ อัมพรชัยจรัส",
-      topic: "ตรวจแผลผ่าคลอด",
-      date: "อังคารที่ 12 ธันวาคม 2566",
-      day: "อังคาร",
-      doctor: "นพ. สมชาย ใจดี",
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
      
-      status: "นัดแล้ว",
-      number: "12",
-      time: "01:00 PM",
-      location: "ชั้น 6 อาคารกปร.",
-      info: "เจาะเลือดก่อนพบแพทย์",
-    },
-    {
-      id: 2,
-      momname: "ณัฐฐ อัมพรชัยจรัส",
-      topic: "ตรวจแผลผ่าคลอด",
-      date: "ศุกร์ที่ 15 ธันวาคม 2566",
-      day: "ศุกร์",
-      doctor: "นพ. สมชาย ใจดี",
-     
-      status: "สำเร็จ",
-      number: "15",
-      time: "01:00 PM",
-      location: "ชั้น 6 อาคารกปร.",
-      info: "เจาะเลือดก่อนพบแพทย์",
-    },
-    {
-      id: 3,
-      momname: "ณัฐฐ อัมพรชัยจรัส",
-      topic: "ตรวจแผลผ่าคลอด",
-      date: "พุธที่ 17 มกราคม 2567",
-      day: "พุธ",
-      doctor: "นพ. สมชาย ใจดี",
-  
-      status: "ยกเลิก",
-      number: "17",
-      time: "01:00 PM",
-      location: "ชั้น 6 อาคารกปร.",
-      info: "เจาะเลือดก่อนพบแพทย์",
-    },
-    {
-      id: 4,
-      momname: "ณัฐฐ อัมพรชัยจรัส",
-      topic: "ตรวจแผลผ่าคลอด",
-      date: "ศุกร์ที่ 22 มกราคม 2567",
-      day: "ศุกร์",
-      doctor: "นพ. สมชาย ใจดี",
-  
-      status: "เลื่อน",
-      number: "22",
-      time: "01:00 PM",
-      location: "ชั้น 6 อาคารกปร.",
-      info: "เจาะเลือดก่อนพบแพทย์",
-    },
-  ];
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("กรุณาเข้าสู่ระบบใหม่");
+          router.push("/user/auth/login");
+          return;
+        }
+        const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/history/mom/${id}`;
+        const response = await fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("API error");
+        const data = await response.json();
+        if (data.status !== "Success") throw new Error(data.message || "Error");
+
+        // Map API data to Appointment[]
+        const mapped: Appointment[] = (data.result || []).map((item: any, idx: number) => ({
+          id: item.id,
+          momname: item.name,
+          topic: item.title || "-",
+          date: item.date
+            ? new Date(item.date).toLocaleDateString("th-TH", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+            : "",
+          day: item.date
+            ? new Date(item.date).toLocaleDateString("th-TH", { weekday: "long" })
+            : "",
+          daydate: item.date
+            ? new Date(item.date).toLocaleDateString("th-TH", { day: "2-digit" })  
+            : "",
+          doctor: item.doctor,
+          status: statusMap[item.status as number] || "นัดแล้ว",
+          number: (idx + 1).toString(),
+          time: item.start_time
+            ? new Date(item.start_time).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })
+            : "",
+          location: item.building || "-",
+          info: item.requirement || "-",
+        }));
+        setAppointments(mapped);
+      } catch (error) {
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลการนัดหมาย");
+        console.error(error);
+      } 
+    };
+    fetchAppointments();
+  }, [id, router]);
+
   const filteredAppointments = appointments.filter(
     (appointment) =>
       appointment.topic.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.doctor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-
       appointment.day.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appointment.info.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  // const groupedAppointments = appointments.reduce((acc, appointment) => {
-  //   const month = appointment.date.split(" ")[1];
-  //   if (!acc[month]) acc[month] = [];
-  //   acc[month].push(appointment);
-  //   return acc;
-  // }, {} as Record<string, Appointment[]>);
+
+  const handleEdit = (appointmentId: string) => {
+    router.push(`/admin/appointment/${appointmentId}/edit`);
+    
+  };
+
+  async function handleDelete(appointmentId: string): Promise<void> {
+    if (!window.confirm("คุณต้องการลบการนัดนี้ใช่หรือไม่?")) return;
+    try {
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("กรุณาเข้าสู่ระบบใหม่");
+        router.push("/user/auth/login");
+        return;
+      }
+      const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/${appointmentId}`;
+      const response = await fetch(apiUrl, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("ลบการนัดไม่สำเร็จ");
+      setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
+    } catch (error) {
+      alert("เกิดข้อผิดพลาดในการลบการนัด");
+      console.error(error);
+    } 
+  }
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-       
-            // Navigate to other pages based on sidebar selection
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          
-        }}
-        selectedItem="1" // Keep this fixed since we're in the mom info section
+     <Sidebar    
+      selectedItem="5"
       />
       <div className="flex-1 p-6">
         <Container>
@@ -154,38 +163,43 @@ const AppointmentsPage: React.FC = () => {
             title="การตรวจตามนัด"
             searchTerm={searchTerm}
             onSearchChange={(value) => setSearchTerm(value)}
-            onAddClick={handleAddClick}
+            onAddClick={() => {}}
           />
-          <div className="w-full flex mt-4 mb-4 justify-end">
-            <Button
-              size="medium"
-              variant="contained"
+            <div className="flex items-center mb-4 justify-end">
+              <Button
+              variant="outlined"
               sx={{
+                minWidth: 0,
+                padding: "6px 24px",
+                marginRight: "16px",
+                borderRadius: "8px",
+                color: "#fff",
+                borderColor: "#B36868",
                 backgroundColor: "#B36868",
-                "&:hover": { backgroundColor: "#965757" },
+                fontWeight: 600,
+                fontSize: "1rem",
+                textTransform: "none",
+                "&:hover": {
+                backgroundColor: "#965757",
+                borderColor: "#965757",
+                },
               }}
-              onClick={() =>
-                router.push(
-                  `/admin/appointment?search=${encodeURIComponent(
-                    appointments[0].momname
-                  )}`
-                )
-              }
-            >
-              ดูประวัตการนัด
-            </Button>
-          </div>
+              onClick={() => router.push(`/admin/appointment?search=${id}`)}
+              >
+              ดูประวัติการนัด
+              </Button>
+            </div>
           <div className="mt-4 space-y-4">
             {filteredAppointments.map((appointment) => (
               <div
                 key={appointment.id}
                 className="border rounded-lg p-4 flex items-start justify-between shadow-sm"
               >
-                <div className="flex items-center w-">
+                <div className="flex items-center">
                   <div className="text-primary5 p-4 rounded-lg text-center w-48">
                     <p className="font-semibold">{appointment.topic}</p>
                     <p className="text-lg py-4">{appointment.day}</p>
-                    <p className="text-4xl font-bold">{appointment.number}</p>
+                    <p className="text-4xl font-bold">{appointment.daydate}</p>
                   </div>
                   <div className="border-l border-gray-300 mx-4 h-20"></div>
                   <div className="flex-1 space-y-1">
@@ -202,8 +216,6 @@ const AppointmentsPage: React.FC = () => {
                       <FaUserMd />
                       {appointment.doctor}
                     </p>
-              
-
                     <p className="flex items-center gap-2 text-gray-700">
                       <FaNotesMedical /> {appointment.info}
                     </p>
@@ -213,52 +225,21 @@ const AppointmentsPage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <span
                       className={`w-3 h-3 rounded-full ${
-                        appointment.status === "สำเร็จ"
-                          ? "bg-[#409261]"
-                          : appointment.status === "ยกเลิก"
-                          ? "bg-gray-400"
-                          : appointment.status === "เลื่อน"
-                          ? "bg-[#9494FF]"
-                          : "bg-primary5"
+                        statusDots[appointment.status]
                       }`}
                     ></span>
-                    <p
-                      className={`${
-                        appointment.status === "สำเร็จ"
-                          ? "text-[#409261]"
-                          : appointment.status === "ยกเลิก"
-                          ? "text-gray-400"
-                          : appointment.status === "เลื่อน"
-                          ? "text-[#9494FF]"
-                          : "text-primary5"
-                      }`}
-                    >
+                    <p className={statusColors[appointment.status]}>
                       {appointment.status}
                     </p>
                   </div>
                 </div>
-
                 <div className="flex mt-6">
                   <Button
                     size="small"
                     variant="outlined"
                     sx={{ color: "#999999", borderColor: "#999999" }}
                     className="text-neutral05 mr-5 w-24"
-                    startIcon={
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M15.723 6.0692L14.8599 6.93226L13.0672 5.13949L13.9309 4.27637L13.9309 4.27631C13.9934 4.21382 14.0782 4.17871 14.1666 4.17871C14.2549 4.17871 14.3396 4.21375 14.4021 4.27614C14.4021 4.27616 14.4021 4.27617 14.4022 4.27619C14.4022 4.27623 14.4022 4.27627 14.4023 4.27631L15.7229 5.59781L15.723 5.59787C15.7855 5.66038 15.8206 5.74515 15.8206 5.83353C15.8206 5.92189 15.7855 6.00664 15.723 6.06915C15.723 6.06916 15.723 6.06918 15.723 6.0692ZM3.8291 16.1669V14.3748L11.3282 6.8789L13.1212 8.67187L5.62616 16.1669H3.8291ZM3.80475 14.3992L3.80508 14.3988C3.80497 14.3989 3.80486 14.399 3.80475 14.3992Z"
-                          stroke="#4D4D4D"
-                        />
-                      </svg>
-                    }
-                    onClick={() => handleEdit(Number(id))}
+                    onClick={() => handleEdit(appointment.id)}
                   >
                     แก้ไข
                   </Button>
@@ -267,21 +248,7 @@ const AppointmentsPage: React.FC = () => {
                     variant="outlined"
                     sx={{ color: "#999999", borderColor: "#999999" }}
                     className="text-neutral05 w-24"
-                    startIcon={
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12.9165 3.83333H15.3332V4.5H4.6665V3.83333H7.08317H7.29028L7.43672 3.68689L8.12361 3H11.8761L12.563 3.68689L12.7094 3.83333H12.9165ZM6.6665 17C6.02598 17 5.49984 16.4739 5.49984 15.8333V6.33333H14.4998V15.8333C14.4998 16.4739 13.9737 17 13.3332 17H6.6665Z"
-                          stroke="#4D4D4D"
-                        />
-                      </svg>
-                    }
-                    // onClick={() => handleDelete(data.id)}
+                    onClick={() => handleDelete(appointment.id)}
                   >
                     ลบ
                   </Button>

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -9,7 +11,6 @@ import {
   Box,
   Typography,
   Grid,
-  Paper,
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -19,6 +20,16 @@ import {
   MenuItem,
   IconButton,
 } from "@mui/material";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from "recharts";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { MomInfo, BabyInfo, GrowthData } from "@/app/admin/types";
 
@@ -38,55 +49,45 @@ export default function EditMomInfo() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const momdata = {
-        id: params.id as string,
-        img: "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0",
-        firstName: "ณัฐฐนิษา",
-        lastName: "อัมพรชัยจรัส",
-        email: "lovely@gmail.com",
-      };
-      setMomInfo(momdata);
-      const babydata = [
-        {
-          id: "1",
-          img: "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg",
-          firstName: "อรดี",
-          lastName: "แสงทอง1",
-          nickname: "อร",
-          gender: "female",
-          birthDate: "2021-10-01",
-          bloodType: "O",
-          birthWeight: "18.6",
-          birthHeight: "50",
-          note: "เด็กเป็นปกติหลังคลอด",
-          growthData: [
-            { date: "2025-01-25", weight: 31.8, height: 63.5 },
-            { date: "2025-02-25", weight: 31.8, height: 63.5 },
-          ],
-        },
-        {
-          id: "2",
-          img: "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg",
-          firstName: "อรดี",
-          lastName: "แสงทอง2",
-          nickname: "อร",
-          gender: "female",
-          birthDate: "2021-10-01",
-          bloodType: "O",
-          birthWeight: "18.6",
-          birthHeight: "50",
-          note: "เด็กเป็นปกติหลังคลอด",
-          growthData: [
-            { date: "2025-01-25", weight: 31.8, height: 63.5 },
-            { date: "2025-02-25", weight: 31.8, height: 63.8 },
-          ],
-        },
-      ];
-
-      setBabyInfo(babydata);
-      setSelectedBabyId(babydata[0].id); // Set the first baby as the default selected baby
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const apiUrl = `${process.env.NEXT_PUBLIC_api_mominfo_personal}/${params.id}`;
+        const res = await fetch(apiUrl, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (data?.result) {
+          setMomInfo({
+            id: data.result.u_id,
+            img: data.result.image_link,
+            firstName: data.result.fname,
+            lastName: data.result.lname,
+            email: data.result.email,
+          });
+          setBabyInfo(
+            (data.result.kids || []).map((kid: any) => ({
+              id: kid.u_id,
+              img: kid.image_link,
+              firstName: kid.fname,
+              lastName: kid.lname,
+              nickname: kid.uname,
+              gender: kid.sex === "ชาย" ? "male" : kid.sex === "หญิง" ? "female" : kid.sex,
+              birthDate: kid.birth_date ? kid.birth_date.split("T")[0] : "",
+              bloodType: kid.blood_type || "",
+              birthWeight: kid.weight?.toString() || "",
+              birthHeight: kid.length?.toString() || "",
+              note: kid.note || "",
+              growthData: kid.growth || [],
+            }))
+          );
+          if (data.result.kids?.[0]?.u_id) setSelectedBabyId(data.result.kids[0].u_id);
+        }
+      } catch (e) {
+        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        console.error(e);
+      }
     };
-
     fetchData();
   }, [params.id]);
 
@@ -119,31 +120,31 @@ export default function EditMomInfo() {
     id: string,
     date: string,
     weight: number,
-    height: number
+    length: number
   ) => {
     setBabyInfo((prev) =>
-      prev.map((baby) =>
-        baby.id === id
-          ? {
-              ...baby,
-              growthData: [
-                ...baby.growthData,
-                { date: date, weight: weight, height: height },
-              ],
-            }
-          : baby
-      )
-    );
+          prev.map((baby) =>
+            baby.id === id
+              ? {
+                  ...baby,
+                  growthData: [
+                    ...baby.growthData,
+                    { date: date, weight: weight, length: length },
+                  ],
+                }
+              : baby
+          )
+        );
     setfromgrowthdatafield({
       date: "",
       weight: 0,
-      height: 0,
+      length: 0,
     });
   };
   const [fromgrowthdatafield, setfromgrowthdatafield] = useState<GrowthData>({
     date: "",
     weight: 0,
-    height: 0,
+    length: 0,
   });
 
   const handleaddBabygrowthdatafield = (
@@ -160,40 +161,111 @@ export default function EditMomInfo() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your save logic here
-    console.log("Saving:", momInfo, babyInfo);
-    // After saving, redirect back to the main page
-    router.push("/admin/mominfo");
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      // ใช้ FormData และ key ตามหน้า add mom
+      const formData = new FormData();
+      // Mom info
+      formData.append("firstname", momInfo.firstName || "");
+      formData.append("lastname", momInfo.lastName || "");
+      formData.append("email", momInfo.email);
+      // Images: [0] mom, [1...] kid
+      if (momInfo.img) {
+        if (momInfo.img.startsWith("data:image")) {
+          const res = await fetch(momInfo.img);
+          const blob = await res.blob();
+          formData.append("images", blob, "mom.jpg");
+        }
+      }
+      console.log("FormData entries:");
+      for (const pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+     
+     
+      // PUT ข้อมูลแม่
+      const response = await fetch(`${process.env.NEXT_PUBLIC_api_mominfo}/${momInfo.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      if (!response.ok) throw new Error("API error");
+
+      // PUT ข้อมูลลูกแต่ละคน
+      for (const baby of babyInfo) {
+        const kidFormData = new FormData();
+        kidFormData.append("firstname", baby.firstName || "");
+        kidFormData.append("lastname", baby.lastName || "");
+        kidFormData.append("username", baby.nickname || "");
+        kidFormData.append("sex", baby.gender || "");
+        const formattedDate = baby.birthDate ? baby.birthDate.replace(/\//g, "-") : "";
+        kidFormData.append("birthdate", formattedDate);
+        kidFormData.append("bloodtype", baby.bloodType || "");
+        kidFormData.append("birthweight", baby.birthWeight || "");
+        kidFormData.append("birthlength", baby.birthHeight || "");
+        kidFormData.append("note", baby.note || "");
+        if (baby.img && baby.img.startsWith("data:image")) {
+          kidFormData.append("images", dataURLtoBlob(baby.img), `baby.jpg`);
+        }
+        await fetch(`${process.env.NEXT_PUBLIC_api_kid}/${baby.id}`, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: kidFormData,
+        });
+      }
+
+      // เพิ่ม growth data ของแต่ละ baby
+      for (const baby of babyInfo) {
+        if (baby.growthData && baby.growthData.length > 0) {
+          for (const growth of baby.growthData) {
+            const growthFormData = new FormData();
+            const formattedDate = growth.date ? growth.date.replace(/\//g, "-") : "";
+            growthFormData.append("date", formattedDate);
+            growthFormData.append("weight", growth.weight.toString());
+            growthFormData.append("length", growth.length.toString());
+            await fetch(`${process.env.NEXT_PUBLIC_api_growth_kid}/${baby.id}`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: growthFormData,
+            });
+          }
+        }
+      }
+
+      alert("บันทึกข้อมูลสำเร็จ");
+      router.push("/admin/mominfo");
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.error(err);
+    }
   };
+
+  // Helper สำหรับแปลง base64 เป็น Blob
+  function dataURLtoBlob(dataurl: string) {
+    const arr = dataurl.split(",");
+    const match = arr[0].match(/:(.*?);/);
+    const mime = match ? match[1] : "";
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  }
 
   return (
     <div className="flex bg-white">
-      <Sidebar
-        onItemSelect={(id) => {
-          if (id !== "0") {
-            switch (id) {
-              case "1":
-                router.push("/admin/mominfo");
-                break;
-              case "2":
-                router.push("/admin/momstories");
-                break;
-              case "3":
-                router.push("/admin/babycare");
-                break;
-              case "4":
-                router.push("/admin/faq");
-                break;
-              case "5":
-                router.push("/admin/appointment");
-                break;
-              case "6":
-                router.push("/admin/nurse-contact");
-                break;
-            }
-          }
-        }}
-        selectedItem="1" // Keep this fixed since we're in the mom info section
+     <Sidebar 
+       selectedItem="1"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -203,7 +275,7 @@ export default function EditMomInfo() {
           >
             แก้ไขข้อมูล
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box sx={{ mt: 3 }}>
             <Typography
               gutterBottom
               className="font-bold text-2x mb-8 text-neutral05"
@@ -285,11 +357,12 @@ export default function EditMomInfo() {
           <div className=" mt-8">
             <div className="bg-neutral04 h-[1px] w-full"></div>
           </div>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box  sx={{ mt: 3 }}>
             <div className="flex gap-4 justify-between mb-5">
               <Typography className="font-bold text-2x text-neutral05">
                 ข้อมูลทารก
               </Typography>
+
               {babyInfo.length > 1 && (
                 <div className="flex gap-4">
                   {babyInfo.map((baby, index) => (
@@ -306,16 +379,17 @@ export default function EditMomInfo() {
                       ทารกคนที่ {index + 1}
                     </button>
                   ))}
-                  <button
-                    type="button"
-                    className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
-
-                    // onClick={() => handleBabyShelect()}
-                  >
-                    เพิ่มทารก
-                  </button>
+                    
                 </div>
               )}
+              <button
+                    type="button"
+                    className=" border border-primary5 text-white rounded-lg px-10 py-2 mb-2 bg-primary5"
+                    onClick={() => router.push(`/admin/mominfo/${momInfo.id}/addkid`)}
+                    >
+                    เพิ่มทารก
+                    </button>
+
             </div>
             {selectedBabyId &&
               babyInfo
@@ -498,84 +572,83 @@ export default function EditMomInfo() {
                   </div>
                 ))}
           </Box>
-          <Box sx={{ mt: 3 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <Typography
-                  variant="h6"
-                  gutterBottom
-                  className="mb-4 text-black text-center"
-                >
-                  กราฟการเจริญเติบโตด้านน้ำหนัก
-                </Typography>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "200px",
-                    backgroundColor: "#f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mt: 2,
-                  }}
-                >
-                  <img
-                    src="https://via.placeholder.com/150"
-                    alt="Weight Growth Chart"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-                <TextField
-                  fullWidth
-                  label="แปลผล"
-                  multiline
-                  rows={4}
-                  sx={{ mt: 2 }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography
-                  variant="h6"
-                  gutterBottom
-                  className="mb-4 text-black text-center"
-                >
-                  กราฟการเจริญเติบโตด้านส่วนสูง
-                </Typography>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "200px",
-                    backgroundColor: "#f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mt: 2,
-                  }}
-                >
-                  <img
-                    src="https://via.placeholder.com/150"
-                    alt="Height Growth Chart"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-                <TextField
-                  fullWidth
-                  label="แปลผล"
-                  multiline
-                  rows={4}
-                  sx={{ mt: 2 }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
+          {/* Prepare growthData for the selected baby */}
+          {(() => {
+            // Find the selected baby's growth data
+            const selectedBaby = babyInfo.find((baby) => baby.id === selectedBabyId);
+            // Map growthData to include a 'months' field for the X axis (or use date)
+            const growthData =
+              selectedBaby?.growthData?.map((g) => ({
+                ...g,
+                months: g.date, // You can replace this with a calculation of months if needed
+                length: g.length, // For chart compatibility
+              })) || [];
+
+            return (
+              <Box sx={{ mt: 3 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className="mb-4 text-black text-center"
+                    >
+                      กราฟการเจริญเติบโตด้านน้ำหนัก
+                    </Typography>
+                    <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <LineChart data={growthData}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="months" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
+                          <YAxis label={{ value: "กก.", angle: -90, position: "insideLeft" }} />
+                          <Tooltip />
+                          <Legend />
+                          <Line type="monotone" dataKey="weight" name="น้ำหนัก (กก.)" stroke="#B36868" activeDot={{ r: 8 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </Box>
+                    <TextField
+                      fullWidth
+                      label="แปลผล"
+                      multiline
+                      rows={4}
+                      sx={{ mt: 2 }}
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className="mb-4 text-black text-center"
+                    >
+                      กราฟการเจริญเติบโตด้านส่วนสูง
+                    </Typography>
+                    <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <LineChart data={growthData}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="months" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
+                          <YAxis label={{ value: "ซม.", angle: -90, position: "insideLeft" }} />
+                          <Tooltip />
+                          <Legend />
+                          <Line type="monotone" dataKey="length" name="ส่วนสูง (ซม.)" stroke="#68A3B3" activeDot={{ r: 8 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </Box>
+                    <TextField
+                      fullWidth
+                      label="แปลผล"
+                      multiline
+                      rows={4}
+                      sx={{ mt: 2 }}
+                      disabled
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            );
+          })()}
           <Box sx={{ mt: 3 }}>
             <div className="flex justify-between mb-5">
               <Typography className="text-black">ข้อมูล</Typography>
@@ -586,13 +659,13 @@ export default function EditMomInfo() {
                   "&:hover": { bgcolor: "#934343" },
                 }}
                 onClick={() => {
-                  // Add your logic to add growth data here
+              
                   if (selectedBabyId) {
                     handleaddgrowthdata(
                       selectedBabyId,
                       fromgrowthdatafield.date,
                       fromgrowthdatafield.weight,
-                      fromgrowthdatafield.height
+                      fromgrowthdatafield.length
                     );
                   }
                   console.log("Adding growth data");
@@ -633,7 +706,7 @@ export default function EditMomInfo() {
                           fullWidth
                           size="small"
                           name="height"
-                          value={data.height}
+                          value={data.length}
                         />
                       </Grid>
                     </Grid>
@@ -666,8 +739,8 @@ export default function EditMomInfo() {
                   <TextField
                     fullWidth
                     size="small"
-                    name="height"
-                    value={fromgrowthdatafield.height}
+                    name="length"
+                    value={fromgrowthdatafield.length}
                     onChange={handleaddBabygrowthdatafield}
                   />
                 </Grid>
@@ -692,13 +765,14 @@ export default function EditMomInfo() {
               ยกเลิก
             </Button>
             <Button
-              type="submit"
+              
               variant="contained"
               sx={{
                 bgcolor: "#B36868",
                 "&:hover": { bgcolor: "#934343" },
               }}
               className="w-40"
+              onClick={handleSubmit}
             >
               บันทึก
             </Button>
