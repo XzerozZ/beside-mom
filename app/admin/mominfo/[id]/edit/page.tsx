@@ -324,17 +324,7 @@ export default function EditMomInfo() {
                   onChange={handleChangemMom}
                   disabled // Usually ID should be read-only
                 />
-                <FormLabel>ชื่อ</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
-                  onChange={handleChangemMom}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
-                <FormLabel>อีเมล</FormLabel>
+                 <FormLabel>อีเมล</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
@@ -343,6 +333,18 @@ export default function EditMomInfo() {
                   value={momInfo.email}
                   onChange={handleChangemMom}
                 />
+                
+              </Grid>
+              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
+              <FormLabel>ชื่อ</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  name="firstName"
+                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
+                  onChange={handleChangemMom}
+                />
+               
                 <FormLabel>นามสกุล</FormLabel>
                 <TextField
                   fullWidth

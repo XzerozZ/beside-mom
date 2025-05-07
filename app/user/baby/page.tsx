@@ -46,16 +46,18 @@ const page = () => {
       alert("Please select a file to upload.");
       return;
     }
-
-    const file = fileInputRef.current.files[0];
     const formData = new FormData();
-    formData.append("images", file);
+    const file = fileInputRef.current.files[0];
+    for (const file of fileInputRef.current.files) {
+      formData.append("images", file);
+    }
 
-    try {
+
+      try {
       const res = await fetch("http://localhost:5000/user", {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -63,16 +65,19 @@ const page = () => {
       if (res.ok) {
         const data = await res.json();
         alert("File uploaded successfully!");
-        console.log("Uploaded file URL:", data.fileUrl);
+        console.log("Uploaded file URL:", data);
         setIsPopupOpen(false);
       } else {
         alert("Failed to upload file.");
         console.error("Upload error:", res.statusText);
       }
-    } catch (error) {
+      } catch (error) {
       alert("An error occurred during file upload.");
       console.error("Upload error:", error);
-    }
+      
+    };
+
+    
   };
 
 

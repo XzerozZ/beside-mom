@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Evaluation } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/user/component/css/loader.css";
+import Navbar from "../../component/navbar";
 
 const page = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -83,7 +84,11 @@ const page = () => {
     } else {
   
   return (
-  
+    <div className="flex flex-col">
+    <header className="fixed top-0 left-0 w-full">
+      <Navbar />
+    </header>
+    <main className="mt-[112px] max-sm:mt-[112px]">
         <div className="">
           <div className="flex flex-col items-center gap-[30px]">
             <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
@@ -97,6 +102,8 @@ const page = () => {
             </div>
           </div>
         </div>
+      </main>
+      </div>
      
   );
 };

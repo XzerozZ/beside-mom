@@ -126,6 +126,7 @@ export default function MomInfoId() {
                 </div>
               </Grid>
               <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
+                
                 <FormLabel>ID</FormLabel>
                 <TextField
                   fullWidth
@@ -135,16 +136,7 @@ export default function MomInfoId() {
                   disabled // Usually ID should be read-only
                 />
 
-                <FormLabel>ชื่อ</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
+                
                 <FormLabel>อีเมล</FormLabel>
                 <TextField
                   fullWidth
@@ -152,6 +144,16 @@ export default function MomInfoId() {
                   name="email"
                   type="email"
                   value={momInfo.email}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
+              <FormLabel>ชื่อ</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  name="firstName"
+                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
                   disabled
                 />
 
