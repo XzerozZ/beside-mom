@@ -6,6 +6,8 @@ import { User } from "@/app/interface";
 import { IoPencilSharp } from "react-icons/io5";
 import Swal from "sweetalert2";
 import "@/app/user/component/css/loader.css";
+import Head from "next/head"
+
 
 const page = () => {
   const token = localStorage.getItem("token");
@@ -115,7 +117,12 @@ const page = () => {
       </div>
     );
   } else {
+    
     return (
+      <>
+      <Head>
+  <link rel="preload" as="image" href={momData?.image_link || "/baby.png"} />
+</Head>
       <div className="flex flex-col items-center gap-[30px]">
         <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
           ข้อมูลคุณแม่
@@ -129,7 +136,8 @@ const page = () => {
                 alt="Baby profile picture"
                 width={176}
                 height={176}
-                className="object-cover w-full h-full rounded-full"
+                className="object-cover w-44 h-44 rounded-full"
+                priority 
               />
               <button
                 onClick={() => setIsPopupOpen(!isPopupOpen)}
@@ -236,6 +244,7 @@ const page = () => {
           </div>
         )}
       </div>
+      </>
     );
   }
 };

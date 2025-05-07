@@ -80,9 +80,18 @@ const Navbar = () => {
             />
             </div>
             <div>
-            <h1 className="font-bold text-[16px] text-[#B36868] text-center">
+              <button
+              className="font-bold text-[16px] text-[#B36868] text-center w-full py-2"
+              onClick={() => {
+                localStorage.removeItem("u_id");
+                localStorage.removeItem("name");
+                localStorage.removeItem("role");
+                localStorage.removeItem("token");
+                window.location.href = "/user/auth/login";
+              }}
+              >
               ออกจากระบบ
-            </h1>
+              </button>
             </div>
           </div>
           </div>

@@ -65,11 +65,11 @@ const page = () => {
           <div className="flex flex-col gap-[40px] mt-[40px]">
             <div className="flex flex-col gap-[24px] mx-auto w-[180px]">
               <Image
-                src={momData?.image_link || ""}
+                src={momData?.image_link || "/baby.png"}
                 width={96}
                 height={96}
                 alt="profilepicture"
-                className="mx-auto"
+                 className="object-cover rounded-full w-44 h-44"
               ></Image>
               <h1 className="font-bold text-[16px] text-center">
                 {momData?.fname + " " + momData?.lname}
@@ -77,10 +77,19 @@ const page = () => {
             
             </div>
           </div>
-          <div className="mt-[40px]">
-            <h1 className="font-bold text-[16px] text-[#B36868] text-center">
+          <div className="mt-[40px] flex justify-center">
+            <button
+              className="font-bold text-[16px] text-[#B36868] text-center"
+              onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("u_id");
+              localStorage.removeItem("name");
+              localStorage.removeItem("role");
+              window.location.href = "/user/auth/login";
+              }}
+            >
               ออกจากระบบ
-            </h1>
+            </button>
           </div>
         </div>
       </div>

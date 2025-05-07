@@ -14,6 +14,7 @@ const page = () => {
   const [video, setVideo] = React.useState<VideoClip>();
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
   const token = localStorage.getItem("token");
+  console.log(like)
   const fetchVideos = async (token: string) => {
     try {
       const res = await fetch(`http://localhost:5000/video`, {
@@ -122,11 +123,14 @@ const page = () => {
       });
       if (res.status === 200) {
         const data = await res.json();
-        setLike(true);
+        if (data.result === true) {
+          setLike(true);
+        } else if (data.result === false) {
+          setLike(false);
+        }
+
         return data.liked; // Assuming the API returns a "liked" boolean
       } else {
-        setLike(false);
-        console.error("Failed to check like status");
         return false;
       }
     } catch (error) {
@@ -214,10 +218,10 @@ const page = () => {
                         height={24}
                         className="inline-block mr-2 cursor-pointer"
                         onClick={() => {
-                          if (like) {
+                          if (like === true) {
                             deleteLike(video?.id || "", token || "");
                             setLike(false);
-                          } else {
+                          }  else if (like === false) {
                             postLike(video?.id || "", token || "");
                             setLike(true);
                           }
@@ -273,6 +277,11 @@ const page = () => {
             </div>
           </div>
         </div>
+        <style jsx>{`
+          nextjs-portal {
+            display: none;
+          }
+        `}</style>
       </div>
     );
   }
