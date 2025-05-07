@@ -7,7 +7,7 @@ import "@/app/user/component/css/loader.css";
 
 const page = () => {
   const [question, setQuestion] = React.useState<QuestionAnswer[]>();
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const fetchQA = async (token: string) => {
     try {
       const res = await fetch(`http://localhost:5000/question`, {
@@ -29,7 +29,7 @@ const page = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

@@ -13,7 +13,7 @@ const page = () => {
   const [isToggle, setIsToggle] = React.useState(false);
   const [video, setVideo] = React.useState<VideoClip>();
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const fetchVideos = async (token: string) => {
     try {
       const res = await fetch(`http://localhost:5000/video`, {
@@ -150,7 +150,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

@@ -82,7 +82,7 @@ const QuizForm: React.FC<{
       localStorage.getItem(`quizAnswers${phase}+${category}`) || "[]"
     );
     console.log("this is storedAnswers", storedAnswers);
-    const token = localStorage.getItem("key");
+    const token = localStorage.getItem("token");
     const filteredAnswers = storedAnswers.filter((ans: boolean) => ans !== null);
     console.log("this is filteredAnswers", filteredAnswers);
     const formData = new FormData();
@@ -123,7 +123,7 @@ const QuizForm: React.FC<{
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("key");
+    const token = localStorage.getItem("token");
     if (token && index) {
       fetchQuizById(Number(index), token,Number(useParam.phase),Number(useParam.category));
     } else {

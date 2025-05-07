@@ -8,7 +8,7 @@ import { ButtonComponents } from "../component/button";
 
 const page = () => {
   const [calendar, setCalendar] = React.useState<Appointment[]>();
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const fetchCalendar = async (token: string) => {
     try {
       const res = await fetch(
@@ -34,7 +34,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

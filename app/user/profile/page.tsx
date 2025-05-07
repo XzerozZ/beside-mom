@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import "@/app/user/component/css/loader.css";
 
 const page = () => {
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const uid = localStorage.getItem("u_id");
   const [momData, setMomData] = React.useState<User>();
   const fetchMomData = async (id: string, key: string) => {
@@ -25,7 +25,7 @@ const page = () => {
    const [loading, setLoading] = React.useState<boolean>(true);
     useEffect(() => {
       const fetchData = async () => {
-        const token = localStorage.getItem("key");
+        const token = localStorage.getItem("token");
         if (!token) {
           console.error("Token is missing. Please log in.");
           await Swal.fire({

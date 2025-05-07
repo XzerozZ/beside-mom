@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import "@/app/user/component/css/loader.css";
 
 const page = () => {
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
 
   const uid = localStorage.getItem("u_id");
   const [momData, setMomData] = React.useState<User>();
@@ -41,7 +41,7 @@ const page = () => {
     }
   };
   const handleUpload = async () => {
-    const token = localStorage.getItem("key");
+    const token = localStorage.getItem("token");
     if (!fileInputRef.current?.files?.[0]) {
       alert("Please select a file to upload.");
       return;
@@ -85,7 +85,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

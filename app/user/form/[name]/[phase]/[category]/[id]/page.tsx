@@ -16,7 +16,7 @@ const page = () => {
   const babyId = searchParams.get("babyid");
   const numericId = Number(id);
   const param = useParams();
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
 
   // Decode the name parameter
   const getDecodedName = (name: string | undefined) => {
@@ -87,7 +87,7 @@ const page = () => {
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

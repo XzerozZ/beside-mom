@@ -7,7 +7,7 @@ import "@/app/user/component/css/loader.css";
 import Swal from "sweetalert2";
 
 const page = () => {
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const [care, setCare] = React.useState<CareItem[]>();
   const fetchCare = async (token: string) => {
     try {
@@ -30,7 +30,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

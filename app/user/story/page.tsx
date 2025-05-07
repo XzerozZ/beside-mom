@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import "@/app/user/component/css/loader.css";
 
 const page = () => {
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
   const fetchVideo = async (token: string) => {
     try {
@@ -30,7 +30,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

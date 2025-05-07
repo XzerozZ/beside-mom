@@ -8,7 +8,7 @@ import "@/app/user/component/css/loader.css";
 
 const page = () => {
   const param = useParams();
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const [calendar, setCalendar] = React.useState<Appointment>();
   const fetchCalendar = async (id: string, token: string) => {
     try {
@@ -32,7 +32,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 
 const page = () => {
   const param = useParams();
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const [care, setCare] = React.useState<CareItem>();
 
   const fetchCare = async (id: string, token: string) => {

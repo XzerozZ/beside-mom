@@ -29,6 +29,7 @@ const Loginpage = () => {
         localStorage.setItem("token", data.result.token);
         localStorage.setItem("name", data.result.name);
         localStorage.setItem("role", data.result.role);
+        localStorage.setItem("u_id", data.result.u_id);
 
         if (data.result.role === "User") {
           router.push("/user/home");

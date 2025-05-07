@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 const page = () => {
   const [password, setPassword] = React.useState("");
   const handleChangePassword = async () => {
-    const token = localStorage.getItem("key");
+    const token = localStorage.getItem("token");
     const formData = new FormData();
     formData.append("email", localStorage.getItem("email")!);
     formData.append("newpassword", password);

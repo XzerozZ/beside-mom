@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 const page = () => {
   const [otp, setOTP] = React.useState("");
   const handleOTP = async () => {
-    const token = localStorage.getItem("key");
+    const token = localStorage.getItem("token");
     const formData = new FormData();
     localStorage.setItem("otp", otp);
     formData.append("email", localStorage.getItem("email")!);

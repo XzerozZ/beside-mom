@@ -9,7 +9,7 @@ import Navbar from "@/app/user/component/navbar";
 const page = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const babyId = searchParams.get("babyid");
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const { name } = useParams();
   const { phase } = useParams();
 
@@ -106,7 +106,7 @@ const page = () => {
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({

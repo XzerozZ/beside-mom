@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import "@/app/user/component/css/loader.css";
 const page = () => {
   const param = useParams();
-  const token = localStorage.getItem("key");
+  const token = localStorage.getItem("token");
   const [kidData, setKidData] = React.useState<KidProfile>();
   const [graphData, setGraphData] = React.useState<GrowthRecord[]>();
   const fetchKidData = async (id: string, token: string) => {
@@ -69,7 +69,7 @@ const page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({
