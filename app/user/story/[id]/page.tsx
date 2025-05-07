@@ -6,6 +6,7 @@ import { VideoClip } from "@/app/interface";
 import Image from "next/image";
 import Swal from "sweetalert2";
 import "@/app/user/component/css/loader.css";
+import Navbar from "../../component/navbar";
 
 const page = () => {
   const param = useParams();
@@ -188,6 +189,11 @@ const page = () => {
     );
   } else {
     return (
+      <div className="flex flex-col">
+      <header className="fixed top-0 left-0 w-full z-10">
+        <Navbar />
+      </header>
+      <main className="mt-[112px] max-sm:mt-[112px]">
       <div className="flex flex-col items-center gap-[30px]">
         <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px]">
           <div className="flex flex-row gap-[31px] max-xl:flex-col">
@@ -198,7 +204,7 @@ const page = () => {
               <div className="relative z-0">
                 <div className="absolute top-0 left-0 w-full h-full bg-transparent pointer-events-none"></div>
                 <video
-                  className="relative z-0 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px]"
+                  className="relative -z-10 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px]"
                   width="100%"
                   controls
                 >
@@ -282,6 +288,8 @@ const page = () => {
             display: none;
           }
         `}</style>
+      </div>
+      </main>
       </div>
     );
   }

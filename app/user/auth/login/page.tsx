@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 const Loginpage = () => {
   const router = useRouter();
 
@@ -103,7 +104,7 @@ const Loginpage = () => {
                   <input
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    type="text"
+                    type="password"
                     id="password"
                     className="peer h-[44px] w-full px-[15px] py-[10px] border-2 rounded-md outline-none text-lg border-text-[#999999 focus:border-[#B36868] text-black"
                     placeholder="xxxxxxxxx"
@@ -116,9 +117,13 @@ const Loginpage = () => {
                   </label>
                 </div>
 
-                <h6 className="text-[12px] text-[#999999] text-right mx-[10px] my-[5px]">
+                <Link href="/user/auth/forgetpassword">
+                <h6 className="text-[12px] text-[#999999] text-right mx-[10px] my-[5px]  underline-offset-1 cursor-pointer">
                   ลืมรหัสผ่าน?
-                </h6>
+                  </h6>
+                  </Link>
+                
+               
               </div>
             </div>
             <div className="button">
@@ -169,7 +174,7 @@ const Loginpage = () => {
                   <input
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    type="text"
+                    type="password"
                     id="password"
                     className="peer h-[44px] w-full px-[15px] py-[10px] border-2 rounded-md outline-none text-lg border-text-[#999999 focus:border-[#B36868] text-black"
                     placeholder="xxxxxxxxx"
@@ -181,20 +186,21 @@ const Loginpage = () => {
                     รหัสผ่าน
                   </label>
                 </div>
-
-                <h6 className="text-[12px] text-[#999999] text-right mx-[10px] my-[5px]">
+                <Link href="/user/auth/forgetpassword">
+                <h6 className="text-[12px] text-[#999999] text-right mx-[10px] my-[5px]  underline-offset-1 cursor-pointer">
                   ลืมรหัสผ่าน?
                 </h6>
+                  </Link>
               </div>
             </div>
             <div className="button">
               {/* <button className=" bg-[#B36868] rounded-[4px] h-[44px] text-white text-bold text-[15px] w-full" >
                 เข้าสู่ระบบ
               </button> */}
-              <ButtonComponents
+               <ButtonComponents
                 title="เข้าสู่ระบบ"
                 textSize="text-[15px] text-bold"
-                onClick={() => {}}
+                onClick={handleLogin}
               />
             </div>
           </div>

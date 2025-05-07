@@ -22,6 +22,14 @@ const page = () => {
         setCalendar(data.result);
       } else {
         console.error("Failed to fetch kid data");
+         await Swal.fire({
+                  title: "Please login again your token is expired!",
+                  icon: "error",
+                  showCancelButton: false,
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#B36868",
+                });
+                window.location.href = "/user/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching kid data:", error);

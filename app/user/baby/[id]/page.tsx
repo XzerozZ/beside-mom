@@ -28,6 +28,14 @@ const page = () => {
         setKidData(data.result);
       } else {
         console.error("Failed to fetch kid data");
+         await Swal.fire({
+                  title: "Please login again your token is expired!",
+                  icon: "error",
+                  showCancelButton: false,
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#B36868",
+                });
+                window.location.href = "/user/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching kid data:", error);
@@ -50,12 +58,20 @@ const page = () => {
         console.error(
           `Failed to fetch graph data: ${res.status} ${res.statusText}`
         );
+         await Swal.fire({
+                  title: "Please login again your token is expired!",
+                  icon: "error",
+                  showCancelButton: false,
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#B36868",
+                });
+                window.location.href = "/user/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching graph data:", error);
     }
   };
-
+console.log("graphData", kidData);
   const formatDate = (dateString?: string): string => {
     if (!dateString) return "-";
     const date = new Date(dateString);
@@ -165,7 +181,7 @@ const page = () => {
                     type="radio"
                     name="gender"
                     value="male"
-                    checked={kidData?.sex === "ชาย"}
+                    checked={kidData?.sex === "male"}
                     readOnly
                     className="accent-[#B36868]"
                   />
@@ -176,7 +192,7 @@ const page = () => {
                     type="radio"
                     name="gender"
                     value="female"
-                    checked={kidData?.sex === "หญิง"}
+                    checked={kidData?.sex === "female"}
                     readOnly
                     className="accent-[#B36868]"
                   />

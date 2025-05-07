@@ -9,11 +9,11 @@ const FormCard: React.FC<QuizResult> = (quizData) => {
       quizData.solution_status === "ผ่าน" ? "opacity-50 pointer-events-none" : ""
       }`}
     >
-      <div>
+      <div className="max-sm:w-1/3 max-xl:w-1/3">
       <Image src="/baby.png" alt="baby" width={300} height={300}></Image>
       </div>
-      <div className="flex flex-col gap-[16px]">
-      <h1 className="font-bold text-[20px] text-[#4d4d4d]">
+      <div className="flex flex-col gap-[16px] max-sm:w-2/3 max-xl:w-2/3">
+      <h1 className="font-bold text-[20px]  max-sm:text-[16px]">
         {(() => {
         switch (Number(quizData?.id)) {
           case 1:
@@ -33,10 +33,10 @@ const FormCard: React.FC<QuizResult> = (quizData) => {
       </h1>
       <div className="flex gap-[10px]">
         <div className="flex flex-col gap-[5px]">
-        <h2 className="font-bold text-[16px] text-[#4d4d4d]">
+        <h2 className="font-bold text-[16px] max-sm:text-[12px]">
           สถานะการประเมิน:
         </h2>
-        <h2 className="font-bold text-[16px] text-[#4d4d4d]">
+        <h2 className="font-bold text-[16px]] max-sm:text-[12px]">
           ผลการประเมิน:
         </h2>
         </div>
@@ -60,7 +60,7 @@ const FormCard: React.FC<QuizResult> = (quizData) => {
             width={20}
             height={20}
           ></Image>
-          <h2 className=" text-[16px] text-[#4d4d4d]">
+          <h2 className=" text-[16px]  max-sm:text-[12px]">
             {(() => {
             switch (quizData?.solution_status) {
               case "ผ่าน":
@@ -91,8 +91,8 @@ const FormCard: React.FC<QuizResult> = (quizData) => {
             width={20}
             height={20}
           ></Image>
-          <h2 className=" text-[16px] text-[#4d4d4d]"></h2>
-          <h2 className=" text-[16px] text-[#4d4d4d]">
+          <h2 className=" text-[16px]"></h2>
+          <h2 className=" text-[16px]  max-sm:text-[12px]">
             {quizData?.solution_status}
           </h2>
           </div>

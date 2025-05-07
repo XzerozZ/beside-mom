@@ -39,6 +39,14 @@ const page = () => {
         },
       });
       if (!response.ok) {
+         await Swal.fire({
+                  title: "Please login again your token is expired!",
+                  icon: "error",
+                  showCancelButton: false,
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#B36868",
+                });
+                window.location.href = "/user/auth/login";
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
@@ -85,7 +93,7 @@ const page = () => {
   
   return (
     <div className="flex flex-col">
-    <header className="fixed top-0 left-0 w-full">
+    <header className="fixed top-0 left-0 w-full z-10">
       <Navbar />
     </header>
     <main className="mt-[112px] max-sm:mt-[112px]">

@@ -22,6 +22,17 @@ const page = () => {
         const data = await res.json();
         setCare(data.result);
       }
+      else {
+        console.error("Failed to fetch care data");
+         await Swal.fire({
+                  title: "Please login again your token is expired!",
+                  icon: "error",
+                  showCancelButton: false,
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#B36868",
+                });
+                window.location.href = "/user/auth/login";
+      }
     } catch (error) {
       console.error("An error occurred while fetching care data:", error);
     }

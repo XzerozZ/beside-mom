@@ -80,12 +80,24 @@ const page = () => {
           <div className="mt-[40px] flex justify-center">
             <button
               className="font-bold text-[16px] text-[#B36868] text-center"
-              onClick={() => {
-              localStorage.removeItem("token");
-              localStorage.removeItem("u_id");
-              localStorage.removeItem("name");
-              localStorage.removeItem("role");
-              window.location.href = "/user/auth/login";
+              onClick={async () => {
+              const result = await Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, log out!",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: "#B36868",
+              });
+
+              if (result.isConfirmed) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("u_id");
+                localStorage.removeItem("name");
+                localStorage.removeItem("role");
+                window.location.href = "/user/auth/login";
+              }
               }}
             >
               ออกจากระบบ

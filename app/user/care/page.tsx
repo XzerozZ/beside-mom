@@ -17,7 +17,15 @@ const page = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch quiz data");
+         await Swal.fire({
+                  title: "Please login again your token is expired!",
+                  icon: "error",
+                  showCancelButton: false,
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#B36868",
+                });
+                window.location.href = "/user/auth/login";
+        
       }
       const data = await response.json();
       setCare(data.result);

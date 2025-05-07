@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "./button";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = React.useState(false);
@@ -18,7 +19,7 @@ const Navbar = () => {
           <a href="/user/baby">ข้อมูลทารก</a>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/user/story">เรื่องเราของคุณแม่</a>
+          <a href="/user/story">เรื่องเล่าของคุณแม่</a>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
           <a href="/user/care">การดูแลทารก</a>
@@ -73,22 +74,31 @@ const Navbar = () => {
             <h1 className="font-bold text-[16px]">ชิณภัทร สุขทอง</h1>
             </div>
             <div className="mx-[70px]">
-            <ButtonComponents
-              title="แก้ไขโปรไฟล์"
-              textSize="text-[14px]"
-              onClick={() => {}}
-            />
+          
             </div>
             <div>
               <button
               className="font-bold text-[16px] text-[#B36868] text-center w-full py-2"
-              onClick={() => {
-                localStorage.removeItem("u_id");
-                localStorage.removeItem("name");
-                localStorage.removeItem("role");
-                localStorage.removeItem("token");
-                window.location.href = "/user/auth/login";
-              }}
+              onClick={async () => {
+                            const result = await Swal.fire({
+                              title: "คุณแน่ใจหรือไม่?",
+                              text: "คุณจะออกจากระบบ!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonText: "ใช่, ออกจากระบบ!",
+                              cancelButtonText: "ยกเลิก",
+                              confirmButtonColor: "#B36868",
+                            
+                            });
+             
+                           if (result.isConfirmed) {
+                             localStorage.removeItem("token");
+                             localStorage.removeItem("u_id");
+                             localStorage.removeItem("name");
+                             localStorage.removeItem("role");
+                             window.location.href = "/user/auth/login";
+                           }
+                           }}
               >
               ออกจากระบบ
               </button>
@@ -110,7 +120,7 @@ const Navbar = () => {
       </div>
       </div>
       {showDropdown && (
-      <div className="xl:hidden bg-[#FFEBEC] w-full h-screen fixed top-0 left-0 z-9999">
+      <div className="xl:hidden bg-[#FFEBEC] w-full h-screen fixed top-0 left-0 z-10">
         <div className="flex justify-center">
        <div className="flex flex-row justify-between h-[80px] w-[1312px] items-center max-xl:w-[770px] max-sm:w-[324px]">
       <div className="flex flex-row gap-4 items-center">
@@ -131,12 +141,12 @@ const Navbar = () => {
       </div>
       </div>
         </div>
-        <ul className="flex flex-col gap-4 p-4">
+        <ul className="flex flex-col gap-4 p-4 z-10">
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
           <a href="/user/baby">ข้อมูลทารก</a>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/user/story">เรื่องเราของคุณแม่</a>
+          <a href="/user/story">เรื่องเล่าของคุณแม่</a>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
           <a href="/user/care">การดูแลทารก</a>
