@@ -74,6 +74,9 @@ const AllMomInfoPage: React.FC = () => {
   }, []);
 
   const handleDelete = (id: string) => {
+    if (!window.confirm("คุณต้องการลบข้อมูลนี้ใช่หรือไม่?")) {
+      return;
+    }
     setMomData(momData.filter((mom) => mom.id !== id));
     const token = localStorage.getItem("token");
     fetch(`${process.env.NEXT_PUBLIC_api_mominfo}/${id}`, {
@@ -87,9 +90,10 @@ const AllMomInfoPage: React.FC = () => {
         if (!res.ok) {
           throw new Error("Failed to delete mom info");
         }
+        alert("ลบข้อมูลสำเร็จ");
       })
       .catch((error) => {
-        // Optionally handle error, e.g., show notification
+        alert("เกิดข้อผิดพลาดในการลบข้อมูล");
         console.error(error);
       });
   };
