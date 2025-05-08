@@ -187,8 +187,8 @@ export default function EditMomInfo() {
             >
               ข้อมูลคุณแม่
             </Typography>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={2.4} className="relative">
+            <div className="grid grid-cols-3 gap-4">
+              
                 <div className="relative w-44 h-44">
                   <img
                     src={
@@ -196,11 +196,11 @@ export default function EditMomInfo() {
                       "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
                     }
                     alt="Profile"
-                    className="w-44 h-44 rounded-full overflow-hidden object-cover"
+                    className="w-44 h-44 absolute rounded-full overflow-hidden object-cover"
                   />
                   {/* Floating Button */}
                   <IconButton
-                    className="absolute bottom-2 right-2 bg-red-100 shadow-md flex items-center justify-center aling-center"
+                    className="top-32 left-36 bg-red-100 shadow-md flex items-center justify-center aling-center"
                     size="small"
                   >
                     <svg
@@ -239,9 +239,9 @@ export default function EditMomInfo() {
                     </label>
                   </IconButton>
                 </div>
-              </Grid>
+             
               
-              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2">
                
                 <FormLabel>ชื่อ</FormLabel>
                 <TextField
@@ -263,8 +263,8 @@ export default function EditMomInfo() {
                   value={momInfo.email}
                   onChange={handleChangemMom}
                 />
-              </Grid>
-              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
+              </div>
+              <div className="flex flex-col gap-2">
                
               <FormLabel>นามสกุล</FormLabel>
                 <TextField
@@ -275,8 +275,8 @@ export default function EditMomInfo() {
                   value={momInfo.lastName} // You'll need to add lastName to MomInfo interface
                   onChange={handleChangemMom}
                 />
-              </Grid>
-            </Grid>
+              </div>
+            </div>
           </Box>
           <div className=" mt-8">
             <div className="bg-neutral04 h-[1px] w-full"></div>
@@ -286,8 +286,8 @@ export default function EditMomInfo() {
               ข้อมูลทารก
             </Typography>
 
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={2.4} className="relative">
+            <div className="grid grid-cols-3 gap-4">
+            
                 <div className="relative w-44 h-44">
                   <img
                     src={
@@ -295,11 +295,11 @@ export default function EditMomInfo() {
                       "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                     }
                     alt="Profile"
-                    className="w-44 h-44 rounded-full overflow-hidden object-cover"
+                    className="w-44 h-44 absolute rounded-full overflow-hidden object-cover"
                   />
                   {/* Floating Button */}
                   <IconButton
-                    className="absolute bottom-2 right-2 bg-white shadow-md"
+                    className=" top-32 left-36  bg-white shadow-md"
                     size="small"
                     component="label"
                   >
@@ -324,8 +324,8 @@ export default function EditMomInfo() {
                     />
                   </IconButton>
                 </div>
-              </Grid>
-              <Grid item xs={12} sm={4.64} className="flex flex-col gap-2">
+              
+                <div className="flex flex-col gap-2">
                 <FormLabel>ชื่อ</FormLabel>
                 <TextField
                   fullWidth
@@ -342,8 +342,8 @@ export default function EditMomInfo() {
                   value={babyInfo[0]?.nickname ?? ""}
                   onChange={handleChangeBaby}
                 />
-              </Grid>
-              <Grid item xs={12} sm={4.9} className="flex flex-col gap-2">
+              </div>
+              <div className="flex flex-col gap-2">
                 <FormLabel>นามสกุล</FormLabel>
                 <TextField
                   fullWidth
@@ -361,8 +361,8 @@ export default function EditMomInfo() {
                   onChange={handleChangeBaby}
                   type="date"
                 />
-              </Grid>
-            </Grid>
+              </div>
+            </div>
           </Box>
           <Box>
             <Grid container spacing={3}>

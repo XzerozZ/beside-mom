@@ -118,8 +118,8 @@ export default function AddKid() {
             เพิ่มข้อมูลลูก
           </Typography>
           <form onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={2.4} className="relative">
+          <div className="grid grid-cols-3 gap-4">
+             
                 <div className="relative w-44 h-44">
                   <img
                     src={
@@ -127,29 +127,29 @@ export default function AddKid() {
                       "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                     }
                     alt="Profile"
-                    className="w-44 h-44 rounded-full overflow-hidden object-cover"
+                    className="w-44 h-44 absolute rounded-full overflow-hidden object-cover"
                   />
-                  <IconButton className="absolute bottom-2 right-2 bg-white shadow-md" size="small" component="label">
+                  <IconButton className="top-32 left-36 bg-white shadow-md" size="small" component="label">
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M7.82666 23.7039L18.125 13.41L18.5898 13.8748L8.29779 24.1668H7.82666V23.7039ZM23.4915 8.04416C23.4914 8.04427 23.4913 8.04438 23.4912 8.0445L23.4915 8.04416Z" stroke="#B36868" strokeWidth="5" />
                     </svg>
                     <input type="file" accept="image/*" style={{ display: "none" }} onChange={handleImgUpload} />
                   </IconButton>
                 </div>
-              </Grid>
-              <Grid item xs={12} sm={4.64} className="flex flex-col gap-2">
+             
+                <div className="flex flex-col gap-2">
                 <FormLabel>ชื่อ</FormLabel>
                 <TextField fullWidth size="small" name="firstName" value={kid.firstName} onChange={handleChange} />
                 <FormLabel>ชื่อเล่น</FormLabel>
                 <TextField fullWidth size="small" name="username" value={kid.username} onChange={handleChange} />
-              </Grid>
-              <Grid item xs={12} sm={4.9} className="flex flex-col gap-2">
+              </div>
+              <div className="flex flex-col gap-2">
                 <FormLabel>นามสกุล</FormLabel>
                 <TextField fullWidth size="small" name="lastName" value={kid.lastName} onChange={handleChange} />
                 <FormLabel>วันเกิด</FormLabel>
                 <TextField fullWidth size="small" name="birthDate" value={kid.birthDate} onChange={handleChange} type="date" />
-              </Grid>
-            </Grid>
+              </div>
+            </div>
             <Box>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={0.7}>

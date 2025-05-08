@@ -112,8 +112,7 @@ export default function MomInfoId() {
             >
               ข้อมูลคุณแม่
             </Typography>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={2.4}>
+            <div className="grid grid-cols-3 gap-4">
                 <div className="relative w-44 h-44">
                   <img
                     src={
@@ -124,9 +123,9 @@ export default function MomInfoId() {
                     className="w-44 h-44 rounded-full overflow-hidden object-cover"
                   />
                 </div>
-              </Grid>
-              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
-                
+              
+              
+                <div className="flex flex-col gap-2">
                 <FormLabel>ID</FormLabel>
                 <TextField
                   fullWidth
@@ -137,6 +136,19 @@ export default function MomInfoId() {
                 />
 
                 
+                
+                <FormLabel>ชื่อ</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  name="firstName"
+                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
+                  disabled
+                />
+                </div>
+             
+                <div className="flex flex-col gap-2">
+
                 <FormLabel>อีเมล</FormLabel>
                 <TextField
                   fullWidth
@@ -146,16 +158,7 @@ export default function MomInfoId() {
                   value={momInfo.email}
                   disabled
                 />
-              </Grid>
-              <Grid item xs={12} sm={4.8} className="flex flex-col gap-2">
-              <FormLabel>ชื่อ</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
-                  disabled
-                />
+              
 
                 <FormLabel>นามสกุล</FormLabel>
                 <TextField
@@ -165,8 +168,8 @@ export default function MomInfoId() {
                   value={momInfo.lastName} // You'll need to add lastName to MomInfo interface
                   disabled
                 />
-              </Grid>
-            </Grid>
+             </div>
+            </div>
           </Box>
           <div className=" mt-8">
             <div className="bg-neutral04 h-[1px] w-full"></div>
@@ -201,8 +204,8 @@ export default function MomInfoId() {
               babyInfo
                 .filter((baby) => baby.id === selectedBabyId)
                 .map((baby) => (
-                  <Grid container spacing={3} key={baby.id}>
-                    <Grid item xs={12} sm={2.4} className="relative">
+                  <div className="w-full grid grid-cols-1 gap-6" key={baby.id}>
+                    <div className="grid grid-cols-3 gap-4">
                       <div className="relative w-44 h-44">
                         <img
                           src={
@@ -213,13 +216,8 @@ export default function MomInfoId() {
                           className="w-44 h-44 rounded-full overflow-hidden object-cover"
                         />
                       </div>
-                    </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      sm={4.64}
-                      className="flex flex-col gap-2"
-                    >
+                  
+                      <div className="flex flex-col gap-2">
                       <FormLabel>ชื่อ</FormLabel>
                       <TextField
                         fullWidth
@@ -236,8 +234,8 @@ export default function MomInfoId() {
                         value={baby.nickname}
                         disabled
                       />
-                    </Grid>
-                    <Grid item xs={12} sm={4.9} className="flex flex-col gap-2">
+                      </div>
+                      <div className="flex flex-col gap-2">
                       <FormLabel>นามสกุล</FormLabel>
                       <TextField
                         fullWidth
@@ -255,79 +253,86 @@ export default function MomInfoId() {
                         disabled
                         type="date"
                       />
-                    </Grid>
+                      </div>
+                    </div>
                     
-                    <Grid item xs={12} sm={0.7}>
-                      <FormLabel>เพศ</FormLabel>
-                    </Grid>
-                    <Grid item xs={12} sm={1.75}>
-                      <RadioGroup name="gender" value={baby.gender}>
-                        <FormControlLabel
-                          value="male"
-                          control={
-                            <Radio
-                              disabled
-                              sx={{
-                                color: "#999999",
-                                "&.Mui-checked": { color: "#B36868" },
-                              }}
-                            />
-                          }
-                          className="text-neutral04"
-                          label="ชาย"
+                    <div className="grid grid-cols-12 gap-4">
+                      <div className="col-span-1">
+                        <FormLabel>เพศ</FormLabel>
+                      </div>
+                      <div className="col-span-2">
+                        <RadioGroup name="gender" value={baby.gender}>
+                          <FormControlLabel
+                            value="male"
+                            control={
+                              <Radio
+                                disabled
+                                sx={{
+                                  color: "#999999",
+                                  "&.Mui-checked": { color: "#B36868" },
+                                }}
+                              />
+                            }
+                            className="text-neutral04"
+                            label="ชาย"
+                          />
+                          <FormControlLabel
+                            value="female"
+                            control={
+                              <Radio
+                                disabled
+                                sx={{
+                                  color: "#999999",
+                                  "&.Mui-checked": { color: "#B36868" },
+                                }}
+                              />
+                            }
+                            className="text-neutral04"
+                            label="หญิง"
+                          />
+                        </RadioGroup>
+                      </div>
+                      <div className="col-span-9">
+                        <FormLabel>กรุ๊ปเลือด</FormLabel>
+                        <Select
+                          fullWidth
+                          size="small"
+                          name="bloodType"
+                          value={baby.bloodType}
+                          disabled
+                        >
+                          <MenuItem value="A">A</MenuItem>
+                          <MenuItem value="B">B</MenuItem>
+                          <MenuItem value="AB">AB</MenuItem>
+                          <MenuItem value="O">O</MenuItem>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <FormLabel>น้ำหนักแรกเกิด (กก.)</FormLabel>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          name="birthWeight"
+                          value={baby.birthWeight}
+                          disabled
                         />
-                        <FormControlLabel
-                          value="female"
-                          control={
-                            <Radio
-                              disabled
-                              sx={{
-                                color: "#999999",
-                                "&.Mui-checked": { color: "#B36868" },
-                              }}
-                            />
-                          }
-                          className="text-neutral04"
-                          label="หญิง"
+                      </div>
+                      <div>
+                        <FormLabel>ความยาวแรกเกิด (ซม.)</FormLabel>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          name="birthHeight"
+                          value={baby.birthHeight}
+                          disabled
                         />
-                      </RadioGroup>
-                    </Grid>
-                    <Grid item xs={12} sm={9.5}>
-                      <FormLabel>กรุ๊ปเลือด</FormLabel>
-                      <Select
-                        fullWidth
-                        size="small"
-                        name="bloodType"
-                        value={baby.bloodType}
-                        disabled
-                      >
-                        <MenuItem value="A">A</MenuItem>
-                        <MenuItem value="B">B</MenuItem>
-                        <MenuItem value="AB">AB</MenuItem>
-                        <MenuItem value="O">O</MenuItem>
-                      </Select>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormLabel>น้ำหนักแรกเกิด (กก.)</FormLabel>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        name="birthWeight"
-                        value={baby.birthWeight}
-                        disabled
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormLabel>ความยาวแรกเกิด (ซม.)</FormLabel>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        name="birthHeight"
-                        value={baby.birthHeight}
-                        disabled
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
+                      </div>
+                    </div>
+                    
+                    <div className="w-full">
                       <FormLabel>โน้ต</FormLabel>
                       <TextField
                         fullWidth
@@ -338,9 +343,9 @@ export default function MomInfoId() {
                         multiline
                         rows={3}
                       />
-                    </Grid>
+                    </div>
                    
-                    <div style={{ display: "flex", justifyContent: "center", width: "100%" }} className="mt-4">
+                    <div className="flex justify-center w-full mt-4">
                       <Button
                         variant="contained"
                         onClick={() => router.push(`/admin/mominfo/${momInfo.id}/evaluate/${baby.id}`)}
@@ -349,9 +354,7 @@ export default function MomInfoId() {
                         แบบประเมินพัฒนาการ
                       </Button>
                     </div>
-                        </Grid>
-
-                 
+                  </div>
                 ))}
           </Box>
           <Box sx={{ mt: 3 }}>
