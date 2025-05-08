@@ -29,6 +29,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
     { id: 7, label: "แบบประเมินพัฒนาการ"}
   ];
 
+
   return (
     <div className="w-64 bg-white  h-screen">
       {/* Profile Section */}
@@ -41,7 +42,11 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
               className="w-full h-full object-cover"
             />
           </div>
-          <h2 className=" ml-2 text-xl text-black ">Admin Name</h2>
+            <div className="ml-2">
+            <h2 className="text-xl text-black">
+              {typeof window !== 'undefined' && localStorage.getItem('name')}
+            </h2>
+            </div>
         </div>
       </div>
 
@@ -252,7 +257,15 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
         <div className="absolute bottom-4 w-full">
           <button
             onClick={() => {
-              /* Add logout logic here */
+              // Remove auth data from localStorage
+              localStorage.removeItem('token');
+              localStorage.removeItem('name');
+              localStorage.removeItem('role');
+              localStorage.removeItem('u_id');
+
+              // Navigate to login page
+              router.push('/user/auth/login');
+              
             }}
             className="flex items-center w-64 px-6 py-4 text-neutral05 hover:bg-gray-100 transition-colors"
           >
@@ -271,6 +284,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
               />
             </svg>
             <span className="ml-2">ออกจากระบบ</span>
+       
           </button>
         </div>
       </nav>
