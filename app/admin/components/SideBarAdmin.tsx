@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element*/
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
 interface MenuItem {
   id: number;
   label: string;
@@ -28,6 +29,14 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
     { id: 6, label: "ข้อมูลติดต่อกับพยาบาล" },
     { id: 7, label: "แบบประเมินพัฒนาการ"}
   ];
+  const [adminname, setAdminname] = useState("Admin");
+  
+  useEffect(() => {
+    const storedName = localStorage.getItem("name");
+    if (storedName) {
+      setAdminname(storedName);
+    }
+  }, []);
 
 
   return (
@@ -44,7 +53,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
           </div>
             <div className="ml-2">
             <h2 className="text-xl text-black">
-              {typeof window !== 'undefined' && localStorage.getItem('name')}
+              {adminname} 
             </h2>
             </div>
         </div>

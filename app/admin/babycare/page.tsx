@@ -24,12 +24,12 @@ const MomstoryPage: React.FC = () => {
   const handleAddClick = () => {
     console.log("Add button clicked");
   };
-  const handleEdit = (id: number, type: string) => {
+  const handleEdit = (id: string, type: string) => {
     console.log("Edit button clicked", id);
     router.push(`/admin/babycare/edit/${id}/${type}`);
   };
   type BabyCareItem = {
-    id: number;
+    id: string;
     title: string;
     date: string;
     type: string;
@@ -49,7 +49,7 @@ const MomstoryPage: React.FC = () => {
           if (Array.isArray(data.result)) {
             const result: ContentBabycareItem[] = data.result;
             const mapped: BabyCareItem[] = result.map(item => ({
-              id: Number(item.c_id),
+              id: item.c_id,
               title: item.title,
               date: item.updated_at,
               type: item.type,
