@@ -78,7 +78,13 @@ export default function EditMomInfo() {
               birthWeight: kid.weight?.toString() || "",
               birthHeight: kid.length?.toString() || "",
               note: kid.note || "",
-              growthData: kid.growth || [],
+              growthData: (kid.growth || []).map((g: any) => ({
+                id: g.G_id,
+                date: g.created_at.slice(0, 10),
+                months: g.months,
+                weight: g.weight,
+                length: g.length,
+              })),
             }))
           );
           if (data.result.kids?.[0]?.u_id) setSelectedBabyId(data.result.kids[0].u_id);
@@ -599,14 +605,7 @@ export default function EditMomInfo() {
                         </LineChart>
                       </ResponsiveContainer>
                     </Box>
-                    <TextField
-                      fullWidth
-                      label="แปลผล"
-                      multiline
-                      rows={4}
-                      sx={{ mt: 2 }}
-                      disabled
-                    />
+                    
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography
@@ -628,14 +627,7 @@ export default function EditMomInfo() {
                         </LineChart>
                       </ResponsiveContainer>
                     </Box>
-                    <TextField
-                      fullWidth
-                      label="แปลผล"
-                      multiline
-                      rows={4}
-                      sx={{ mt: 2 }}
-                      disabled
-                    />
+                   
                   </Grid>
                 </Grid>
               </Box>
@@ -681,6 +673,7 @@ export default function EditMomInfo() {
                           name="date"
                           type="date"
                           value={data.date}
+                          disabled
                         />
                       </Grid>
                       <Grid item xs={12} sm={4}>
@@ -690,6 +683,7 @@ export default function EditMomInfo() {
                           size="small"
                           name="weight"
                           value={data.weight}
+                          disabled
                         />
                       </Grid>
                       <Grid item xs={12} sm={4}>
@@ -699,6 +693,7 @@ export default function EditMomInfo() {
                           size="small"
                           name="height"
                           value={data.length}
+                          disabled
                         />
                       </Grid>
                     </Grid>

@@ -368,25 +368,18 @@ export default function MomInfoId() {
                   กราฟการเจริญเติบโตด้านน้ำหนัก
                 </Typography>
                 <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
-                  <ResponsiveContainer width="100%" height={200}>
-                    <LineChart data={growthData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="months" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
-                      <YAxis label={{ value: "กก.", angle: -90, position: "insideLeft" }} />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="weight" name="น้ำหนัก (กก.)" stroke="#B36868" activeDot={{ r: 8 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </Box>
-                <TextField
-                  fullWidth
-                  label="แปลผล"
-                  multiline
-                  rows={4}
-                  sx={{ mt: 2 }}
-                  disabled
-                />
+                      <ResponsiveContainer width="100%" height={200}>
+                        <LineChart data={growthData}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="date" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
+                          <YAxis label={{ value: "กก.", angle: -90, position: "insideLeft" }} />
+                          <Tooltip />
+                          <Legend />
+                          <Line type="monotone" dataKey="weight" name="น้ำหนัก (กก.)" stroke="#B36868" activeDot={{ r: 8 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </Box>
+                
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography
@@ -400,7 +393,7 @@ export default function MomInfoId() {
                   <ResponsiveContainer width="100%" height={200}>
                     <LineChart data={growthData}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="months" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
+                      <XAxis dataKey="date" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
                       <YAxis label={{ value: "ซม.", angle: -90, position: "insideLeft" }} />
                       <Tooltip />
                       <Legend />
@@ -408,14 +401,7 @@ export default function MomInfoId() {
                     </LineChart>
                   </ResponsiveContainer>
                 </Box>
-                <TextField
-                  fullWidth
-                  label="แปลผล"
-                  multiline
-                  rows={4}
-                  sx={{ mt: 2 }}
-                  disabled
-                />
+                
               </Grid>
             </Grid>
           </Box>
