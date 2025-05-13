@@ -28,14 +28,14 @@ const page = () => {
         setKidData(data.result);
       } else {
         console.error("Failed to fetch kid data");
-         await Swal.fire({
-                  title: "Please login again your token is expired!",
-                  icon: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#B36868",
-                });
-                window.location.href = "/user/auth/login";
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#B36868",
+        });
+        window.location.href = "/user/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching kid data:", error);
@@ -58,20 +58,20 @@ const page = () => {
         console.error(
           `Failed to fetch graph data: ${res.status} ${res.statusText}`
         );
-         await Swal.fire({
-                  title: "Please login again your token is expired!",
-                  icon: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#B36868",
-                });
-                window.location.href = "/user/auth/login";
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#B36868",
+        });
+        window.location.href = "/user/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching graph data:", error);
     }
   };
-console.log("graphData", kidData);
+  console.log("graphData", kidData);
   const formatDate = (dateString?: string): string => {
     if (!dateString) return "-";
     const date = new Date(dateString);
@@ -140,33 +140,33 @@ console.log("graphData", kidData);
             <div className="flex-1 flex flex-col justify-between pb-4 max-md:gap-6">
               <div className="grid grid-cols-4 justify-between max-md:flex-col max-md:gap-6 max-sm:grid-cols-1">
                 <div className="w-1/4">
-                  <h3>ชื่อ</h3>
+                  <h3 className="font-bold text-[18px]">ชื่อ</h3>
                   <h4>{kidData?.firstname}</h4>
                 </div>
                 <div className="w-1/4">
-                  <h3>นามสกุล</h3>
+                  <h3 className="font-bold text-[18px]">นามสกุล</h3>
                   <h4>{kidData?.lastname}</h4>
                 </div>
                 <div className="w-1/4">
-                  <h3>ชื่อเล่น</h3>
+                  <h3 className="font-bold text-[18px]">ชื่อเล่น</h3>
                   <h4>{kidData?.username}</h4>
                 </div>
               </div>
               <div className="flex flex-row justify-between max-sm:flex-col max-sm:gap-5">
                 <div className="w-1/4">
-                  <h3>วันเกิด</h3>
+                  <h3 className="font-bold text-[18px]">วันเกิด</h3>
                   <h4>{formatDate(kidData?.birthdate)}</h4>
                 </div>
                 <div className="w-1/4">
-                  <h3>กรุ๊ปเลือด</h3>
+                  <h3 className="font-bold text-[18px]">กรุ๊ปเลือด</h3>
                   <h4>{kidData?.blood}</h4>
                 </div>
                 <div className="w-1/4">
-                  <h3>น้ำหนัก (กก.)</h3>
+                  <h3 className="font-bold text-[18px]">น้ำหนัก (กก.)</h3>
                   <h4>{kidData?.birthweight}</h4>
                 </div>
                 <div className="w-1/4">
-                  <h3>ความยาว (ซม.)</h3>
+                  <h3 className="font-bold text-[18px]">ความยาว (ซม.)</h3>
                   <h4>{kidData?.birthlength}</h4>
                 </div>
               </div>

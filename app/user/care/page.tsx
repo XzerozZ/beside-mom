@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 const page = () => {
   const token = localStorage.getItem("token");
   const [care, setCare] = React.useState<CareItem[]>();
+  const [random, setRandom] = React.useState<number>(0);
   const fetchCare = async (token: string) => {
     try {
       const response = await fetch(`http://localhost:5000/care`, {
@@ -61,6 +62,22 @@ const page = () => {
     fetchData();
   }, [token]);
 
+  const shuffleArray = (array: CareItem[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
+  useEffect(() => {
+    if (care && care.length > 0) {
+    
+   
+      setRandom(Math.floor(Math.random() * care.length));
+    }
+  }, [care]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen mt-[-160px] max-sm:mt-[-112px]">
@@ -82,11 +99,13 @@ const page = () => {
                 </h1>
                 <div className="flex flex-col gap-[20px]">
                   <h2 className="text-right font-bold text-[20px]">
-                    {care?.[0]?.title}
+                    {care?.[random]?.title}
                   </h2>
                   <h3 className="text-right text-[16px] ">{care?.[0]?.desc}</h3>
                   <div className="flex flex-row justify-end gap-[5px]">
-                    <h1 className="text-[14px] font-bold">ดูเพิ่มเติม</h1>
+                    <a href={`/user/story/${care?.[random]?.c_id}`} className="text-[14px] font-bold">
+                      ดูเพิ่มเติม
+                    </a>
                     <Image
                       src="/nexticon.svg"
                       alt="next"
@@ -98,7 +117,7 @@ const page = () => {
               </div>
               <div className="w-3/5">
                 <Image
-                  src={care?.[0]?.banner || "/baby.png"}
+                  src={care?.[random]?.banner || "/baby.png"}
                   alt="baby"
                   layout="responsive"
                   width={500}

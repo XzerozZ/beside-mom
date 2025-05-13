@@ -134,7 +134,7 @@ const page = () => {
 
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] gap-8 flex flex-col">
             <div className="flex flex-row gap-[64px] max-md:flex-col max-md:gap-0">
-              <div className="relative w-44 h-44 flex-none max-md:mx-auto max-md:mb-6 -z-10">
+              <div className="relative w-44 h-44 flex-none max-md:mx-auto max-md:mb-6 z-0">
                 <Image
                   src={momData?.image_link || "/baby.png"}
                   alt="Baby profile picture"
@@ -154,21 +154,21 @@ const page = () => {
               <div className="flex-1 flex flex-col justify-between pb-4 max-md:gap-6">
                 <div className="flex flex-row justify-between max-md:flex-col max-md:gap-6">
                   <div className="w-1/2">
-                    <h3>ID</h3>
+                    <h3 className="font-bold text-[18px]">ID</h3>
                     <h4>{momData?.u_id}</h4>
                   </div>
                   <div className="w-1/2">
-                    <h3>อีเมล</h3>
+                  <h3 className="font-bold text-[18px]">อีเมล</h3>
                     <h4>{momData?.email}</h4>
                   </div>
                 </div>
                 <div className="flex flex-row justify-between">
                   <div className="w-1/2">
-                    <h3>ชื่อ</h3>
+                  <h3 className="font-bold text-[18px]">ชื่อ</h3>
                     <h4>{momData?.fname}</h4>
                   </div>
                   <div className="w-1/2">
-                    <h3>นามสกุล</h3>
+                  <h3 className="font-bold text-[18px]">นามสกุล</h3>
                     <h4>{momData?.lname}</h4>
                   </div>
                 </div>

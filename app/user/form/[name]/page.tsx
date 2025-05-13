@@ -73,15 +73,15 @@ const page = () => {
           return;
         }
       };
-      if (token) {
+      fetchData();
+      if (token && typeof babyId === "string") {
         fetchPeriod(token!, babyId!);
       } else {
-        console.error("Invalid or missing parameter: id");
       }
       setLoading(false);
   
-      fetchData();
-    }, [token]);
+     
+    }, [token,babyId]);
   
     if (loading) {
       return (

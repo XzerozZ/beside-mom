@@ -50,8 +50,13 @@ const StepProgress = (data : HistoryData) => {
   const activeIndex = resultArrayQuiz.findIndex((step) => step.solution_status === "ผ่าน");
   const stepWidthPercent = 100 / (steps.length - 1); // Spread steps evenly
 
-
-
+  if (resultArrayQuiz.length < 5) {
+    return (
+      <div>
+        </div>
+        );
+  }
+ else {
   return (
     <div className="w-full py-10 max-sm:py-8">
       <div className="relative mx-auto">
@@ -108,6 +113,6 @@ const StepProgress = (data : HistoryData) => {
       </div>
     </div>
   );
-};
+};}
 
 export default StepProgress;
