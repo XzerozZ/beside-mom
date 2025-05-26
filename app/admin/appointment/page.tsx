@@ -79,7 +79,7 @@ export default function AppointmentPage() {
         const token = localStorage.getItem("token");
         if (!token) {
           setError("กรุณาเข้าสู่ระบบใหม่");
-          router.push("/user/auth/login");
+          router.push("/auth/login");
           return;
         }
         const apiUrl = process.env.NEXT_PUBLIC_api_appointment;

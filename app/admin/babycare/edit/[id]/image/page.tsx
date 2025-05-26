@@ -59,7 +59,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
         if (!token) {
           setError("No authentication token found");
           alert("กรุณาเข้าสู่ระบบใหม่");
-          router.push('/user/auth/login');
+          router.push('/auth/login');
           return;
         }
 
@@ -157,7 +157,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
       if (!token) {
         setError("No authentication token found");
         alert("กรุณาเข้าสู่ระบบใหม่");
-        router.push('/user/auth/login');
+        router.push('/auth/login');
         return;
       }
       

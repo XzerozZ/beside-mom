@@ -53,7 +53,7 @@ const ContactNurseInfo: React.FC = () => {
               },
             }}
           />
-          <div className="flex justify-end mt-4 ">
+          <div className="flex justify-end mt-4 gap-2">
             <Button
               variant="outlined"
               sx={{
