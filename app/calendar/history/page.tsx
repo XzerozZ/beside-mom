@@ -10,7 +10,7 @@ const page = () => {
   const [calendar, setCalendar] = React.useState<Appointment[]>();
   const fetchCalendar = async (token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/appoint`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/appoint`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

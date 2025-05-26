@@ -10,7 +10,7 @@ const page = () => {
   const token = localStorage.getItem("token");
   const fetchQA = async (token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/question`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/question`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

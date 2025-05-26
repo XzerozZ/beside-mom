@@ -12,7 +12,7 @@ const page = () => {
   const fetchCalendar = async (token: string) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/appoint/history/progress`,
+        `${process.env.NEXT_PUBLIC_url}/appoint/history/progress`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

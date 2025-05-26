@@ -16,7 +16,7 @@ const page = () => {
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
 
   const fetchMomData = async (id: string, key: string) => {
-    const res = await fetch(`http://localhost:5000/info/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/info/${id}`, {
       headers: {
         Authorization: `Bearer ${key}`,
       },
@@ -63,7 +63,7 @@ const page = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

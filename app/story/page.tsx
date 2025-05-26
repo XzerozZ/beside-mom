@@ -11,7 +11,7 @@ const page = () => {
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
   const fetchVideo = async (token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/video`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

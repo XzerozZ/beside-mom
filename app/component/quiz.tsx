@@ -31,7 +31,7 @@ const QuizForm: React.FC<{
   const fetchQuizById = async (id: number, token: string,phase:number,category:number) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/quiz/period/${phase}/category/${category}/question/${id}`,
+        `${process.env.NEXT_PUBLIC_url}/quiz/period/${phase}/category/${category}/question/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ const QuizForm: React.FC<{
   const fetchQuizByIdInNext = async (id: number, token: string,phase:number,category:number) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/quiz/period/${phase}/category/${category}/question/${id + 1}`,
+        `${process.env.NEXT_PUBLIC_url}/quiz/period/${phase}/category/${category}/question/${id + 1}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ const QuizForm: React.FC<{
           throw new Error("Authorization token not found");
         }
         const response = await fetch(
-          `http://localhost:5000/history/evaluate/${phase}/category/${category}/kid/${babyid}`,
+          `${process.env.NEXT_PUBLIC_url}/history/evaluate/${phase}/category/${category}/kid/${babyid}`,
           {
             method: "POST",
             headers: {

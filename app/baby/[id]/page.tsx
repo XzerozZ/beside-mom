@@ -18,7 +18,7 @@ const page = () => {
   const [graphData, setGraphData] = React.useState<GrowthRecord[]>();
   const fetchKidData = async (id: string, token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/kid/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/kid/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -44,7 +44,7 @@ const page = () => {
   const fetchGraphKid = async (id: string, token: string) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/growth/kid/${id}/summary`,
+        `${process.env.NEXT_PUBLIC_url}/growth/kid/${id}/summary`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

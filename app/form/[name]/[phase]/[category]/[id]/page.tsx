@@ -42,7 +42,7 @@ const page = () => {
   // const fetchQuiz = async (id: number, token: string) => {
   //   try {
   //     const response = await fetch(
-  //       `http://localhost:5000/quiz/period/2/category/1/`,
+  //       `${process.env.NEXT_PUBLIC_url}/quiz/period/2/category/1/`,
   //       {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ const page = () => {
   ) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/quiz/period/2/category/1`,
+        `${process.env.NEXT_PUBLIC_url}/quiz/period/2/category/1`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

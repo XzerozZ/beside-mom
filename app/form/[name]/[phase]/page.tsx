@@ -47,7 +47,7 @@ const page = () => {
   ) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/history/result/evaluate/${phase}/kid/${babyid}`,
+        `${process.env.NEXT_PUBLIC_url}/history/result/evaluate/${phase}/kid/${babyid}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const page = () => {
     for (let i = 1; i <= 5; i++) {
       try {
         const response = await fetch(
-          `http://localhost:5000/quiz/period/${decodedPhase}/category/${i}/`,
+          `${process.env.NEXT_PUBLIC_url}/quiz/period/${decodedPhase}/category/${i}/`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -10,7 +10,7 @@ const page = () => {
   const uid = localStorage.getItem("u_id");
   const [momData, setMomData] = React.useState<User>();
   const fetchMomData = async (id: string, key: string) => {
-    const res = await fetch(`http://localhost:5000/info/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/info/${id}`, {
       headers: {
         Authorization: `Bearer ${key}`,
       },

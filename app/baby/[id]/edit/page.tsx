@@ -28,7 +28,7 @@ const page = () => {
   const fetchBabyData = async (token: string, babyid: string) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/growth/kid/${babyid}/all`,
+        `${process.env.NEXT_PUBLIC_url}/growth/kid/${babyid}/all`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ const page = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/growth/kid/${babyid}`,
+        `${process.env.NEXT_PUBLIC_url}/growth/kid/${babyid}`,
         {
           method: "POST",
           headers: {

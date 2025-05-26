@@ -13,7 +13,7 @@ const page = () => {
 
   const fetchCare = async (id: string, token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/care/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/care/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -33,7 +33,7 @@ const page = () => {
 
   const fetchPeriod = async (token: string,babyid: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/evaluate/all/${babyid}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_url}/evaluate/all/${babyid}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

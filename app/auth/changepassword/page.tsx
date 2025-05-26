@@ -13,7 +13,7 @@ const page = () => {
     formData.append("newpassword", password);
     try {
       const response = await fetch(
-        `http://localhost:5000/auth/forgotpassword/changepassword`,
+        `${process.env.NEXT_PUBLIC_url}/auth/forgotpassword/changepassword`,
         {
           method: "PUT",
 

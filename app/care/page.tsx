@@ -12,7 +12,7 @@ const page = () => {
   const [random, setRandom] = React.useState<number>(0);
   const fetchCare = async (token: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/care`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_url}/care`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

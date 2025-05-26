@@ -14,7 +14,7 @@ const page = () => {
     formData.append("otp", otp);
     try {
       const response = await fetch(
-        `http://localhost:5000/auth/forgotpassword/otp`,
+        `${process.env.NEXT_PUBLIC_url}/auth/forgotpassword/otp`,
         {
           method: "POST",
 

@@ -18,7 +18,7 @@ const page = () => {
   console.log(like);
   const fetchVideos = async (token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/video`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -36,7 +36,7 @@ const page = () => {
 
   const fetchVideo = async (id: String, token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/video/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,7 +78,7 @@ const page = () => {
       const formData = new FormData();
       formData.append("videoid", id.toString());
 
-      const res = await fetch(`http://localhost:5000/like`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -97,7 +97,7 @@ const page = () => {
 
   const deleteLike = async (id: String, token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/like/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -114,7 +114,7 @@ const page = () => {
 
   const checkLike = async (id: String, token: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/like/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

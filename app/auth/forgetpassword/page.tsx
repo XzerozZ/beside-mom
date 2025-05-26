@@ -13,7 +13,7 @@ const page = () => {
     formData.append("Email", email);
     try {
       const response = await fetch(
-        `http://localhost:5000/auth/forgotpassword`,
+        `${process.env.NEXT_PUBLIC_url}/auth/forgotpassword`,
         {
           method: "POST",
 
