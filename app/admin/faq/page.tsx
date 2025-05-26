@@ -41,7 +41,7 @@ export default function Faq() {
         if (!token) {
           setError("No authentication token found");
           alert("กรุณาเข้าสู่ระบบใหม่");
-          router.push('/user/auth/login');
+          router.push('/auth/login');
           return;
         }
         
@@ -98,7 +98,7 @@ export default function Faq() {
       if (!token) {
         setError("No authentication token found");
         alert("กรุณาเข้าสู่ระบบใหม่");
-        router.push('/user/auth/login');
+        router.push('/auth/login');
         return;
       }
       

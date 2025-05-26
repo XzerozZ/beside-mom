@@ -28,7 +28,7 @@ const AddFag: React.FC = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       alert("กรุณาเข้าสู่ระบบใหม่");
-      router.push("/user/auth/login");
+      router.push("/auth/login");
       return;
     }
 

@@ -148,7 +148,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
       if (!token) {
         console.error("No token found");
         alert("กรุณาเข้าสู่ระบบใหม่");
-        router.push('/user/auth/login');
+        router.push('/auth/login');
         return;
       }
 

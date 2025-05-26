@@ -273,7 +273,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
               localStorage.removeItem('u_id');
 
               // Navigate to login page
-              router.push('/user/auth/login');
+              router.push('/auth/login');
               
             }}
             className="flex items-center w-64 px-6 py-4 text-neutral05 hover:bg-gray-100 transition-colors"

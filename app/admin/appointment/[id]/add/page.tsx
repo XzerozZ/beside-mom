@@ -40,7 +40,7 @@ export default function Babygraphs() {
         const token = localStorage.getItem("token");
         if (!token) {
           alert("กรุณาเข้าสู่ระบบใหม่");
-          router.push("/user/auth/login");
+          router.push("/auth/login");
           return;
         }
         const apiUrl = `${process.env.NEXT_PUBLIC_api_mominfo}/info/${id}`;
@@ -82,7 +82,7 @@ export default function Babygraphs() {
     const token = localStorage.getItem("token");
     if (!token) {
       alert("กรุณาเข้าสู่ระบบใหม่");
-      router.push("/user/auth/login");
+      router.push("/auth/login");
       return;
     }
     try {

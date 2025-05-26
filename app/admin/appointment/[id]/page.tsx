@@ -68,7 +68,7 @@ const AppointmentsPage: React.FC = () => {
         const token = localStorage.getItem("token");
         if (!token) {
           alert("กรุณาเข้าสู่ระบบใหม่");
-          router.push("/user/auth/login");
+          router.push("/auth/login");
           return;
         }
         const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/history/mom/${id}`;
@@ -135,7 +135,7 @@ const AppointmentsPage: React.FC = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         alert("กรุณาเข้าสู่ระบบใหม่");
-        router.push("/user/auth/login");
+        router.push("/auth/login");
         return;
       }
       const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/${appointmentId}`;

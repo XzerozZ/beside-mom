@@ -15,14 +15,14 @@ export default function Home() {
           if (role === "Admin") {
             router.push("/admin/mominfo");
           } else if (role === "User") {
-            router.push("/user/home");
+            router.push("/home");
           }
         } else {
-          router.replace('/user/auth/login');
+          router.replace('/auth/login');
         }
       } catch (error) {
         console.error("Error checking authentication:", error);
-        router.replace('/user/auth/login');
+        router.replace('/auth/login');
       }
     };
     
