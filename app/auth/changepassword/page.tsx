@@ -26,6 +26,7 @@ const page = () => {
           icon: "success",
           timer: 1000,
         });
+           window.location.href = "/auth/login";
       } else {
         Swal.fire({
           title: "Failed to change password",

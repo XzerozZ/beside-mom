@@ -27,6 +27,7 @@ const page = () => {
           icon: "success",
           timer: 1000,
         });
+         window.location.href = "/auth/changepassword";
       } else {
         Swal.fire({
           title: "Failed to verify OTP",
@@ -143,7 +144,7 @@ const page = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleOTP();
-                  window.location.href = "/auth/changepassword";
+                 
                 }}
               />
             </div>
