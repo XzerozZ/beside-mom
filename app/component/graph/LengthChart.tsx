@@ -28,12 +28,6 @@ interface ChartDataPoint {
   height: number | null;
 }
 
-// Type for raw real measurement data
-interface RealMeasurement {
-  month: number;
-  height: number;
-}
-
 
 
 const SdAreaLineChart: FC<ChartProps> = (props) => {

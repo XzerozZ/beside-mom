@@ -1,38 +1,6 @@
 import {  HistoryData } from "@/app/interface";
 import React from "react";
 
-const steps = [
-  {
-    number: 1,
-    titleTH: "ด้านการเคลื่อนไหว",
-    titleEN: "Gross Motor (GM)",
-    active: true,
-  },
-  {
-    number: 2,
-    titleTH: "ด้านการใช้กล้ามเนื้อมัดเล็ก และสติปัญญา",
-    titleEN: "Fine Motor (FM)",
-    active: true,
-  },
-  {
-    number: 3,
-    titleTH: "ด้านการเข้าใจภาษา",
-    titleEN: "Receptive Language (RL)",
-    active : true,
-  },
-  {
-    number: 4,
-    titleTH: "ด้านการใช้ภาษา",
-    titleEN: "Expression Language (EL)",
-  },
-  {
-    number: 5,
-    titleTH: "ด้านการช่วยเหลือตนเองและสังคม",
-    titleEN: "Personal and Social (PS)",
-  },
- 
- 
-];
 const StepProgress = (data : HistoryData) => { 
   const resultArrayQuiz = data
   ? Object.entries(data).map(([key, value]) => {

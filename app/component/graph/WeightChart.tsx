@@ -28,11 +28,7 @@ interface ChartDataPoint {
   weight: number | null;
 }
 
-// Type for raw real measurement data
-interface RealMeasurement {
-  month: number;
-  weight: number;
-}
+
 
 
 

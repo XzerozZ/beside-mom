@@ -18,7 +18,7 @@ const PageForm = () => {
     const safeDecode = (text: string) => {
       try {
         return decodeURIComponent(text);
-      } catch (e) {
+      } catch  {
         return text;
       }
     };

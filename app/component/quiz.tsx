@@ -60,7 +60,7 @@ const QuizForm: React.FC<{
       if (!response.ok) {
         setQuizNext(true);
       }
-    } catch (error) {}
+    } catch {}
   };
 
   const handleAnswer = (value: boolean,phase:number,category:number) => {
@@ -139,10 +139,10 @@ const QuizForm: React.FC<{
     }
     try {
       fetchQuizByIdInNext(Number(index), localStorage.getItem("key") || "",Number(useParam.phase),Number(useParam.category));
-    } catch (error) {
+    } catch  {
       console.log("hello");
     }
-  }, []);
+  }, [useParam.phase,useParam.category,index]);
 
   return (
     <div>

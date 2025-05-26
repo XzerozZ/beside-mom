@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { CareItem } from "@/app/interface";
@@ -62,7 +62,7 @@ const Page = () => {
     };
 
     fetchData();
-  }, [token]);
+  }, [token,param.id]);
 
   if (loading) {
     return (

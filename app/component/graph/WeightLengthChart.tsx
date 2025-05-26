@@ -11,14 +11,6 @@ import { FC } from "react";
 import { WeightGrowth } from "@/app/interface";
 import { ChartProps } from "@/app/interface";
 
-// Type for each data point in the standard deviation chart
-
-// Type for raw real measurement data
-interface RealMeasurement {
-  month: number;
-  weight: number;
-}
-
 const SdAreaLineChart: FC<ChartProps> = (props) => {
   const { GrowthRecord } = props;
 

@@ -14,7 +14,6 @@ const PageFormCategory = () => {
   const { id } = useParams();
   const searchParams = new URLSearchParams(window.location.search);
   const babyId = searchParams.get("babyid");
-  const numericId = Number(id);
   const param = useParams();
   const token = localStorage.getItem("token");
 
@@ -23,7 +22,7 @@ const PageFormCategory = () => {
     const safeDecode = (text: string) => {
       try {
         return decodeURIComponent(text);
-      } catch (e) {
+      } catch  {
         return text;
       }
     };
@@ -48,7 +47,7 @@ const PageFormCategory = () => {
   ) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/quiz/period/2/category/1`,
+        `${process.env.NEXT_PUBLIC_url}/quiz/period/${phase}/category/${category}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
