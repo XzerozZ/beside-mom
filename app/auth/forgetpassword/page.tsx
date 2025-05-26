@@ -4,10 +4,9 @@ import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
 import Swal from "sweetalert2";
 
-const page = () => {
+const PageFP = () => {
   const [email, setEmail] = React.useState("");
   const handleForgetPassword = async () => {
-    const token = localStorage.getItem("token");
     localStorage.setItem("email", email);
     const formData = new FormData();
     formData.append("Email", email);
@@ -151,4 +150,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PageFP;

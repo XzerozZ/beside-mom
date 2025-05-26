@@ -1,7 +1,7 @@
-import { BabyCardProps, ButtonProps } from "@/app/interface";
+import { BabyCardProps } from "@/app/interface";
 import React, { FC } from "react";
 import Image from "next/image";
-import { ButtonComponents, ButtonComponents3 } from "./button";
+import { ButtonComponents3 } from "./button";
 import { text } from "stream/consumers";
 import Link from "next/link";
 

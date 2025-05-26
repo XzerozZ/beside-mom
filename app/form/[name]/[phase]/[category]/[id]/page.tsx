@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "@/app/component/navbar";
 
-const page = () => {
+const PageFormCategory = () => {
   const { name } = useParams();
   const { phase } = useParams();
   const { id } = useParams();
@@ -39,25 +39,7 @@ const page = () => {
 
   // const [quiz, setQuiz] = React.useState<Quiz[]>();
   const [quizHistoryData, setQuizHistoryData] = React.useState<Quiz[]>();
-  // const fetchQuiz = async (id: number, token: string) => {
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_url}/quiz/period/2/category/1/`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch quiz data");
-  //     }
-  //     const data = await response.json();
-  //     setQuiz(data.result);
-  //   } catch (error) {
-  //     console.error("Error fetching quiz data:", error);
-  //   }
-  // };
+
 
   const fetchQuizArray = async (
     token: string,
@@ -118,7 +100,7 @@ const page = () => {
     setLoading(false);
 
   
-  }, [token]);
+  }, [token,param.phase,param.category]);
 
   if (loading) {
     return (
@@ -168,4 +150,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageFormCategory;

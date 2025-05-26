@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../../component/navbar";
 
-const page = () => {
+const PageStoryId = () => {
   const param = useParams();
   const [like, setLike] = React.useState<boolean>(false);
   const [isToggle, setIsToggle] = React.useState(false);
@@ -294,4 +294,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageStoryId;

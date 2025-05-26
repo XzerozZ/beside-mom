@@ -1,4 +1,4 @@
-import { ButtonProps, CareItem, VideoClip } from "@/app/interface";
+import { CareItem, VideoClip } from "@/app/interface";
 import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
@@ -11,7 +11,7 @@ import { useParams } from "next/navigation";
 import { GrowthRecord } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
-const page = () => {
+const PageBabyId = () => {
   const param = useParams();
   const token = localStorage.getItem("token");
   const [kidData, setKidData] = React.useState<KidProfile>();
@@ -232,4 +232,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageBabyId;

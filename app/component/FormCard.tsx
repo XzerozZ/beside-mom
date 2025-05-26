@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { HistoryData, Quiz, QuizHistory, QuizResult } from "@/app/interface";
+import { QuizResult } from "@/app/interface";
 
 const FormCard: React.FC<QuizResult> = (quizData) => {
   return (

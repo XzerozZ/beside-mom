@@ -1,12 +1,12 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import CalendarCard from "../../../component/calendarcard";
 import { Appointment } from "@/app/interface";
 import { useParams } from "next/navigation";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 
-const page = () => {
+const PageCalendarHistoryId = () => {
   const param = useParams();
   const token = localStorage.getItem("token");
   const [calendar, setCalendar] = React.useState<Appointment>();
@@ -64,7 +64,7 @@ const page = () => {
     setLoading(false);
 
     
-  }, [token]);
+  }, [token,param.id]);
 
   if (loading) {
     return (
@@ -88,4 +88,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageCalendarHistoryId;

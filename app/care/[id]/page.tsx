@@ -6,7 +6,7 @@ import { CareItem } from "@/app/interface";
 import "@/app/component/css/loader.css";
 import Swal from "sweetalert2";
 
-const page = () => {
+const Page = () => {
   const param = useParams();
   const token = localStorage.getItem("token");
   const [care, setCare] = React.useState<CareItem>();
@@ -121,4 +121,4 @@ const page = () => {
     );
   }
 };
-export default page;
+export default Page;

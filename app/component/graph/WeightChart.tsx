@@ -1,19 +1,15 @@
 import {
-  AreaChart,
   Area,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
-  Legend,
   ComposedChart,
-  Customized,
 } from 'recharts';
 
 import { FC } from 'react';
-import { GrowthRecord, WeightGrowth } from '@/app/interface';
+import { WeightGrowth } from '@/app/interface';
 import { ChartProps } from '@/app/interface';
 
 // Type for each data point in the standard deviation chart
@@ -48,28 +44,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
     weight: item.weight
   }));
   console.log(RealWeight);
- 
-  const realMeasurements: RealMeasurement[] = [
-    { month: 0, weight: 3.0 },
-    { month: 1, weight: 4.0 },
-    { month: 2, weight: 5.0 },
-    { month: 3, weight: 5.7 },
-    { month: 4, weight: 6.2 },
-    { month: 5, weight: 6.6 },
-    { month: 6, weight: 7.2 },
-    { month: 7, weight: 7.5 },
-    { month: 8, weight: 7.8 },
-    { month: 9, weight: 8.1 },
-    { month: 10, weight: 8.3 },
-    { month: 11, weight: 8.5 },
-    { month: 12, weight: 8.8 },
-    { month: 12.5, weight: 8.8 },
-    { month: 13, weight: 9.0 },
-    { month: 14, weight: 9.2 },
-    { month: 15, weight: 9.4 },
-    { month: 16, weight: 9.5 },
-   
-  ];
+
   const BoyData = [
     { month: 0, '-3SD': 2.0, '-2SD': 2.4, '0SD': 3.2, '+2SD': 4.2, '+3SD': 4.7, full: 16.0 },
     { month: 1, '-3SD': 2.7, '-2SD': 3.2, '0SD': 4.2, '+2SD': 5.4, '+3SD': 6.1, full: 16.0 },

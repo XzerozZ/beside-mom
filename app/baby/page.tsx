@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../component/navbar";
 
-const page = () => {
+const PageBaby = () => {
   const token = localStorage.getItem("token");
 
   const uid = localStorage.getItem("u_id");
@@ -52,7 +52,6 @@ const page = () => {
       return;
     }
     const formData = new FormData();
-    const file = fileInputRef.current.files[0];
     for (const file of fileInputRef.current.files) {
       formData.append("images", file);
     }
@@ -251,4 +250,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageBaby;

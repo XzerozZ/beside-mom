@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../component/navbar";
 
-const page = () => {
+const PageStory = () => {
   const token = localStorage.getItem("token");
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
   const fetchVideo = async (token: string) => {
@@ -84,4 +84,4 @@ const page = () => {
     );
   }
 };
-export default page;
+export default PageStory;

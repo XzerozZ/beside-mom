@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "@/app/component/navbar";
 import ProgressBar from "@/app/component/progressbar"; // Adjust the path as necessary
-const page = () => {
+const PageFormPhase = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const babyId = searchParams.get("babyid");
   const token = localStorage.getItem("token");
@@ -140,7 +140,7 @@ const page = () => {
     setLoading(false);
 
    
-  }, [token]);
+  }, [token,babyId,decodedPhase]);
 
   if (loading) {
     return (
@@ -215,4 +215,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageFormPhase;

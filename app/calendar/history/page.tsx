@@ -5,7 +5,7 @@ import { Appointment } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 
-const page = () => {
+const PageCalendarHistory = () => {
   const token = localStorage.getItem("token");
   const [calendar, setCalendar] = React.useState<Appointment[]>();
   const fetchCalendar = async (token: string) => {
@@ -85,4 +85,4 @@ const page = () => {
     );
   }
 };
-export default page;
+export default PageCalendarHistory;

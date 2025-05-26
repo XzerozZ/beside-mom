@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { ButtonComponents } from "./button";
 import Swal from "sweetalert2";
+import Link from "next/link";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = React.useState(false);
@@ -16,22 +16,22 @@ const Navbar = () => {
       <div className="max-xl:hidden">
         <ul className="flex flex-row gap-[44px]">
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/baby">ข้อมูลทารก</a>
+          <Link href="/baby">ข้อมูลทารก</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/story">เรื่องเล่าของคุณแม่</a>
+          <Link href="/story">เรื่องเล่าของคุณแม่</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/care">การดูแลทารก</a>
+          <Link href="/care">การดูแลทารก</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/question">คำถามที่พบบ่อย</a>
+          <Link href="/question">คำถามที่พบบ่อย</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/calendar">การตรวจตามนัด</a>
+          <Link href="/calendar">การตรวจตามนัด</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/contact">ติดต่อพยาบาล</a>
+          <Link href="/contact">ติดต่อพยาบาล</Link>
         </li>
         </ul>
       </div>
@@ -143,25 +143,25 @@ const Navbar = () => {
         </div>
         <ul className="flex flex-col gap-4 p-4 z-10">
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/baby">ข้อมูลทารก</a>
+          <Link href="/baby">ข้อมูลทารก</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/story">เรื่องเล่าของคุณแม่</a>
+          <Link href="/story">เรื่องเล่าของคุณแม่</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/care">การดูแลทารก</a>
+          <Link href="/care">การดูแลทารก</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/question">คำถามที่พบบ่อย</a>
+          <Link href="/question">คำถามที่พบบ่อย</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/calendar">การตรวจตามนัด</a>
+          <Link href="/calendar">การตรวจตามนัด</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/contact">ติดต่อพยาบาล</a>
+          <Link href="/contact">ติดต่อพยาบาล</Link>
         </li>
         <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
-          <a href="/profile">โปรไฟล์</a>
+          <Link href="/profile">โปรไฟล์</Link>
         </li>
         </ul>
       </div>

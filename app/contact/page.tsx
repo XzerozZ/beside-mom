@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "../component/button";
 
-const page = () => {
+const Page = () => {
   return (
     <div className="">
       <div className="flex flex-col items-center gap-[30px]">
@@ -98,4 +98,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

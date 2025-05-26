@@ -1,5 +1,4 @@
 import {  HistoryData } from "@/app/interface";
-import { access } from "fs";
 import React from "react";
 
 const steps = [
@@ -45,10 +44,6 @@ const StepProgress = (data : HistoryData) => {
   : [];
   
   console.log("data",data) // Get index of active step
-  const arrayData = Object.values(data);
-
-  const activeIndex = resultArrayQuiz.findIndex((step) => step.solution_status === "ผ่าน");
-  const stepWidthPercent = 100 / (steps.length - 1); // Spread steps evenly
 
   if (resultArrayQuiz.length < 5) {
     return (
