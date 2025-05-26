@@ -97,7 +97,7 @@ const page = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleOTP();
-                  window.location.href = "/auth/changepassword";
+                
                 }}
               />
             </div>

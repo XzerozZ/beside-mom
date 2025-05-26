@@ -26,8 +26,8 @@ const page = () => {
           icon: "success",
           timer: 1000,
         });
+          window.location.href = "/auth/verify";
       } else {
-        alert("Failed to send password reset link");
         Swal.fire({
           title: "Failed to send password reset link",
           icon: "error",
@@ -96,7 +96,7 @@ const page = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleForgetPassword();
-                  window.location.href = "/auth/verify";
+                
                 }}
               />
             </div>
@@ -140,7 +140,7 @@ const page = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleForgetPassword();
-                  window.location.href = "/auth/verify";
+                
                 }}
               />
             </div>

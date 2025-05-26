@@ -93,7 +93,7 @@ const page = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleChangePassword();
-                  window.location.href = "/auth/login";
+                
                 }}
               />
             </div>
@@ -137,7 +137,7 @@ const page = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleChangePassword();
-                  window.location.href = "/auth/login";
+               
                 }}
               />
             </div>
