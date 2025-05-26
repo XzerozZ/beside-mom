@@ -16,7 +16,9 @@ const page = () => {
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
 
   const fetchMomData = async (id: string, key: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/info/${id}`, {
+    console.log("Fetching mom data for ID:", id);
+    console.log("Using token:", key);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user/info/${id}`, {
       headers: {
         Authorization: `Bearer ${key}`,
       },
@@ -26,14 +28,7 @@ const page = () => {
       setMomData(data.result);
     } else {
       console.error("Failed to fetch mom data");
-       await Swal.fire({
-                title: "Please login again your token is expired!",
-                icon: "error",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-                confirmButtonColor: "#B36868",
-              });
-              window.location.href = "/auth/login";
+    
       
     }
   };
@@ -103,6 +98,7 @@ const page = () => {
         return;
       }
     };
+     fetchData();
     if (token) {
       fetchMomData(uid!, token!);
     } else {
@@ -110,8 +106,8 @@ const page = () => {
     }
     setLoading(false);
 
-    fetchData();
-  }, [token]);
+   
+  }, [token,uid]);
 
   if (loading) {
     return (

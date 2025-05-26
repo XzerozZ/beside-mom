@@ -9,7 +9,6 @@ const Loginpage = () => {
 
   const handleLogin = async () => {
     if (!username || !password) {
-      alert("Please enter both username and password");
       return;
     }
     try {
@@ -27,6 +26,7 @@ const Loginpage = () => {
       const data = await response.json();
 
       if (data.status === "Success" && data.result?.token) {
+        alert("Login successful");
         localStorage.setItem("token", data.result.token);
         localStorage.setItem("name", data.result.name);
         localStorage.setItem("role", data.result.role);

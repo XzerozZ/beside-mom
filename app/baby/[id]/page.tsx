@@ -98,6 +98,7 @@ const page = () => {
         return;
       }
     };
+     fetchData();
     if (token) {
       if (typeof param.id === "string") {
         fetchKidData(param.id, token!);
@@ -110,8 +111,8 @@ const page = () => {
     }
     setLoading(false);
 
-    fetchData();
-  }, [token]);
+   
+  }, [token,param.id]);
 
   if (loading) {
     return (
