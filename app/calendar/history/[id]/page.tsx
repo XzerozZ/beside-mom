@@ -53,6 +53,7 @@ const page = () => {
         return;
       }
     };
+    fetchData();
     if (token) {
       if (typeof param.id === "string") {
         fetchCalendar(param.id, token!);
@@ -62,7 +63,7 @@ const page = () => {
     }
     setLoading(false);
 
-    fetchData();
+    
   }, [token]);
 
   if (loading) {

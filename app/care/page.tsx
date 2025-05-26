@@ -52,6 +52,7 @@ const page = () => {
         return;
       }
     };
+       fetchData();
     if (token) {
       fetchCare(token);
     } else {
@@ -59,7 +60,7 @@ const page = () => {
     }
     setLoading(false);
 
-    fetchData();
+   
   }, [token]);
 
   const shuffleArray = (array: CareItem[]) => {

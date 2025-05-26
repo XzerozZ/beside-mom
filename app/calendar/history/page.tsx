@@ -51,6 +51,7 @@ const page = () => {
         return;
       }
     };
+     fetchData();
     if (token) {
       fetchCalendar(token!);
     } else {
@@ -58,7 +59,7 @@ const page = () => {
     }
     setLoading(false);
 
-    fetchData();
+   
   }, [token]);
 
   if (loading) {

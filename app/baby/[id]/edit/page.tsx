@@ -104,6 +104,7 @@ const page = () => {
         return;
       }
     };
+      fetchData();
     if (token) {
       fetchBabyData(token!, babyId!);
     } else {

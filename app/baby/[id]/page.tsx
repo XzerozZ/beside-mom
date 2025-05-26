@@ -182,7 +182,7 @@ const page = () => {
                     type="radio"
                     name="gender"
                     value="male"
-                    checked={kidData?.sex === "male"}
+                    checked={kidData?.sex === "ชาย"}
                     readOnly
                     className="accent-[#B36868]"
                   />
@@ -193,7 +193,7 @@ const page = () => {
                     type="radio"
                     name="gender"
                     value="female"
-                    checked={kidData?.sex === "female"}
+                    checked={kidData?.sex === "หญิง"}
                     readOnly
                     className="accent-[#B36868]"
                   />
@@ -222,9 +222,9 @@ const page = () => {
             </div>
           </div>
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-row max-xl:flex-col justify-between gap-8">
-            <WeightChart gender="boy" GrowthRecord={graphData || []} />
-            <LengthChart gender="boy" GrowthRecord={graphData || []} />
-            <WeigthLengthGrowth gender="girl" GrowthRecord={graphData || []} />
+            <WeightChart gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
+            <LengthChart gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
+            <WeigthLengthGrowth gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
           </div>
         </div>
       </div>

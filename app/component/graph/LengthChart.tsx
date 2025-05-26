@@ -133,7 +133,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
   // Preprocess the data
   let processedData: ChartDataPoint[] = [];
 
-  if (gender === 'boy') {
+  if (gender === 'ชาย') {
     processedData = BoyData.map((d) => ({
       month: d.month,
       '-3SD': d['-3SD'],
@@ -148,7 +148,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
       band4: d['+3SD'] - d['+2SD'],
       height: RealHeight.find((r) => r.month === d.month)?.length ?? null,
     }));
-  } else if (gender === 'girl') {
+  } else if (gender === 'หญิง') {
     processedData = GirlData.map((d) => ({
       month: d.month,
       '-3SD': d['-3SD'],

@@ -58,7 +58,7 @@ const page = () => {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

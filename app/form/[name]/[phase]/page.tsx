@@ -128,6 +128,7 @@ const page = () => {
         return;
       }
     };
+     fetchData();
     if (token) {
       fetchQuizData(token || "", babyId || "", Number(decodedPhase)); // Fetch quiz history
 
@@ -138,7 +139,7 @@ const page = () => {
     }
     setLoading(false);
 
-    fetchData();
+   
   }, [token]);
 
   if (loading) {

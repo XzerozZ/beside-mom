@@ -109,6 +109,7 @@ const page = () => {
         return;
       }
     };
+      fetchData();
     if (token) {
       fetchQuizArray(token!, Number(param.phase), Number(param.category));
     } else {
@@ -116,7 +117,7 @@ const page = () => {
     }
     setLoading(false);
 
-    fetchData();
+  
   }, [token]);
 
   if (loading) {

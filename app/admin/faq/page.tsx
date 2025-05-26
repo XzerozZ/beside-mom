@@ -167,7 +167,7 @@ export default function Faq() {
                         <Typography variant="h6" fontWeight="bold">
                           Q: {faq.question}
                         </Typography>
-                        <div>
+                        <div className="flex gap-2">
                           <Button
                             size="small"
                             variant="outlined"

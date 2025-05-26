@@ -55,6 +55,7 @@ const page = () => {
         return;
       }
     };
+    fetchData();
     if (token) {
       fetchCalendar(token!);
     } else {
