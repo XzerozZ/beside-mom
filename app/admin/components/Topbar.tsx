@@ -10,12 +10,7 @@ import {
 } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
 
-interface TopBarSectionProps {
-  title: string;
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  onAddClick: () => void;
-}
+import { TopBarSectionProps } from "@/app/admin/types";
 
 const TopBarSection: React.FC<TopBarSectionProps> = ({
   title,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -9,6 +8,7 @@ import {
 import Sidebar from "../../../../../components/SideBarAdmin";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { EvaluateDataAPI, EvaluatePeriods } from "@/app/admin/types";
 
 const periodMap: Record<number, string> = {
     1: "แรกเกิด",
@@ -27,7 +27,7 @@ const ContactNurseInfo: React.FC = () => {
   const kid_id = params.kid_id as string;
   const period_id = params.period_id as string;
 
-  const [evaluateData, setEvaluateData] = useState<any>(null);
+  const [evaluateData, setEvaluateData] = useState<EvaluateDataAPI | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,8 +45,8 @@ const ContactNurseInfo: React.FC = () => {
       if (!res.ok) throw new Error("ไม่สามารถดึงข้อมูลได้");
       const data = await res.json();
       setEvaluateData(data.result);
-    } catch (err: any) {
-      setError(err.message || "เกิดข้อผิดพลาด");
+    } catch (err) {
+      console.error("Error fetching data:", err);
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const ContactNurseInfo: React.FC = () => {
           <div className="text-red-500">{error}</div>
         ) : evaluateData ? (
           <div className="space-y-4">
-            {Object.entries(evaluateData).map(([category, periods]: any) => {
+            {Object.entries(evaluateData).map(([category, periods]: [string, EvaluatePeriods]) => {
             
               const periodKeys = Object.keys(periods).sort((a, b) => Number(a) - Number(b));
               const lastPeriodKey = periodKeys.length > 0 ? periodKeys[periodKeys.length - 1] : undefined;

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -19,6 +18,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import TopBarSection from "../components/Topbar";
 import { doctors } from "../types";
 type AppointmentStatus = "สำเร็จ" | "ยกเลิก" | "เลื่อน" | "นัดแล้ว";
+
+import { AppointmentApiData_id ,Appointmentpage} from "../types";
+
 
 const statusMap: Record<number, AppointmentStatus> = {
   1: "นัดแล้ว",
@@ -41,15 +43,7 @@ const statusDots = {
   นัดแล้ว: "bg-primary5",
 };
 
-interface Appointment {
-  a_id: string;
-  user_id: string;
-  name: string;
-  date: string;
-  time: string;
-  doctor: string;
-  status: AppointmentStatus;
-}
+
 
 export default function AppointmentPage() {
   const searchParams = useSearchParams();
@@ -57,12 +51,12 @@ export default function AppointmentPage() {
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [selectedDoctor, setSelectedDoctor] = useState<string>("");
   const [doctorDropdownOpen, setDoctorDropdownOpen] = useState(false);
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<Appointmentpage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof Appointment;
+    key: keyof Appointmentpage;
     direction: "asc" | "desc";
   } | null>(null);
 
@@ -95,7 +89,7 @@ export default function AppointmentPage() {
         if (data.status !== "Success") throw new Error(data.message || "Error");
 
         // Map API data to Appointment[]
-        const mapped: Appointment[] = (data.result || []).map((item: any) => ({
+        const mapped: Appointmentpage[] = (data.result || []).map((item: AppointmentApiData_id) => ({
           a_id: item.id,
           user_id: item.user_id,
           name: item.name,
@@ -107,8 +101,10 @@ export default function AppointmentPage() {
           status: statusMap[item.status as number] || "นัดแล้ว",
         }));
         setAppointments(mapped);
-      } catch (err: any) {
-        setError(err.message || "เกิดข้อผิดพลาดในการโหลดข้อมูล");
+      } catch (err) {
+        console.error("Error fetching appointments:", err);
+        setError("ไม่สามารถดึงข้อมูลการนัดหมายได้");
+        setAppointments([]);
       } finally {
         setLoading(false);
       }
@@ -121,7 +117,7 @@ export default function AppointmentPage() {
     router.push(`/admin/appointment/${appointmentId}`);
   };
 
-  const handleSort = (key: keyof Appointment) => {
+  const handleSort = (key: keyof Appointmentpage) => {
     setSortConfig((prev) => {
       if (prev?.key === key) {
         return { key, direction: prev.direction === "asc" ? "desc" : "asc" };

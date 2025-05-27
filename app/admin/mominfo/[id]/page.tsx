@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   Container,
   TextField,
@@ -21,6 +20,9 @@ import {
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { MomInfo, BabyInfo} from "@/app/admin/types";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {MomApiResponse, KidApiData, GrowthApiData} from "@/app/admin/types";
+
+
 
 export default function MomInfoId() {
   const params = useParams();
@@ -50,7 +52,7 @@ export default function MomInfoId() {
         );
         if (!res.ok) throw new Error("Failed to fetch mom info");
         const data = await res.json();
-        const mom = data.result;
+        const mom: MomApiResponse = data.result;
         setMomInfo({
           id: mom.u_id,
           img: mom.image_link,
@@ -59,19 +61,19 @@ export default function MomInfoId() {
           email: mom.email,
         });
 
-        const babydata = (mom.kids || []).map((kid: any) => ({
+        const babydata = (mom.kids || []).map((kid: KidApiData) => ({
           id: kid.u_id,
           img: kid.image_link,
           firstName: kid.fname,
           lastName: kid.lname,
           nickname: kid.uname,
-          gender: kid.sex === "ชาย" ? "male" : "female",
+          gender: kid.sex === "ชาย" ? "male" : kid.sex === "หญิง" ? "female" : kid.sex,
           birthDate: kid.birth_date?.slice(0, 10) || "",
           bloodType: kid.blood_type,
           birthWeight: kid.weight?.toString() || "",
           birthHeight: kid.length?.toString() || "",
           note: kid.note,
-          growthData: (kid.growth || []).map((g: any) => ({
+          growthData: (kid.growth || []).map((g: GrowthApiData) => ({
             id: g.G_id,
             date: g.created_at.slice(0, 10),
             months: g.months,
@@ -114,11 +116,13 @@ export default function MomInfoId() {
             </Typography>
             <div className="grid grid-cols-3 gap-4">
                 <div className="relative w-44 h-44">
-                  <img
+                  <Image
                     src={
                       momInfo.img ||
                       "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
                     }
+                    width={176}
+                    height={176}
                     alt="Profile"
                     className="w-44 h-44 rounded-full overflow-hidden object-cover"
                   />
@@ -132,7 +136,7 @@ export default function MomInfoId() {
                   size="small"
                   name="id"
                   value={momInfo.id}
-                  disabled // Usually ID should be read-only
+                  disabled 
                 />
 
                 
@@ -142,7 +146,7 @@ export default function MomInfoId() {
                   fullWidth
                   size="small"
                   name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
+                  value={momInfo.firstName || ""} 
                   disabled
                 />
                 </div>
@@ -165,7 +169,7 @@ export default function MomInfoId() {
                   fullWidth
                   size="small"
                   name="lastName"
-                  value={momInfo.lastName} // You'll need to add lastName to MomInfo interface
+                  value={momInfo.lastName} 
                   disabled
                 />
              </div>
@@ -207,12 +211,14 @@ export default function MomInfoId() {
                   <div className="w-full grid grid-cols-1 gap-6" key={baby.id}>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="relative w-44 h-44">
-                        <img
+                        <Image
                           src={
                             baby.img ||
                             "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                           }
-                          alt="Profile"
+                          width={176}
+                          height={176}
+                          alt="Baby Profile"
                           className="w-44 h-44 rounded-full overflow-hidden object-cover"
                         />
                       </div>

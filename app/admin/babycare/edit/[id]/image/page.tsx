@@ -16,22 +16,7 @@ import {
 } from "@mui/material";
 import Sidebar from "../../../../components/SideBarAdmin";
 
-interface Asset {
-  asset_id: string;
-  link: string;
-}
-
-interface BabyCareData {
-  c_id: string;
-  type: string;
-  title: string;
-  desc: string;
-  banner: string;
-  user_id: string;
-  assets: Asset[];
-  created_at: string;
-  updated_at: string;
-}
+import { BabyCareData } from "@/app/admin/types";
 
 const EditBabyCareInfoPicturePage: React.FC = () => {
   const router = useRouter();

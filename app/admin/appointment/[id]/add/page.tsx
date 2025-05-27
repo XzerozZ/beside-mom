@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -13,6 +12,7 @@ import {
   FormLabel,
   Select,
   MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { doctors } from "@/app/admin/types";
@@ -69,7 +69,7 @@ export default function Babygraphs() {
     });
   };
 
-  const handleDoctorChange = (e: any) => {
+  const handleDoctorChange = (e: SelectChangeEvent<string>) => {
     setAppointmentmomInfo({
       ...appointmentmomInfo,
       doctor: e.target.value,

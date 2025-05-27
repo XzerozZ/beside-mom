@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -15,11 +14,11 @@ import {
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
-
+import { MomStory } from "../types";
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<MomStory[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
