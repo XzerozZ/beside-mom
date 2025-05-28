@@ -274,7 +274,7 @@ const QuizForm: React.FC<{
                   const currentIndex = quizIds.findIndex((id: number) => id === currentQuizId);
                   if (currentIndex !== -1 && currentIndex + 1 < quizIds.length) {
                     const nextQuizId = quizIds[currentIndex + 1];
-                    window.location.href = `/${navigate}/${nextQuizId}?babyid=${babyId}`;
+                    window.location.href = `/form/${navigate}/${nextQuizId}?babyid=${babyId}`;
                   }
                 }
               }}
