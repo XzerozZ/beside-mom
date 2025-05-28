@@ -8,17 +8,12 @@ import { useParams } from "next/navigation";
 
 const QuizForm: React.FC<{
   props: Quiz[];
-  param: string;
   navigate: string;
   history: Quiz[];
   index: number;
   babyId: string;
-}> = ({ props, param, navigate, index ,babyId}) => {
-  console.log("thisis ", props);
-  console.log("thisis param ", param);
-  console.log("thisis index ", index);
-  console.log("thisis babyId ", babyId);
-  console.log("thisis navigate ", navigate);
+}> = ({ props, navigate, index ,babyId}) => {
+
   const useParam = useParams();
   const quizIds: number[] = props.map(item => item.quiz_id);
 
@@ -166,6 +161,21 @@ const QuizForm: React.FC<{
     return false;
   }, [quiz?.quiz_id, useParam.phase, useParam.category]);
 
+  // Check if props array is empty
+  if (props.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 bg-gray-100 rounded-lg gap-4">
+        <p className="text-gray-600 text-lg font-medium">ไม่มีแบบทดสอบ</p>
+        <ButtonComponents6Size
+          title="ย้อนกลับ"
+          textSize="text-[16px]"
+          boxSize="w-[180px] max-sm:w-full"
+          onClick={() => window.history.back()}
+        />
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex p-[20px] gap-[80px] max-sm:flex-col max-sm:gap-8">
@@ -232,7 +242,7 @@ const QuizForm: React.FC<{
             onClick={() => {
               handleAnswer(isAnswered as boolean, Number(useParam.phase), Number(useParam.category));
               handleSubmit(Number(useParam.phase), Number(useParam.category), babyId);
-                window.location.href = `/form/${useParam.phase}/${useParam.category}?babyid=${babyId}`;
+                window.location.href = `/form/${useParam.phase}?babyid=${babyId}`;
             }}
           />
         </div>

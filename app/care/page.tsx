@@ -87,39 +87,41 @@ const PageCare = () => {
             การดูแลทารก
           </h1>
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[358px] flex flex-col gap-[40px]">
-            <div className="flex flex-row gap-[20px] bg-[#FFF4F4] p-[67px] max-sm:hidden">
+            {care && care.length > 0 && (
+              <div className="flex flex-row gap-[20px] bg-[#FFF4F4] p-[67px] max-sm:hidden">
               <div className="flex flex-col gap-[32px]  w-2/5 justify-center">
                 <h1 className="text-right font-bold text-[20px] text-[#B36868]">
-                  แนะนำ
+                แนะนำ
                 </h1>
                 <div className="flex flex-col gap-[20px]">
-                  <h2 className="text-right font-bold text-[20px]">
-                    {care?.[random]?.title}
-                  </h2>
-                  <h3 className="text-right text-[16px] ">{care?.[0]?.desc}</h3>
-                  <div className="flex flex-row justify-end gap-[5px]">
-                    <a href={`/story/${care?.[random]?.c_id}`} className="text-[14px] font-bold">
-                      ดูเพิ่มเติม
-                    </a>
-                    <Image
-                      src="/nexticon.svg"
-                      alt="next"
-                      width={8}
-                      height={20}
-                    ></Image>
-                  </div>
+                <h2 className="text-right font-bold text-[20px]">
+                  {care?.[random]?.title}
+                </h2>
+                <h3 className="text-right text-[16px] ">{care?.[0]?.desc}</h3>
+                <div className="flex flex-row justify-end gap-[5px]">
+                  <a href={`/story/${care?.[random]?.c_id}`} className="text-[14px] font-bold">
+                  ดูเพิ่มเติม
+                  </a>
+                  <Image
+                  src="/nexticon.svg"
+                  alt="next"
+                  width={8}
+                  height={20}
+                  ></Image>
+                </div>
                 </div>
               </div>
               <div className="w-3/5">
                 <Image
-                  src={care?.[random]?.banner || "/baby.png"}
-                  alt="baby"
-                  layout="responsive"
-                  width={500}
-                  height={500}
+                src={care?.[random]?.banner || "/baby.png"}
+                alt="baby"
+                layout="responsive"
+                width={500}
+                height={500}
                 ></Image>
               </div>
-            </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-4 gap-[40px] max-xl:grid-cols-3 max-sm:grid max-sm:grid-cols-1">
               {care?.map((item) => (

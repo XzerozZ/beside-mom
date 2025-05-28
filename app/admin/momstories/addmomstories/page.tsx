@@ -125,7 +125,7 @@ const AddMomStoryPage: React.FC = () => {
     }
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_api_momstory as string;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/video`;
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
