@@ -12,7 +12,7 @@ const Loginpage = () => {
       return;
     }
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_api_login! as string, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_url}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

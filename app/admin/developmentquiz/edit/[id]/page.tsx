@@ -60,7 +60,7 @@ export default function EditDevelopmentQuiz() {
       setError("");
       try {
         const token = localStorage.getItem("token");
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_quiz}/${id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz/${id}`;
         const res = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -108,7 +108,7 @@ export default function EditDevelopmentQuiz() {
         formData.append("banners", banners);
       }
       const token = localStorage.getItem("token");
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_quiz}/${id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz/${id}`;
       const res = await fetch(apiUrl, {
         method: "PUT",
         headers: {

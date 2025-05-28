@@ -52,7 +52,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
         const id = params.id as string;
         
         // Fetch data from API
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_babycare}/${id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${id}`;
         const response = await fetch(apiUrl, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -176,7 +176,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
       }
       
       // Make the API call
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_babycare}/${params.id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${params.id}`;
       const response = await fetch(apiUrl, {
         method: 'PUT', // Use PUT for updates
         headers: {

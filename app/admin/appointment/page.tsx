@@ -76,7 +76,7 @@ function AppointmentPageContent() {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = process.env.NEXT_PUBLIC_api_appointment;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint`;
         if (!apiUrl) throw new Error("API URL not defined");
 
         const response = await fetch(apiUrl, {

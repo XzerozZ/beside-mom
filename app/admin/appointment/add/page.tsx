@@ -47,7 +47,7 @@ export default function AppointmentAdd() {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = process.env.NEXT_PUBLIC_api_mominfo;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/user`;
         const response = await fetch(apiUrl as string, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -101,7 +101,7 @@ export default function AppointmentAdd() {
     }
     try {
       
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/${appointmentmomInfo.id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${appointmentmomInfo.id}`;
       const formData = new FormData();
       formData.append("title", appointmentmomInfo.subject);
       const formattedDate = appointmentmomInfo.date

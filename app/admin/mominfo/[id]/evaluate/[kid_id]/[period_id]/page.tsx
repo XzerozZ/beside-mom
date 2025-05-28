@@ -37,7 +37,7 @@ const ContactNurseInfo: React.FC = () => {
       setError(null);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_api_evaluate_history}/${period_id}/kid/${kid_id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/history/evaluate/${period_id}/kid/${kid_id}`, {
         headers: {
         Authorization: `Bearer ${token}`,
         },

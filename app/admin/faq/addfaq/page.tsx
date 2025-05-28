@@ -33,7 +33,7 @@ const AddFag: React.FC = () => {
     }
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_api_question;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/question`;
       if (!apiUrl) throw new Error("API URL not defined");
 
       const formData = new FormData();

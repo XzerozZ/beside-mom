@@ -111,7 +111,7 @@ export default function EditMomInfo() {
       return;
     }
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_api_mominfo as string;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/user` as string;
       const formData = new FormData();
       // Mom info
       formData.append("firstname", momInfo.firstName || "");

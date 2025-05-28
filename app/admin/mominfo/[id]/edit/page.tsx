@@ -54,7 +54,7 @@ export default function EditMomInfo() {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_mominfo_personal}/${params.id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/user/info/${params.id}`;
         const res = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -195,7 +195,7 @@ export default function EditMomInfo() {
      
      
       // PUT ข้อมูลแม่
-      const response = await fetch(`${process.env.NEXT_PUBLIC_api_mominfo}/${momInfo.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_url}/user/${momInfo.id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -220,7 +220,7 @@ export default function EditMomInfo() {
         if (baby.img && baby.img.startsWith("data:image")) {
           kidFormData.append("images", dataURLtoBlob(baby.img), `baby.jpg`);
         }
-        await fetch(`${process.env.NEXT_PUBLIC_api_kid}/${baby.id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_url}/kid/${baby.id}`, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -238,7 +238,7 @@ export default function EditMomInfo() {
             growthFormData.append("date", formattedDate);
             growthFormData.append("weight", growth.weight.toString());
             growthFormData.append("length", growth.length.toString());
-            await fetch(`${process.env.NEXT_PUBLIC_api_growth_kid}/${baby.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_url}/growth/kid/${baby.id}`, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${token}`,

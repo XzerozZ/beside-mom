@@ -40,7 +40,7 @@ export default function Faq() {
         }
         
         // Fetch data from API
-        const apiUrl = process.env.NEXT_PUBLIC_api_question ;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/question` ;
         if (!apiUrl) {
           throw new Error("API URL not defined");
         }
@@ -97,7 +97,7 @@ export default function Faq() {
       }
       
       // Delete FAQ from API
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_question}/${id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/question/${id}`;
       const response = await fetch(apiUrl, {
         method: 'DELETE',
         headers: {

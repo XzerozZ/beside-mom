@@ -43,7 +43,7 @@ const AllMomInfoPage: React.FC = () => {
     const fetchMomData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(process.env.NEXT_PUBLIC_api_mominfo as string, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user` as string, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -75,7 +75,7 @@ const AllMomInfoPage: React.FC = () => {
     }
     setMomData(momData.filter((mom) => mom.id !== id));
     const token = localStorage.getItem("token");
-    fetch(`${process.env.NEXT_PUBLIC_api_mominfo}/${id}`, {
+    fetch(`${process.env.NEXT_PUBLIC_url}/user/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

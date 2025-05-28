@@ -32,7 +32,7 @@ export default function DevelopmentQuizPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const apiUrl = process.env.NEXT_PUBLIC_api_quiz;
+    const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz`;
     if (!apiUrl) {
       console.error("API URL is not defined");
       return;
@@ -53,7 +53,7 @@ export default function DevelopmentQuizPage() {
   }, []);
   async function handleDelete(quiz_id: number) {
     const token = localStorage.getItem("token");
-    const apiUrl = process.env.NEXT_PUBLIC_api_quiz;
+    const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz`;
     if (!apiUrl) {
     console.error("API URL is not defined");
     return;

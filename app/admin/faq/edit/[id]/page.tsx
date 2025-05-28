@@ -29,7 +29,7 @@ const EditFaq: React.FC = () => {
         return;
       }
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_question}/${id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/question/${id}`;
         const response = await fetch(apiUrl, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ const EditFaq: React.FC = () => {
       return;
     }
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_question}/${id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/question/${id}`;
       const formData = new FormData();
       formData.append("question", question);
       formData.append("answer", answer);

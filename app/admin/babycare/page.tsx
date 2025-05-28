@@ -40,7 +40,7 @@ const MomstoryPage: React.FC = () => {
       const fetchData = async () => {
         try {
           const token = localStorage.getItem("token");
-          const res = await fetch(process.env.NEXT_PUBLIC_api_babycare as string, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_url}/care` as string, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -85,7 +85,7 @@ const MomstoryPage: React.FC = () => {
         return;
       }
 
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_babycare}/${id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${id}`;
       const response = await fetch(apiUrl, {
         method: "DELETE",
         headers: {
