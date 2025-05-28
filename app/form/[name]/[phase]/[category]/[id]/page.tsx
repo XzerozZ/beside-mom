@@ -128,7 +128,6 @@ const PageFormCategory = () => {
                 {quizHistoryData && (
                   <QuizForm
                     props={quizHistoryData}
-                    param={`${quizHistoryData?.length}`}
                     navigate={`${name}/${phase}/1`}
                     history={quizHistoryData ?? []}
                     index={Number(id)}
