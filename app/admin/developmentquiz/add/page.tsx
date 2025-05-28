@@ -69,7 +69,7 @@ export default function AddDevelopmentQuiz() {
       formData.append("suggestion", suggestion);
       if (banners) formData.append("banners", banners);
       const token = typeof window !== "undefined" ? localStorage.getItem("token") : "";
-      const apiUrl = process.env.NEXT_PUBLIC_api_quiz;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz`;
       if (!apiUrl) throw new Error("API URL not defined");
       const res = await fetch(apiUrl, {
         method: "POST",

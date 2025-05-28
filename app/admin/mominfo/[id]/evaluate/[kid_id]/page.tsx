@@ -93,7 +93,7 @@ const EvaluateList: React.FC = () => {
       setError("");
       try {
         const token = localStorage.getItem("token");
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_evaluate}/all/${kid_id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/evaluate/all/${kid_id}`;
         const res = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });

@@ -61,7 +61,7 @@ const AppointmentsPage: React.FC = () => {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/history/mom/${id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/history/mom/${id}`;
         const response = await fetch(apiUrl, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -131,7 +131,7 @@ const AppointmentsPage: React.FC = () => {
         router.push("/auth/login");
         return;
       }
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/${appointmentId}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${appointmentId}`;
       const response = await fetch(apiUrl, {
         method: "DELETE",
         headers: {

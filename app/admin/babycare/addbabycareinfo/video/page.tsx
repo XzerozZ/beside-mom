@@ -174,7 +174,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
       }
       
       // Make the API call
-      const apiUrl = process.env.NEXT_PUBLIC_api_babycare as string;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/care` as string;
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {

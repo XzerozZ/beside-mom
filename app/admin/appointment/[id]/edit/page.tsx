@@ -43,7 +43,7 @@ export default function Babygraphs() {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/${id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${id}`;
         const response = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -89,7 +89,7 @@ export default function Babygraphs() {
       return;
     }
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_appointment}/${id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${id}`;
       const formData = new FormData();
       const formattedDate = appointmentmomInfo.date
         ? appointmentmomInfo.date.replace(/\//g, "-")

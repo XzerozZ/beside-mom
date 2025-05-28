@@ -42,7 +42,7 @@ export default function MomInfoId() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_api_mominfo_personal}/${params.id}`,
+          `${process.env.NEXT_PUBLIC_url}/user/info/${params.id}`,
           {
             cache: "no-store",
             headers: {

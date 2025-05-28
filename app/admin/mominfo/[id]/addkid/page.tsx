@@ -74,7 +74,7 @@ export default function AddKid() {
       return;
     }
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_kid ?? ""}/${params.id as string}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url ?? ""}/kid/${params.id as string}`;
       const formData = new FormData();
       formData.append("firstname", kid.firstName || "");
       formData.append("lastname", kid.lastName || "");

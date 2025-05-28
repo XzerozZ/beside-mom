@@ -31,7 +31,7 @@ const MomstoryPage: React.FC = () => {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = process.env.NEXT_PUBLIC_api_momstory;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/video`;
         const response = await fetch(apiUrl as string, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ const MomstoryPage: React.FC = () => {
         router.push("/auth/login");
         return;
       }
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_momstory}/${id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${id}`;
       const response = await fetch(apiUrl, {
         method: "DELETE",
         headers: {
