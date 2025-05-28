@@ -21,13 +21,9 @@ import {
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
 import { useEffect } from "react";
-import { MomMappedItem, MomRawItem } from "../types";
+import { MomMappedItem, MomRawItem,MomData } from "../types";
 
-interface MomData {
-  id: string;
-  email: string;
-  name: string;
-}
+
 
 const AllMomInfoPage: React.FC = () => {
   const router = useRouter();

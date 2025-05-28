@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element*/
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Container,
   Typography,
@@ -20,20 +20,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/navigation";
 
 
-interface Quiz {
-  quiz_id: number;
-  question: string;
-  desc: string;
-  solution: string;
-  suggestion: string;
-  banner: string;
-  category: { ID: number; category: string };
-  period: { ID: number; period: string };
-}
+import { Quizdevelopment } from "../types";
 
 export default function DevelopmentQuizPage() {
   const router = useRouter();
-  const [quizList, setQuizList] = useState<Quiz[]>([]);
+  const [quizList, setQuizList] = useState<Quizdevelopment[]>([]);
   const [search, setSearch] = useState("");
   const [periodFilter, setPeriodFilter] = useState<string>("ทั้งหมด");
   const [periods, setPeriods] = useState<string[]>([]);
@@ -55,7 +46,7 @@ export default function DevelopmentQuizPage() {
       .then((data) => {
         setQuizList(data.result || []);
         const uniquePeriods = Array.from(
-          new Set((data.result || []).map((q: Quiz) => q.period.period))
+          new Set((data.result || []).map((q: Quizdevelopment) => q.period.period))
         ) as string[];
         setPeriods(uniquePeriods);
       });
@@ -98,7 +89,7 @@ export default function DevelopmentQuizPage() {
           q.question.includes(search) ||
           q.category.category.includes(search))
     )
-    .reduce((acc: Record<string, Quiz[]>, quiz) => {
+    .reduce((acc: Record<string, Quizdevelopment[]>, quiz) => {
       if (!acc[quiz.period.period]) acc[quiz.period.period] = [];
       acc[quiz.period.period].push(quiz);
       return acc;
@@ -227,16 +218,17 @@ export default function DevelopmentQuizPage() {
                               mb: 1,
                             }}
                           >
-                            <img
-                              src={quiz.banner}
-                              alt="banner"
-                              style={{
-                                width: 32,
-                                height: 32,
-                                borderRadius: 6,
-                                objectFit: "cover",
-                              }}
-                            />
+                            <Box sx={{ position: "relative", width: 32, height: 32 }}>
+                              <Image
+                                src={quiz.banner}
+                                alt="banner"
+                                fill
+                                style={{
+                                  borderRadius: 6,
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </Box>
                             <Typography
                               variant="subtitle2"
                               className="font-bold text-neutral05"

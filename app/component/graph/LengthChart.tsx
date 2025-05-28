@@ -1,19 +1,15 @@
 import {
-  AreaChart,
   Area,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
-  Legend,
   ComposedChart,
-  Customized,
+ 
 } from 'recharts';
 
 import { FC } from 'react';
-import { ButtonProps } from '@mui/material';
 import { ChartProps, LengthGrowth } from '@/app/interface';
 
 // Type for each data point in the standard deviation chart
@@ -32,12 +28,6 @@ interface ChartDataPoint {
   height: number | null;
 }
 
-// Type for raw real measurement data
-interface RealMeasurement {
-  month: number;
-  height: number;
-}
-
 
 
 const SdAreaLineChart: FC<ChartProps> = (props) => {
@@ -48,34 +38,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
     
   }));
   console.log(RealHeight);  
-  const realMeasurements: RealMeasurement[] = [
-    { month: 0, height: 50.2 },
-    { month: 1, height: 54.1 },
-    { month: 2, height: 57.2 },
-    { month: 3, height: 59.9 },
-    { month: 4, height: 62.4 },
-    { month: 5, height: 64.8 },
-    { month: 6, height: 67.4 },
-    { month: 7, height: 69.7 },
-    { month: 8, height: 71.0 },
-    { month: 9, height: 72.3 },
-    { month: 10, height: 73.5 },
-    { month: 11, height: 74.7 },
-    { month: 12, height: 76.0 },
-    { month: 12.5, height: 76.0 },
-    { month: 13, height: 77.2 },
-    { month: 14, height: 78.4 },
-    { month: 15, height: 79.6 },
-    { month: 16, height: 80.8 },
-    { month: 17, height: 82.0 },
-    { month: 18, height: 83.2 },
-    { month: 19, height: 84.4 },
-    { month: 20, height: 85.6 },
-    { month: 21, height: 86.8 },
-    { month: 22, height: 88.0 },
-    { month: 23, height: 89.2 },
-    { month: 24, height: 90.5 },
-  ];
+
   const BoyData = [
     { month: 0, '-3SD': 44.2, '-2SD': 46.1, '0SD': 49.1, '+2SD': 52.2, '+3SD': 54.0 , full: 95 },
     { month: 1, '-3SD': 47.8, '-2SD': 49.8, '0SD': 53.7, '+2SD': 57.6, '+3SD': 59.5 , full: 95 },

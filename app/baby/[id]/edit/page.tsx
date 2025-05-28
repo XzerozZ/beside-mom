@@ -5,11 +5,11 @@ import {
   ButtonComponents,
   ButtonComponents4,
 } from "@/app/component/button";
-import { GrowthEdit, GrowthRecord } from "@/app/interface";
+import { GrowthEdit } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 
-const page = () => {
+const PageBabyEdit = () => {
   const token = localStorage.getItem("token");
   const searchParams = new URLSearchParams(window.location.search);
   const babyId = searchParams.get("babyid");
@@ -78,7 +78,7 @@ const page = () => {
         throw new Error("Failed to add baby data");
       }
 
-      const result = await response.json();
+     
       setShowInput(false); // Hide input form
       alert("ข้อมูลถูกบันทึกเรียบร้อยแล้ว");
     } catch (error) {
@@ -113,7 +113,7 @@ const page = () => {
     setLoading(false);
 
     fetchData();
-  }, [token]);
+  }, [token,babyId]);
 
   if (loading) {
     return (
@@ -239,4 +239,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageBabyEdit;

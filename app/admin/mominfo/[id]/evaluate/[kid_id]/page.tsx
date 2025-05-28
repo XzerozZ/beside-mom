@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -17,6 +16,7 @@ import Sidebar from "../../../../components/SideBarAdmin";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { EvaluateData } from "@/app/admin/types";
 
 const periodMap: Record<number, string> = {
   1: "แรกเกิด",
@@ -84,7 +84,7 @@ const EvaluateList: React.FC = () => {
   const params = useParams();
   const kid_id = params.kid_id as string;
   const [loading, setLoading] = useState(true);
-  const [evaluates, setEvaluates] = useState<any[]>([]);
+  const [evaluates, setEvaluates] = useState<EvaluateData[]>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {

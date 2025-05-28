@@ -1,8 +1,9 @@
-/* eslint-disable @next/next/no-img-element*/
+
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
 import {
   Container,
   Typography,
@@ -16,23 +17,7 @@ import {
   Alert,
 } from "@mui/material";
 import Sidebar from "../../../../components/SideBarAdmin";
-
-interface Asset {
-  asset_id: string;
-  link: string;
-}
-
-interface BabyCareData {
-  c_id: string;
-  type: string;
-  title: string;
-  desc: string;
-  banner: string;
-  user_id: string;
-  assets: Asset[];
-  created_at: string;
-  updated_at: string;
-}
+import { BabyCareData } from "@/app/admin/types";
 
 const EditBabyCareInfoVideoPage: React.FC = () => {
   const router = useRouter();
@@ -441,11 +426,12 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
               </Typography>
               
               {bannerPreview && (
-                <Box sx={{ width: "100%", mt: 2, mb: 2 }}>
-                  <img 
+                <Box sx={{ width: "100%", mt: 2, mb: 2, position: "relative", height: "200px" }}>
+                  <Image 
                     src={bannerPreview} 
                     alt="Banner preview" 
-                    style={{ maxWidth: "100%", maxHeight: "200px" }}
+                    fill
+                    style={{ objectFit: "contain" }}
                   />
                 </Box>
               )}

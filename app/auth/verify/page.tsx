@@ -4,10 +4,9 @@ import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
 import Swal from "sweetalert2";
 
-const page = () => {
+const PageVerify = () => {
   const [otp, setOTP] = React.useState("");
   const handleOTP = async () => {
-    const token = localStorage.getItem("token");
     const formData = new FormData();
     localStorage.setItem("otp", otp);
     formData.append("email", localStorage.getItem("email")!);
@@ -155,4 +154,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PageVerify;

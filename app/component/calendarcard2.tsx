@@ -7,7 +7,6 @@ import {
   FaNotesMedical,
 } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
-import { MdBook } from "react-icons/md";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import Link from "next/link";

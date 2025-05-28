@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../../component/navbar";
 
-const page = () => {
+const PageStoryId = () => {
   const param = useParams();
   const [like, setLike] = React.useState<boolean>(false);
   const [isToggle, setIsToggle] = React.useState(false);
@@ -34,7 +34,7 @@ const page = () => {
     }
   };
 
-  const fetchVideo = async (id: String, token: string) => {
+  const fetchVideo = async (id: string, token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video/${id}`, {
         headers: {
@@ -73,7 +73,7 @@ const page = () => {
     return `${day} ${month} ${year}`;
   };
 
-  const postLike = async (id: String, token: string) => {
+  const postLike = async (id: string, token: string) => {
     try {
       const formData = new FormData();
       formData.append("videoid", id.toString());
@@ -95,7 +95,7 @@ const page = () => {
     }
   };
 
-  const deleteLike = async (id: String, token: string) => {
+  const deleteLike = async (id: string, token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
         method: "DELETE",
@@ -109,10 +109,10 @@ const page = () => {
       } else {
         console.error("Failed to unlike video");
       }
-    } catch (error) {}
+    } catch {}
   };
 
-  const checkLike = async (id: String, token: string) => {
+  const checkLike = async (id: string, token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
         headers: {
@@ -140,7 +140,7 @@ const page = () => {
   useEffect(() => {
     checkLike(video?.id || "", token || "");
     console.log("like", like);
-  }, []);
+  }, [like, video?.id, token]);
   console.log(like);
 
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -172,7 +172,7 @@ const page = () => {
     console.log("video", like);
 
     fetchData();
-  }, [token]);
+  }, [token, param.id, like]);
 
   if (loading) {
     return (
@@ -294,4 +294,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageStoryId;

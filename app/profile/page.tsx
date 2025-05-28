@@ -5,7 +5,7 @@ import { User } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 
-const page = () => {
+const PageProfile = () => {
   const token = localStorage.getItem("token");
   const uid = localStorage.getItem("u_id");
   const [momData, setMomData] = React.useState<User>();
@@ -46,7 +46,7 @@ const page = () => {
       setLoading(false);
   
       fetchData();
-    }, [token]);
+    }, [token,uid]);
   
     if (loading) {
       return (
@@ -109,4 +109,4 @@ const page = () => {
   );
 };}
 
-export default page;
+export default PageProfile;

@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../../component/navbar";
 
-const page = () => {
+const PageForm = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const babyId = searchParams.get("babyid");
   const token = localStorage.getItem("token");
@@ -18,7 +18,7 @@ const page = () => {
     const safeDecode = (text: string) => {
       try {
         return decodeURIComponent(text);
-      } catch (e) {
+      } catch  {
         return text;
       }
     };
@@ -116,4 +116,4 @@ const page = () => {
   );
 };
 }
-export default page;
+export default PageForm;

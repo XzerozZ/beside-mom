@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   Container,
   TextField,
@@ -31,7 +30,10 @@ import {
   Legend,
 } from "recharts";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
-import { MomInfo, BabyInfo, GrowthData } from "@/app/admin/types";
+import { MomInfo, BabyInfo, GrowthData , KidApiDataEdit,GrowthApiDataEdit,MomApiDataEdit} from "@/app/admin/types";
+
+
+
 
 export default function EditMomInfo() {
   const params = useParams();
@@ -58,15 +60,16 @@ export default function EditMomInfo() {
         });
         const data = await res.json();
         if (data?.result) {
+          const result: MomApiDataEdit = data.result;
           setMomInfo({
-            id: data.result.u_id,
-            img: data.result.image_link,
-            firstName: data.result.fname,
-            lastName: data.result.lname,
-            email: data.result.email,
+            id: result.u_id,
+            img: result.image_link,
+            firstName: result.fname,
+            lastName: result.lname,
+            email: result.email,
           });
           setBabyInfo(
-            (data.result.kids || []).map((kid: any) => ({
+            (result.kids || []).map((kid: KidApiDataEdit) => ({
               id: kid.u_id,
               img: kid.image_link,
               firstName: kid.fname,
@@ -78,7 +81,7 @@ export default function EditMomInfo() {
               birthWeight: kid.weight?.toString() || "",
               birthHeight: kid.length?.toString() || "",
               note: kid.note || "",
-              growthData: (kid.growth || []).map((g: any) => ({
+              growthData: (kid.growth || []).map((g: GrowthApiDataEdit) => ({
                 id: g.G_id,
                 date: g.created_at.slice(0, 10),
                 months: g.months,
@@ -87,7 +90,7 @@ export default function EditMomInfo() {
               })),
             }))
           );
-          if (data.result.kids?.[0]?.u_id) setSelectedBabyId(data.result.kids[0].u_id);
+          if (result.kids?.[0]?.u_id) setSelectedBabyId(result.kids[0].u_id);
         }
       } catch (e) {
         alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
@@ -291,17 +294,18 @@ export default function EditMomInfo() {
             <div className="grid grid-cols-3 gap-4">
              
                 <div className="relative w-44 h-44">
-                  <img
+                  <Image
                     src={
                       momInfo.img ||
                       "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
                     }
                     alt="Profile"
-                    className="w-44 h-44 absolute rounded-full overflow-hidden object-cover"
+                    fill
+                    className="rounded-full object-cover"
                   />
                   {/* Floating Button */}
                   <IconButton
-                    className="top-32 left-36 bg-red-100 shadow-md"
+                    className="absolute top-32 left-36 bg-red-100 shadow-md"
                     size="small"
                   >
                     <svg
@@ -347,7 +351,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
+                  value={momInfo.firstName || ""} 
                   onChange={handleChangemMom}
                 />
                
@@ -356,7 +360,7 @@ export default function EditMomInfo() {
                   fullWidth
                   size="small"
                   name="lastName"
-                  value={momInfo.lastName} // You'll need to add lastName to MomInfo interface
+                  value={momInfo.lastName} 
                   onChange={handleChangemMom}
                 />
               </div>
@@ -407,17 +411,18 @@ export default function EditMomInfo() {
                     <div className="grid grid-cols-3 gap-4">
                       
                         <div className="relative w-44 h-44">
-                          <img
+                          <Image
                             src={
                               baby.img ||
                               "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                             }
                             alt="Profile"
-                            className="w-44 h-44 absolute rounded-full overflow-hidden object-cover"
+                            fill
+                            className="rounded-full object-cover"
                           />
                           {/* Floating Button */}
                           <IconButton
-                            className=" top-32 left-36  bg-red-100 shadow-md flex items-center justify-center aling-center"
+                            className="absolute top-32 left-36 bg-red-100 shadow-md flex items-center justify-center"
                             size="small"
                           >
                             <svg

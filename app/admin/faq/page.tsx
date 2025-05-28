@@ -13,14 +13,8 @@ import {
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
+import { FAQ } from "../types"; // Adjust the import path as necessary
 
-interface FAQ {
-  Q_id: string;
-  question: string;
-  answer: string;
-  created_at: string;
-  updated_at: string;
-}
 
 export default function Faq() {
   const router = useRouter();

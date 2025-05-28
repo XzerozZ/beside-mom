@@ -1,9 +1,9 @@
 
-/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useRouter } from "next/navigation";
 import { useState} from "react";
+import Image from "next/image";
 import {
   Container,
   TextField,
@@ -11,7 +11,6 @@ import {
   Box,
   Typography,
   Grid,
-
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -190,17 +189,18 @@ export default function EditMomInfo() {
             <div className="grid grid-cols-3 gap-4">
               
                 <div className="relative w-44 h-44">
-                  <img
+                  <Image
                     src={
                       momInfo.img ||
                       "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
                     }
                     alt="Profile"
-                    className="w-44 h-44 absolute rounded-full overflow-hidden object-cover"
+                    fill
+                    className="rounded-full object-cover"
                   />
                   {/* Floating Button */}
                   <IconButton
-                    className="top-32 left-36 bg-red-100 shadow-md flex items-center justify-center aling-center"
+                    className="absolute top-32 left-36 bg-red-100 shadow-md flex items-center justify-center"
                     size="small"
                   >
                     <svg
@@ -249,7 +249,7 @@ export default function EditMomInfo() {
                   size="small"
                   // label="ชื่อ"
                   name="firstName"
-                  value={momInfo.firstName || ""} // You'll need to add firstName to MomInfo interface
+                  value={momInfo.firstName || ""} 
                   onChange={handleChangemMom}
                 />
                  
@@ -272,7 +272,7 @@ export default function EditMomInfo() {
                   size="small"
                   // label="นามสกุล"
                   name="lastName"
-                  value={momInfo.lastName} // You'll need to add lastName to MomInfo interface
+                  value={momInfo.lastName} 
                   onChange={handleChangemMom}
                 />
               </div>
@@ -289,17 +289,18 @@ export default function EditMomInfo() {
             <div className="grid grid-cols-3 gap-4">
             
                 <div className="relative w-44 h-44">
-                  <img
+                  <Image
                     src={
                       babyInfo[0]?.img ||
                       "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                     }
                     alt="Profile"
-                    className="w-44 h-44 absolute rounded-full overflow-hidden object-cover"
+                    fill
+                    className="rounded-full object-cover"
                   />
                   {/* Floating Button */}
                   <IconButton
-                    className=" top-32 left-36  bg-white shadow-md"
+                    className="absolute top-32 left-36 bg-white shadow-md"
                     size="small"
                     component="label"
                   >

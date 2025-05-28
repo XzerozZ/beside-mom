@@ -1,18 +1,10 @@
-/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { SidebarProps, MenuItem } from "../types";
 
-interface MenuItem {
-  id: number;
-  label: string;
-  icon?: string;
-}
-
-interface SidebarProps {
-  selectedItem: string;
-}
 
 const Sidebar = ({ selectedItem }: SidebarProps) => {
   const router = useRouter();
@@ -44,11 +36,12 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex flex-row items-center">
-          <div className="w-9 h-9 rounded-full overflow-hidden">
-            <img
+          <div className="w-9 h-9 rounded-full overflow-hidden relative">
+            <Image
               src={profileImageUrl}
               alt="Profile"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
             <div className="ml-2">

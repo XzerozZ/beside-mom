@@ -1,8 +1,8 @@
-/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   Container,
   Typography,
@@ -10,11 +10,9 @@ import {
   Button,
   Box,
   Grid,
-
   FormLabel,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
-
 
 const AddBabyCareInfoPicturePage: React.FC = () => {
   const router = useRouter();
@@ -202,14 +200,13 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
                   border: "1px solid #ddd",
                   }}
                 >
-                  <img
-                  src={img}
-                  alt={`preview-${idx}`}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
+                  <Image
+                    src={img}
+                    alt={`preview-${idx}`}
+                    fill
+                    style={{
+                      objectFit: "cover",
+                    }}
                   />
                 </Box>
                 ))}
@@ -278,17 +275,18 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <img
-                    src={formData.banners}
-                    alt="banner-preview"
-                    style={{
-                      width: "180px",
-                      height: "100px",
-                      objectFit: "cover",
-                      borderRadius: 4,
-                      border: "1px solid #ddd",
-                    }}
-                  />
+                  <div style={{ position: "relative", width: "180px", height: "100px" }}>
+                    <Image
+                      src={formData.banners}
+                      alt="banner-preview"
+                      fill
+                      style={{
+                        objectFit: "cover",
+                        borderRadius: 4,
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                  </div>
                 </Box>
               )}
             </Grid>

@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import { ButtonComponents } from "../component/button";
 
-const page = () => {
+const PageCalendar = () => {
   const [calendar, setCalendar] = React.useState<Appointment[]>();
   const token = localStorage.getItem("token");
   const fetchCalendar = async (token: string) => {
@@ -110,4 +110,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageCalendar;

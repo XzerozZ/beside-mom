@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -16,6 +16,9 @@ import {
 } from "@mui/material";
 import TopBarSection from "../../components/Topbar";
 import Sidebar from "../../components/SideBarAdmin";
+
+import { AppointmentApiData ,AppointmentAPI_id} from "../../types";
+
 
 type AppointmentStatus = "สำเร็จ" | "ยกเลิก" | "เลื่อน" | "นัดแล้ว";
 const statusMap: Record<number, AppointmentStatus> = {
@@ -39,26 +42,13 @@ const statusDots = {
   นัดแล้ว: "bg-primary5",
 };
 
-interface Appointment {
-  id: string;
-  momname: string;
-  topic: string;
-  date: string;
-  day: string;
-  daydate: string;
-  doctor: string;
-  status: AppointmentStatus;
-  number: string;
-  time: string;
-  location: string;
-  info: string;
-}
+
 
 const AppointmentsPage: React.FC = () => {
   const router = useRouter();
   const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<AppointmentAPI_id[]>([]);
 
 
   useEffect(() => {
@@ -82,7 +72,7 @@ const AppointmentsPage: React.FC = () => {
         if (data.status !== "Success") throw new Error(data.message || "Error");
 
         // Map API data to Appointment[]
-        const mapped: Appointment[] = (data.result || []).map((item: any, idx: number) => ({
+        const mapped: AppointmentAPI_id[] = (data.result || []).map((item: AppointmentApiData, idx: number) => ({
           id: item.id,
           momname: item.name,
           topic: item.title || "-",
@@ -99,14 +89,17 @@ const AppointmentsPage: React.FC = () => {
           status: statusMap[item.status as number] || "นัดแล้ว",
           number: (idx + 1).toString(),
           time: item.start_time
-            ? new Date(item.start_time).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })
+            ? item.start_time.includes('T') 
+              ? item.start_time.split('T')[1].substring(0, 5) // Extract HH:MM from ISO string
+              : item.start_time
             : "",
           location: item.building || "-",
           info: item.requirement || "-",
         }));
         setAppointments(mapped);
-      } catch (error) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลการนัดหมาย");
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการโหลดข้อมูลการนัดหมาย";
+        alert(errorMessage);
         console.error(error);
       } 
     };
@@ -147,8 +140,9 @@ const AppointmentsPage: React.FC = () => {
       });
       if (!response.ok) throw new Error("ลบการนัดไม่สำเร็จ");
       setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
-    } catch (error) {
-      alert("เกิดข้อผิดพลาดในการลบการนัด");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลบการนัด";
+      alert(errorMessage);
       console.error(error);
     } 
   }

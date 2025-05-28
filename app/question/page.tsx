@@ -5,7 +5,7 @@ import { QuestionAnswer } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 
-const page = () => {
+const PageQuestion = () => {
   const [question, setQuestion] = React.useState<QuestionAnswer[]>();
   const token = localStorage.getItem("token");
   const fetchQA = async (token: string) => {
@@ -84,4 +84,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageQuestion;

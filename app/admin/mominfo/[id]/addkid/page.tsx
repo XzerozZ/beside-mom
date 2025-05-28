@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 import {
   Container,
   TextField,
@@ -18,6 +17,7 @@ import {
   Select,
   MenuItem,
   IconButton,
+  SelectChangeEvent,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 
@@ -40,7 +40,7 @@ export default function AddKid() {
   const [kid, setKid] = useState({ ...defaultKid });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | any
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>
   ) => {
     const { name, value } = e.target;
     setKid((prev) => ({ ...prev, [name]: value }));
@@ -121,15 +121,16 @@ export default function AddKid() {
           <div className="grid grid-cols-3 gap-4">
              
                 <div className="relative w-44 h-44">
-                  <img
+                  <Image
                     src={
                       kid.img ||
                       "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
                     }
                     alt="Profile"
-                    className="w-44 h-44 absolute rounded-full overflow-hidden object-cover"
+                    fill
+                    className="rounded-full object-cover"
                   />
-                  <IconButton className="top-32 left-36 bg-white shadow-md" size="small" component="label">
+                  <IconButton className="absolute top-32 left-36 bg-white shadow-md" size="small" component="label">
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M7.82666 23.7039L18.125 13.41L18.5898 13.8748L8.29779 24.1668H7.82666V23.7039ZM23.4915 8.04416C23.4914 8.04427 23.4913 8.04438 23.4912 8.0445L23.4915 8.04416Z" stroke="#B36868" strokeWidth="5" />
                     </svg>

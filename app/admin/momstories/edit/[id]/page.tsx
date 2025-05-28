@@ -1,8 +1,8 @@
-/* eslint-disable @next/next/no-img-element*/
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
 import {
   Container,
   Typography,
@@ -334,11 +334,12 @@ const EditMomStoryPage: React.FC = () => {
                   ภาพปกวิดีโอ
                 </Typography>
                 {formData.bannerPreview && (
-                  <Box sx={{ width: "100%", mt: 2, mb: 2 }}>
-                    <img
+                  <Box sx={{ width: "100%", mt: 2, mb: 2, position: "relative", height: "200px" }}>
+                    <Image
                       src={formData.bannerPreview}
                       alt="Banner preview"
-                      style={{ maxWidth: "100%", maxHeight: "200px" }}
+                      fill
+                      style={{ objectFit: "contain" }}
                     />
                   </Box>
                 )}

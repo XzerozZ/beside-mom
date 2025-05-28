@@ -1,12 +1,12 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { CardCare } from "../component/card";
 import { CareItem } from "@/app/interface";
 import "@/app/component/css/loader.css";
 import Swal from "sweetalert2";
 
-const page = () => {
+const PageCare = () => {
   const token = localStorage.getItem("token");
   const [care, setCare] = React.useState<CareItem[]>();
   const [random, setRandom] = React.useState<number>(0);
@@ -63,13 +63,6 @@ const page = () => {
    
   }, [token]);
 
-  const shuffleArray = (array: CareItem[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
 
   useEffect(() => {
     if (care && care.length > 0) {
@@ -141,4 +134,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default PageCare;
