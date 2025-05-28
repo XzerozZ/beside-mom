@@ -4,33 +4,20 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #000000;
+  --foreground: #171717;
 }
 
-/* Force light mode - override dark mode preferences */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ffffff !important;
-    --foreground: #000000 !important;
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }
 
 body {
-  color: var(--foreground) !important;
-  background: var(--background) !important;
+  color: var(--foreground);
+  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Force all text to be black */
-* {
-  color: #000000 !important;
-}
-
-/* Keep input and form elements readable */
-input, textarea, select {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border-color: #d1d5db !important;
 }
 
 /* nextjs-portal {
