@@ -67,7 +67,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
       }
     }
     
-    // Clear any error for this field
+ 
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = {...prev};
