@@ -23,12 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="light">
       <head>
         <link rel="icon" href="/besidemom.ico" type="image/x-icon" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
         {children}
       </body>

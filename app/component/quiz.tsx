@@ -19,14 +19,24 @@ const QuizForm: React.FC<{
   console.log("thisis index ", index);
   console.log("thisis babyId ", babyId);
   console.log("thisis navigate ", navigate);
-  
   const useParam = useParams();
+  const quizIds: number[] = props.map(item => item.quiz_id);
+
+  // Store quizIds in localStorage with key 'No{phase}+{category}'
+  React.useEffect(() => {
+    const phase = useParam.phase;
+    const category = useParam.category;
+    if (phase && category && quizIds.length > 0) {
+      localStorage.setItem(`No${phase}+${category}`, JSON.stringify(quizIds));
+    }
+  }, [quizIds, useParam.phase, useParam.category]);
+  
   // const isAnswered = history[Number(param)-1]?.answer;
 
   const [isAnswered, setIsAnswered] = React.useState<boolean | null>(null);
 
   const [quiz, setQuiz] = React.useState<Quiz>();
-  const [quizNex, setQuizNext] = React.useState<boolean>(false);
+  // const [quizNex, setQuizNext] = React.useState<boolean>(false);
 
   const fetchQuizById = async (id: number, token: string,phase:number,category:number) => {
     try {
@@ -47,21 +57,21 @@ const QuizForm: React.FC<{
       console.error("Error fetching quiz data:", error);
     }
   };
-  const fetchQuizByIdInNext = async (id: number, token: string,phase:number,category:number) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/quiz/period/${phase}/category/${category}/question/${id + 1}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        setQuizNext(true);
-      }
-    } catch {}
-  };
+  // const fetchQuizByIdInNext = async (id: number, token: string,phase:number,category:number) => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_url}/quiz/period/${phase}/category/${category}/question/${id + 1}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     if (!response.ok) {
+  //       setQuizNext(true);
+  //     }
+  //   } catch {}
+  // };
 
   const handleAnswer = (value: boolean,phase:number,category:number) => {
     const storedAnswers = JSON.parse(
@@ -137,12 +147,24 @@ const QuizForm: React.FC<{
     if (previousAnswer !== null && previousAnswer !== undefined) {
       setIsAnswered(previousAnswer);
     }
-    try {
-      fetchQuizByIdInNext(Number(index), localStorage.getItem("key") || "",Number(useParam.phase),Number(useParam.category));
-    } catch  {
-      console.log("hello");
-    }
+    // try {
+    //   fetchQuizByIdInNext(Number(index), localStorage.getItem("key") || "",Number(useParam.phase),Number(useParam.category));
+    // } catch  {
+    //   console.log("hello");
+    // }
   }, [useParam.phase,useParam.category,index]);
+
+  // Determine if this is the last quiz in the sequence
+  const isLastQuiz = React.useMemo(() => {
+    const phase = useParam.phase;
+    const category = useParam.category;
+    const quizIdsStr = localStorage.getItem(`No${phase}+${category}`);
+    if (quizIdsStr && quiz?.quiz_id) {
+      const quizIds = JSON.parse(quizIdsStr);
+      return quiz?.quiz_id === quizIds[quizIds.length - 1];
+    }
+    return false;
+  }, [quiz?.quiz_id, useParam.phase, useParam.category]);
 
   return (
     <div>
@@ -195,7 +217,7 @@ const QuizForm: React.FC<{
           </div>
         </div>
       </div>
-      {quizNex === true ? (
+      {isLastQuiz ? (
         <div className="flex flex-row gap-[16px] justify-between max-sm:gap-3 max-sm:flex-col-reverse">
           <ButtonComponents6Size
             title="ย้อนกลับ"
@@ -203,17 +225,15 @@ const QuizForm: React.FC<{
             boxSize="w-[180px] max-sm:w-full"
             onClick={() => window.history.back()}
           />
-          {/* <Link href={`/baby?babyid=${babyId}`} passHref> */}
-            <ButtonComponents5Size
-              title="ส่งคำตอบ"
-              textSize="text-[16px]"
-              boxSize="w-[180px] max-sm:w-full"
-              onClick={() => {
-                handleAnswer(isAnswered as boolean,Number(useParam.phase),Number(useParam.category));
-                handleSubmit(Number(useParam.phase),Number(useParam.category),babyId);
-              }}
-            />
-          {/* </Link> */}
+          <ButtonComponents5Size
+            title="ส่งคำตอบ"
+            textSize="text-[16px]"
+            boxSize="w-[180px] max-sm:w-full"
+            onClick={() => {
+              handleAnswer(isAnswered as boolean, Number(useParam.phase), Number(useParam.category));
+              handleSubmit(Number(useParam.phase), Number(useParam.category), babyId);
+            }}
+          />
         </div>
       ) : quiz?.quiz_id === 1 ? (
         <div className="flex flex-row gap-[16px] justify-end max-sm:gap-3 max-sm:flex-col-reverse">
@@ -238,22 +258,32 @@ const QuizForm: React.FC<{
           />
 
           {isAnswered !== null ? (
-            <Link href={`${index + 1}?babyid=${babyId}`} passHref>
-              <ButtonComponents5Size
-            title="ต่อไป"
-            textSize="text-[16px]"
-            boxSize="w-[180px] max-sm:w-full"
-            onClick={() => {
-              handleAnswer(isAnswered as boolean,Number(useParam.phase),Number(useParam.category));
-            }}
-              />
-            </Link>
+            <ButtonComponents5Size
+              title="ต่อไป"
+              textSize="text-[16px]"
+              boxSize="w-[180px] max-sm:w-full"
+              onClick={() => {
+                handleAnswer(isAnswered as boolean, Number(useParam.phase), Number(useParam.category));
+                // Get quizIds from localStorage and go to next quiz
+                const phase = useParam.phase;
+                const category = useParam.category;
+                const quizIdsStr = localStorage.getItem(`No${phase}+${category}`);
+                if (quizIdsStr) {
+                  const quizIds = JSON.parse(quizIdsStr);
+                  const currentQuizId = quiz?.quiz_id;
+                  const currentIndex = quizIds.findIndex((id: number) => id === currentQuizId);
+                  if (currentIndex !== -1 && currentIndex + 1 < quizIds.length) {
+                    const nextQuizId = quizIds[currentIndex + 1];
+                    window.location.href = `/${navigate}/${useParam.phase}/${useParam.category}/${nextQuizId}?babyid=${babyId}`;
+                  }
+                }
+              }}
+            />
           ) : (
             <ButtonComponents5Size
               title="ต่อไป"
               textSize="text-[16px]"
               boxSize="w-[180px] max-sm:w-full opacity-50 cursor-not-allowed"
-             
             />
           )}
         </div>

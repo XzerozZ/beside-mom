@@ -159,7 +159,7 @@ const PageFormPhase = () => {
                 {decodedPhase === "1"
                   ? "แรกเกิด"
                   : decodedPhase === "2"
-                  ? "1 เดือน)"
+                  ? "1 เดือน"
                   : decodedPhase === "3"
                   ? "2 เดือน"
                   : decodedPhase === "4"
