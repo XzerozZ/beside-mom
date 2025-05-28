@@ -232,6 +232,7 @@ const QuizForm: React.FC<{
             onClick={() => {
               handleAnswer(isAnswered as boolean, Number(useParam.phase), Number(useParam.category));
               handleSubmit(Number(useParam.phase), Number(useParam.category), babyId);
+                window.location.href = `/form/${useParam.phase}/${useParam.category}?babyid=${babyId}`;
             }}
           />
         </div>
