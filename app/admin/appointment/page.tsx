@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   Container,
   Table,
@@ -45,7 +45,7 @@ const statusDots = {
 
 
 
-export default function AppointmentPage() {
+function AppointmentPageContent() {
   const searchParams = useSearchParams();
   const initialSearchTerm = searchParams.get("search") || "";
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
@@ -289,5 +289,13 @@ export default function AppointmentPage() {
         </Container>
       </div>
     </div>
+  );
+}
+
+export default function AppointmentPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-64"><CircularProgress /></div>}>
+      <AppointmentPageContent />
+    </Suspense>
   );
 }
