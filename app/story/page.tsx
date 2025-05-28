@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React  from "react";
 import { Card } from "../component/card";
 import { VideoClip } from "@/app/interface";
 import Swal from "sweetalert2";
@@ -7,8 +7,17 @@ import "@/app/component/css/loader.css";
 import Navbar from "../component/navbar";
 
 const PageStory = () => {
-  const token = localStorage.getItem("token");
+  const [token, setToken] = React.useState<string | null>(null);
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
+
+  // Fetch token from localStorage on client only
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
+
   const fetchVideo = async (token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video`, {
@@ -27,11 +36,8 @@ const PageStory = () => {
     }
   };
 
-  const [loading, setLoading] = React.useState<boolean>(true);
-
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({
@@ -43,15 +49,12 @@ const PageStory = () => {
         window.location.href = "/auth/login";
         return;
       }
+      fetchVideo(token);
+      setLoading(false);
     };
     if (token) {
-      fetchVideo(token || "");
-    } else {
-      console.error("Invalid or missing parameter: id");
+      fetchData();
     }
-    setLoading(false);
-
-    fetchData();
   }, [token]);
 
   if (loading) {

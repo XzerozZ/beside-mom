@@ -7,9 +7,18 @@ import "@/app/component/css/loader.css";
 import Swal from "sweetalert2";
 
 const PageCare = () => {
-  const token = localStorage.getItem("token");
+  const [token, setToken] = React.useState<string | null>(null);
   const [care, setCare] = React.useState<CareItem[]>();
   const [random, setRandom] = React.useState<number>(0);
+  const [loading, setLoading] = React.useState<boolean>(true);
+
+  // Fetch token from localStorage on client only
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
+
   const fetchCare = async (token: string) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_url}/care`, {
@@ -35,11 +44,8 @@ const PageCare = () => {
     }
   };
 
-  const [loading, setLoading] = React.useState<boolean>(true);
-
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({
@@ -51,18 +57,13 @@ const PageCare = () => {
         window.location.href = "/auth/login";
         return;
       }
-    };
-       fetchData();
-    if (token) {
       fetchCare(token);
-    } else {
-      console.error("Invalid or missing parameter: id");
+      setLoading(false);
+    };
+    if (token) {
+      fetchData();
     }
-    setLoading(false);
-
-   
   }, [token]);
-
 
   useEffect(() => {
     if (care && care.length > 0) {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import CalendarCard from "../component/calendarcard";
 import { Appointment } from "@/app/interface";
 import Swal from "sweetalert2";
@@ -8,7 +8,16 @@ import { ButtonComponents } from "../component/button";
 
 const PageCalendar = () => {
   const [calendar, setCalendar] = React.useState<Appointment[]>();
-  const token = localStorage.getItem("token");
+  const [token, setToken] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
+
+  // Fetch token from localStorage on client only
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
+
   const fetchCalendar = async (token: string) => {
     try {
       const res = await fetch(
@@ -24,25 +33,22 @@ const PageCalendar = () => {
         setCalendar(data.result);
       } else {
         console.error("Failed to fetch kid data");
-         await Swal.fire({
-                  title: "Please login again your token is expired!",
-                  icon: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#B36868",
-                });
-                window.location.href = "/auth/login";
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#B36868",
+        });
+        window.location.href = "/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching kid data:", error);
     }
   };
 
-  const [loading, setLoading] = React.useState<boolean>(true);
-
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({
@@ -54,16 +60,12 @@ const PageCalendar = () => {
         window.location.href = "/auth/login";
         return;
       }
+      fetchCalendar(token);
+      setLoading(false);
     };
-    fetchData();
     if (token) {
-      fetchCalendar(token!);
-    } else {
-      console.error("Invalid or missing parameter: id");
+      fetchData();
     }
-    setLoading(false);
-
-    fetchData();
   }, [token]);
 
   if (loading) {
@@ -76,19 +78,19 @@ const PageCalendar = () => {
     return (
       <div className="">
         <div className="flex flex-col items-center gap-[30px]">
-        <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
-          <div className="flex  justify-between">
-            <h1 className="font-bold text-[20px] text-left">การตรวจตามนัด</h1>
-            <div className="w-[180px] max-sm:w-[120px]">
-              <ButtonComponents
-                title="ดูประวัติการนัดหมาย"
-                onClick={() => {
-                  window.location.href = "/calendar/history";
-                }}
-              />
+          <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
+            <div className="flex  justify-between">
+              <h1 className="font-bold text-[20px] text-left">การตรวจตามนัด</h1>
+              <div className="w-[180px] max-sm:w-[120px]">
+                <ButtonComponents
+                  title="ดูประวัติการนัดหมาย"
+                  onClick={() => {
+                    window.location.href = "/calendar/history";
+                  }}
+                />
+              </div>
             </div>
           </div>
-            </div>
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-col gap-[10px]">
             <h2 className="font-bold text-[16px] text-left my">
               การนัดหมายครั้งถัดไป

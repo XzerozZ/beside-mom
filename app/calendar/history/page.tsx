@@ -1,13 +1,22 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import CalendarCard from "../../component/calendarcard2";
 import { Appointment } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 
 const PageCalendarHistory = () => {
-  const token = localStorage.getItem("token");
+  const [token, setToken] = React.useState<string | null>(null);
   const [calendar, setCalendar] = React.useState<Appointment[]>();
+  const [loading, setLoading] = React.useState<boolean>(true);
+
+  // Fetch token from localStorage on client only
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
+
   const fetchCalendar = async (token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/appoint`, {
@@ -20,25 +29,22 @@ const PageCalendarHistory = () => {
         setCalendar(data.result);
       } else {
         console.error("Failed to fetch kid data");
-         await Swal.fire({
-                  title: "Please login again your token is expired!",
-                  icon: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#B36868",
-                });
-                window.location.href = "/auth/login";
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#B36868",
+        });
+        window.location.href = "/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching kid data:", error);
     }
   };
 
-  const [loading, setLoading] = React.useState<boolean>(true);
-
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({
@@ -50,16 +56,12 @@ const PageCalendarHistory = () => {
         window.location.href = "/auth/login";
         return;
       }
+      fetchCalendar(token);
+      setLoading(false);
     };
-     fetchData();
     if (token) {
-      fetchCalendar(token!);
-    } else {
-      console.error("Invalid or missing parameter: id");
+      fetchData();
     }
-    setLoading(false);
-
-   
   }, [token]);
 
   if (loading) {
