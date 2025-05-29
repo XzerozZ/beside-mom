@@ -3,9 +3,48 @@ import React from "react";
 import Image from "next/image";
 import Swal from "sweetalert2";
 import Link from "next/link";
+import { User } from "../interface";
 
 const Navbar = () => {
+  
   const [showDropdown, setShowDropdown] = React.useState(false);
+  const [momData, setMomData] = React.useState<User>();
+
+ const fetchMomData = async (id: string, key: string) => {
+    console.log("Fetching mom data for ID:", id);
+    console.log("Using token:", key);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user/info/${id}`, {
+      headers: {
+        Authorization: `Bearer ${key}`,
+      },
+    });
+    if (res.status === 200) {
+      const data = await res.json();
+      setMomData(data.result);
+    } else {
+      console.error("Failed to fetch mom data");
+    }
+  };
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      const uid = localStorage.getItem("u_id");
+      if (!token || !uid) {
+        console.error("Token or UID is missing. Please log in.");
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+        });
+        window.location.href = "/auth/login";
+        return;
+      }
+      fetchMomData(uid, token);
+    };
+    fetchData();
+  }, []);
   return (
     <nav className="bg-[#FFEBEC] flex justify-center fixed top-0 left-0 w-full z-999">
       <div className="flex flex-row justify-between h-[80px] w-[1312px] items-center max-xl:w-[770px] max-sm:w-[324px]">
@@ -37,7 +76,7 @@ const Navbar = () => {
       </div>
       <div className="flex flex-row gap-2 max-xl:hidden">
         <Image
-        src="/profileicon.svg"
+        src={momData?.image_link || "/profileicon.svg"}
         width={28}
         height={28}
         alt="profile"
@@ -71,7 +110,7 @@ const Navbar = () => {
               height={96}
               alt="profilepicture"
             ></Image>
-            <h1 className="font-bold text-[16px]">ชิณภัทร สุขทอง</h1>
+            <h1 className="font-bold text-[16px]">{momData?.fname} {momData?.lname}</h1>
             </div>
             <div className="mx-[70px]">
           
