@@ -78,14 +78,12 @@ export const CardCare: FC<CareItem> = (props) => {
   return (
     <Link href={`/care/${props.c_id}`}>
       <div className="shadow-[0_0_10px_#ccc] rounded-[16px]">
-      <div className="w-full h-[158px]">
+      <div className="w-full h-[158px] relative">
           <Image
           className="bg-black rounded-t-[16px] object-cover"
           src={props.banner}
           alt="mom"
-          layout="responsive"
-          width={270}
-          height={158}
+          fill
         />
       </div>
 
