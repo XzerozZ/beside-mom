@@ -80,7 +80,7 @@ export const CardCare: FC<CareItem> = (props) => {
       <div className="shadow-[0_0_10px_#ccc] rounded-[16px]">
       <div className="w-full h-[158px] relative">
           <Image
-          className="bg-black rounded-t-[16px] object-cover"
+          className="bg-black rounded-t-[16px] object-cover h-[158px]"
           src={props.banner}
           alt="mom"
           fill
