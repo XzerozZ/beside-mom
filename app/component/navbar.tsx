@@ -11,8 +11,7 @@ const Navbar = () => {
   const [momData, setMomData] = React.useState<User>();
 
  const fetchMomData = async (id: string, key: string) => {
-    console.log("Fetching mom data for ID:", id);
-    console.log("Using token:", key);
+   
     const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user/info/${id}`, {
       headers: {
         Authorization: `Bearer ${key}`,

@@ -73,7 +73,7 @@ const PageFormCategory = () => {
     }
   };
 
-  console.log("test", quizHistoryData);
+
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {
     const fetchData = async () => {

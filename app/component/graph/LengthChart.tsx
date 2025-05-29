@@ -37,7 +37,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
     length: item.length
     
   }));
-  console.log(RealHeight);  
+  
 
   const BoyData = [
     { month: 0, '-3SD': 44.2, '-2SD': 46.1, '0SD': 49.1, '+2SD': 52.2, '+3SD': 54.0 , full: 95 },

@@ -16,14 +16,12 @@ const PageBabyEdit = () => {
   const currentDate = new Date(
     new Date().getTime() + 7 * 60 * 60 * 1000
   ).toISOString();
-  console.log("currentDate", currentDate);
   const [babyData, setBabyData] = React.useState<GrowthEdit[]>([]);
   const [length, setLength] = React.useState<number>(0);
   const [weight, setWeight] = React.useState<number>(0.0);
   const [date, setDate] = React.useState<string>(currentDate.slice(0, 10));
 
   const [showInput, setShowInput] = React.useState(false);
-  console.log("babyData", showInput);
 
   const fetchBabyData = async (token: string, babyid: string) => {
     try {

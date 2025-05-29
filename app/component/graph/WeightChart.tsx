@@ -39,7 +39,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
     month: item.months,
     weight: item.weight
   }));
-  console.log(RealWeight);
+
 
   const BoyData = [
     { month: 0, '-3SD': 2.0, '-2SD': 2.4, '0SD': 3.2, '+2SD': 4.2, '+3SD': 4.7, full: 16.0 },
