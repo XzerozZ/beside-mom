@@ -99,7 +99,7 @@ const PageCare = () => {
                 </h2>
                 <h3 className="text-right text-[16px] ">{care?.[0]?.desc}</h3>
                 <div className="flex flex-row justify-end gap-[5px]">
-                  <a href={`/story/${care?.[random]?.c_id}`} className="text-[14px] font-bold">
+                  <a href={`/care/${care?.[random]?.c_id}`} className="text-[14px] font-bold">
                   ดูเพิ่มเติม
                   </a>
                   <Image
@@ -111,7 +111,7 @@ const PageCare = () => {
                 </div>
                 </div>
               </div>
-              <div className="w-3/5">
+              <div className="w-3/5 object-contain">
                 <Image
                 src={care?.[random]?.banner || "/baby.png"}
                 alt="baby"

@@ -86,7 +86,7 @@ const Page = () => {
                     alt="care"
                     width={1000}
                     height={1000}
-                    className="object-cover w-2/4 h-[500px] max-xl:h-[300px] max-sm:h-[200px]"
+                    className="object-cover w-2/4 "
                   />
                 </div>
               ))
