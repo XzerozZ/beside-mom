@@ -18,7 +18,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
     month: item.months,
     weight: item.weight,
   }));
-  console.log(RealWeight);
+ 
 
   // Preprocess the data
 

@@ -11,7 +11,7 @@ const StepProgress = (data : HistoryData) => {
     })
   : [];
   
-  console.log("data",data) // Get index of active step
+ 
 
   if (resultArrayQuiz.length < 5) {
     return (

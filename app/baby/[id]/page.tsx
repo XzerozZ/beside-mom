@@ -71,7 +71,7 @@ const PageBabyId = () => {
       console.error("An error occurred while fetching graph data:", error);
     }
   };
-  console.log("graphData", kidData);
+  
   const formatDate = (dateString?: string): string => {
     if (!dateString) return "-";
     const date = new Date(dateString);

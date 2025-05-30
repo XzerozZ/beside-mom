@@ -81,7 +81,7 @@ const PageFormPhase = () => {
       })
     : [];
 
-  console.log(resultArrayQuiz);
+  // console.log(resultArrayQuiz);
 
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {

@@ -31,14 +31,14 @@ export const Card: FC<VideoClip> = (props) => {
   return (
     <Link href={`/story/${props.id}`}>
       <div className="shadow-[0_0_10px_#ccc] rounded-[16px] ">
-        <Image
-          className="bg-black rounded-t-[16px]"
-          src={props.banner}
-          alt="mom"
-          layout="responsive"
-          width={270}
-          height={158}
-        />
+        <div className="w-full h-[158px] relative">
+          <Image
+            className="bg-black rounded-t-[16px] object-cover h-[158px]"
+            src={props.banner}
+            alt="mom"
+            fill
+          />
+        </div>
 
         <div className="h-[102px] flex flex-col justify-between p-[16px]">
           <div className="font-bold">
@@ -78,14 +78,14 @@ export const CardCare: FC<CareItem> = (props) => {
   return (
     <Link href={`/care/${props.c_id}`}>
       <div className="shadow-[0_0_10px_#ccc] rounded-[16px]">
-      <div className="w-full h-[158px] relative">
+        <div className="w-full h-[158px] relative">
           <Image
-          className="bg-black rounded-t-[16px] object-cover h-[158px]"
-          src={props.banner}
-          alt="mom"
-          fill
-        />
-      </div>
+            className="bg-black rounded-t-[16px] object-cover h-[158px]"
+            src={props.banner}
+            alt="mom"
+            fill
+          />
+        </div>
 
         <div className="h-[102px] flex flex-col justify-between p-[16px]">
           <div className="font-bold">
@@ -96,4 +96,4 @@ export const CardCare: FC<CareItem> = (props) => {
       </div>
     </Link>
   );
-}
+};

@@ -86,10 +86,8 @@ const QuizForm: React.FC<{
     const storedAnswers = JSON.parse(
       localStorage.getItem(`quizAnswers${phase}+${category}`) || "[]"
     );
-    console.log("this is storedAnswers", storedAnswers);
     const token = localStorage.getItem("token");
     const filteredAnswers = storedAnswers.filter((ans: boolean) => ans !== null);
-    console.log("this is filteredAnswers", filteredAnswers);
     const formData = new FormData();
     // filteredAnswers.forEach((answer: boolean) => {
     //   formData.append(`answer`, answer.toString());
