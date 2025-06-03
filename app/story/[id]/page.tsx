@@ -222,10 +222,10 @@ const PageStoryId = () => {
                             onClick={() => {
                               if (like === true) {
                                 deleteLike(video?.id || "", token || "");
-                                setLike(false);
+                           
                               } else if (like === false) {
                                 postLike(video?.id || "", token || "");
-                                setLike(true);
+                               
                               }
                             }}
                           ></Image>
