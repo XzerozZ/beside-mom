@@ -197,11 +197,10 @@ const PageStoryId = () => {
                   <div className="relative z-0">
                     <div className="absolute top-0 left-0 w-full h-full bg-transparent pointer-events-none"></div>
                     <iframe
-                      className="relative -z-10 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px]"
+                      className="relative -z-10 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px] border-0"
                       width="100%"
-                      src={video?.link}
+                      src={video?.link?.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
                       title="YouTube video player"
-                   
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
                     ></iframe>
