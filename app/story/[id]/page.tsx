@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect } from "react";
 import { Card } from "../../component/card";
 import { useParams } from "next/navigation";
 import { VideoClip } from "@/app/interface";
@@ -10,21 +10,13 @@ import Navbar from "../../component/navbar";
 
 const PageStoryId = () => {
   const param = useParams();
-  const [like, setLike] = useState<boolean>(false);
-  const [isToggle, setIsToggle] = useState(false);
-  const [video, setVideo] = useState<VideoClip>();
-  const [videos, setVideos] = useState<VideoClip[]>([]);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  // Initialize token from localStorage on client side
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("token");
-      setToken(storedToken);
-    }
-  }, []);
-
-  const fetchVideos = useCallback(async (token: string) => {
+  const [like, setLike] = React.useState<boolean>(false);
+  const [isToggle, setIsToggle] = React.useState(false);
+  const [video, setVideo] = React.useState<VideoClip>();
+  const [videos, setVideos] = React.useState<VideoClip[]>([]);
+  const token = localStorage.getItem("token");
+ 
+  const fetchVideos = async (token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video`, {
         headers: {
@@ -35,14 +27,14 @@ const PageStoryId = () => {
         const data = await res.json();
         setVideos(data.result);
       } else {
-        console.error("Failed to fetch videos data");
+        console.error("Failed to fetch kid data");
       }
     } catch (error) {
-      console.error("An error occurred while fetching videos data:", error);
+      console.error("An error occurred while fetching kid data:", error);
     }
-  }, []);
+  };
 
-  const fetchVideo = useCallback(async (id: string, token: string) => {
+  const fetchVideo = async (id: string, token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video/${id}`, {
         headers: {
@@ -53,13 +45,13 @@ const PageStoryId = () => {
         const data = await res.json();
         setVideo(data.result);
       } else {
-        console.error("Failed to fetch video data");
+        console.error("Failed to fetch kid data");
       }
     } catch (error) {
-      console.error("An error occurred while fetching video data:", error);
+      console.error("An error occurred while fetching kid data:", error);
     }
-  }, []);
-  const formatDate = useCallback((dateString: string): string => {
+  };
+  const formatDate = (dateString: string): string => {
     const months = [
       "มกราคม",
       "กุมภาพันธ์",
@@ -79,9 +71,9 @@ const PageStoryId = () => {
     const month = months[date.getMonth()];
     const year = date.getFullYear() + 543; // Convert to Buddhist calendar year
     return `${day} ${month} ${year}`;
-  }, []);
+  };
 
-  const postLike = useCallback(async (id: string, token: string) => {
+  const postLike = async (id: string, token: string) => {
     try {
       const formData = new FormData();
       formData.append("videoid", id.toString());
@@ -94,14 +86,16 @@ const PageStoryId = () => {
         body: formData,
       });
       if (res.status === 200) {
-        setLike(true);
+        // console.log("Video liked successfully");
+        setLike(true); // Refresh video data
+      } else {
       }
     } catch (error) {
       console.error("An error occurred while liking the video:", error);
     }
-  }, []);
+  };
 
-  const deleteLike = useCallback(async (id: string, token: string) => {
+  const deleteLike = async (id: string, token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
         method: "DELETE",
@@ -110,14 +104,15 @@ const PageStoryId = () => {
         },
       });
       if (res.status === 200) {
-        setLike(false);
+        // console.log("Video unliked successfully");
+        setLike(false); // Refresh video data
+      } else {
+        // console.error("Failed to unlike video");
       }
-    } catch (error) {
-      console.error("An error occurred while unliking the video:", error);
-    }
-  }, []);
+    } catch {}
+  };
 
-  const checkLike = useCallback(async (id: string, token: string) => {
+  const checkLike = async (id: string, token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
         headers: {
@@ -126,61 +121,39 @@ const PageStoryId = () => {
       });
       if (res.status === 200) {
         const data = await res.json();
-        setLike(data.result === "true");
+        if (data.result == "true") {
+          setLike(true);
+        }
+        else if (data.result == "false") {
+          setLike(false);
+        }
+       
+      } else {
+       
+        return false;
       }
     } catch (error) {
       console.error("An error occurred while checking like status:", error);
+      return false;
     }
-  }, []);
+  };
 
-  const handleLikeToggle = useCallback(() => {
-    if (!video?.id || !token) return;
-    
-    if (like) {
-      deleteLike(video.id, token);
-    } else {
-      postLike(video.id, token);
-    }
-  }, [like, video?.id, token, deleteLike, postLike]);
+  const formattedDate = formatDate(video?.publish_at || "");
 
-  // Memoized formatted date
-  const formattedDate = useMemo(() => 
-    video?.publish_at ? formatDate(video.publish_at) : "", 
-    [video?.publish_at, formatDate]
-  );
-
-  // Memoized YouTube URL conversion
-  const embedUrl = useMemo(() => 
-    video?.link?.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/'), 
-    [video?.link]
-  );
-
-  // Check like status when video changes
   useEffect(() => {
     if (video?.id && token) {
       checkLike(video.id, token);
     }
-  }, [video?.id, token, checkLike]);
+  }, [video?.id, token]);
+  // console.log(like);
 
-  // Main data fetching effect
+  const [loading, setLoading] = React.useState<boolean>(true);
+
   useEffect(() => {
-    if (!token) return;
-
     const fetchData = async () => {
-      try {
-        setLoading(true);
-        
-        if (!param.id) {
-          console.error("Invalid or missing parameter: id");
-          return;
-        }
-
-        await Promise.all([
-          fetchVideo(param.id.toString(), token),
-          fetchVideos(token)
-        ]);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Token is missing. Please log in.");
         await Swal.fire({
           title: "Please login again your token is expired!",
           icon: "error",
@@ -188,13 +161,22 @@ const PageStoryId = () => {
           confirmButtonText: "OK",
         });
         window.location.href = "/auth/login";
-      } finally {
-        setLoading(false);
+        return;
       }
     };
+    if (token) {
+      if (param.id) {
+        fetchVideo(param.id.toString(), token || "");
+        fetchVideos(token || "");
+      }
+    } else {
+      console.error("Invalid or missing parameter: id");
+    }
+    setLoading(false);
+    // console.log("video", like);
 
     fetchData();
-  }, [token, param.id, fetchVideo, fetchVideos]);
+  }, [token, param.id, like]);
 
   if (loading) {
     return (
@@ -221,13 +203,13 @@ const PageStoryId = () => {
                     <iframe
                       className="relative -z-10 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px] border-0"
                       width="100%"
-                      src={embedUrl}
+                      src={video?.link?.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
                       title="YouTube video player"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
                     ></iframe>
                   </div>
-                  <div className="flex flex-col gap-[16px] mt-[20px]">
+                  <div className="flex flex-col gap-[16px] mt-[20px">
                     <div className="flex justify-between ">
                       <h1 className="text-[20px] font-bold">{video?.title} </h1>
                       <div className="flex hover:bg-[#f2f2f2] gap-4 p-1 rounded-[4px]">
@@ -238,8 +220,16 @@ const PageStoryId = () => {
                             width={24}
                             height={24}
                             className="inline-block mr-2 cursor-pointer"
-                            onClick={handleLikeToggle}
-                          />
+                            onClick={() => {
+                              if (like === true) {
+                                deleteLike(video?.id || "", token || "");
+                           
+                              } else if (like === false) {
+                                postLike(video?.id || "", token || "");
+                               
+                              }
+                            }}
+                          ></Image>
                           <div className="my-auto">{video?.count_like}</div>
                         </div>
                       </div>
