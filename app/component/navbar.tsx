@@ -104,7 +104,7 @@ const Navbar = () => {
             </div>
             <div className="flex flex-col gap-[24px] mx-auto">
             <Image
-              src="/profilepicture.png"
+              src={momData?.image_link || "/baby.png"}
               width={96}
               height={96}
               alt="profilepicture"
