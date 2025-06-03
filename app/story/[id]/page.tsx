@@ -121,12 +121,15 @@ const PageStoryId = () => {
       });
       if (res.status === 200) {
         const data = await res.json();
-
-        setLike(true);
-
-        return data.liked; // Assuming the API returns a "liked" boolean
+        if (data.result == "true") {
+          setLike(true);
+        }
+        else if (data.result == "false") {
+          setLike(false);
+        }
+       
       } else {
-        setLike(false);
+       
         return false;
       }
     } catch (error) {
