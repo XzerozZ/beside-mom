@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Card } from "../../component/card";
 import { useParams } from "next/navigation";
 import { VideoClip } from "@/app/interface";
-import Image from "next/image";
+// import Image from "next/image";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../../component/navbar";
@@ -73,44 +73,44 @@ const PageStoryId = () => {
     return `${day} ${month} ${year}`;
   };
 
-  const postLike = async (id: string, token: string) => {
-    try {
-      const formData = new FormData();
-      formData.append("videoid", id.toString());
+  // const postLike = async (id: string, token: string) => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("videoid", id.toString());
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-      if (res.status === 200) {
-        // console.log("Video liked successfully");
-        setLike(true); // Refresh video data
-      } else {
-      }
-    } catch (error) {
-      console.error("An error occurred while liking the video:", error);
-    }
-  };
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like`, {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: formData,
+  //     });
+  //     if (res.status === 200) {
+  //       // console.log("Video liked successfully");
+  //       setLike(true); // Refresh video data
+  //     } else {
+  //     }
+  //   } catch (error) {
+  //     console.error("An error occurred while liking the video:", error);
+  //   }
+  // };
 
-  const deleteLike = async (id: string, token: string) => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.status === 200) {
-        // console.log("Video unliked successfully");
-        setLike(false); // Refresh video data
-      } else {
-        // console.error("Failed to unlike video");
-      }
-    } catch {}
-  };
+  // const deleteLike = async (id: string, token: string) => {
+  //   try {
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     if (res.status === 200) {
+  //       // console.log("Video unliked successfully");
+  //       setLike(false); // Refresh video data
+  //     } else {
+  //       // console.error("Failed to unlike video");
+  //     }
+  //   } catch {}
+  // };
 
   const checkLike = async (id: string, token: string) => {
     try {
