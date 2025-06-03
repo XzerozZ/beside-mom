@@ -15,7 +15,6 @@ const PageStoryId = () => {
   const [video, setVideo] = React.useState<VideoClip>();
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
   const token = localStorage.getItem("token");
-  console.log("like", like);
  
   const fetchVideos = async (token: string) => {
     try {
@@ -142,9 +141,10 @@ const PageStoryId = () => {
   const formattedDate = formatDate(video?.publish_at || "");
 
   useEffect(() => {
-    checkLike(video?.id || "", token || "");
-    // console.log("like", like);
-  }, [like, video?.id, token]);
+    if (video?.id && token) {
+      checkLike(video.id, token);
+    }
+  }, [video?.id, token]);
   // console.log(like);
 
   const [loading, setLoading] = React.useState<boolean>(true);
