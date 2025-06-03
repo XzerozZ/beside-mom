@@ -196,14 +196,15 @@ const PageStoryId = () => {
                   </h1>
                   <div className="relative z-0">
                     <div className="absolute top-0 left-0 w-full h-full bg-transparent pointer-events-none"></div>
-                    <video
+                    <iframe
                       className="relative -z-10 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px]"
                       width="100%"
-                      controls
-                    >
-                      <source src={video?.link} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+                      src={video?.link}
+                      title="YouTube video player"
+                   
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    ></iframe>
                   </div>
                   <div className="flex flex-col gap-[16px] mt-[20px">
                     <div className="flex justify-between ">
