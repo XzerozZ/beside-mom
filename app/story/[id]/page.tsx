@@ -210,11 +210,11 @@ const PageStoryId = () => {
                     ></iframe>
                   </div>
                   <div className="flex flex-col gap-[16px] mt-[20px">
-                    <div className="flex justify-between ">
+                    <div className="flex justify-start ">
                       <h1 className="text-[20px] font-bold">{video?.title} </h1>
                       <div className="flex hover:bg-[#f2f2f2] gap-4 p-1 rounded-[4px]">
                         <div className="flex  gap-2">
-                          <Image
+                          {/* <Image
                             src={like ? "/mdi_like.svg" : "/like_default.svg"}
                             alt="like"
                             width={24}
@@ -229,7 +229,7 @@ const PageStoryId = () => {
                                
                               }
                             }}
-                          ></Image>
+                          ></Image> */}
                           <div className="my-auto">{video?.count_like}</div>
                         </div>
                       </div>
