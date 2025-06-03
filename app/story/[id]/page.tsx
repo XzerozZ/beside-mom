@@ -15,6 +15,7 @@ const PageStoryId = () => {
   const [video, setVideo] = React.useState<VideoClip>();
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
   const token = localStorage.getItem("token");
+  console.log("like", like);
  
   const fetchVideos = async (token: string) => {
     try {
