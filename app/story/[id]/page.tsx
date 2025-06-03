@@ -230,7 +230,7 @@ const PageStoryId = () => {
                               }
                             }}
                           ></Image> */}
-                          <div className="my-auto">{video?.count_like}</div>
+                          {/* <div className="my-auto">{video?.count_like}</div> */}
                         </div>
                       </div>
                     </div>
