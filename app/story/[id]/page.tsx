@@ -10,7 +10,7 @@ import Navbar from "../../component/navbar";
 
 const PageStoryId = () => {
   const param = useParams();
-  const [like, setLike] = React.useState<boolean>(false);
+  const [like, setLike] = React.useState<boolean>();
   const [isToggle, setIsToggle] = React.useState(false);
   const [video, setVideo] = React.useState<VideoClip>();
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
@@ -139,13 +139,13 @@ const PageStoryId = () => {
   };
 
   const formattedDate = formatDate(video?.publish_at || "");
-
   useEffect(() => {
     if (video?.id && token) {
       checkLike(video.id, token);
     }
-  }, [video?.id, token]);
-  // console.log(like);
+  }, [video?.id, token, like]);
+  
+
 
   const [loading, setLoading] = React.useState<boolean>(true);
 
