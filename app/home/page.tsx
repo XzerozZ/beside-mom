@@ -3,13 +3,13 @@ import Navbar from "../component/navbar";
 
 const home = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen overflow-hidden">
       <header className="fixed top-0 left-0 w-full">
         <Navbar />
       </header>
-      <main className="mt-[80px]">
+      <main className="mt-[80px] h-full overflow-hidden">
         <div
-          className="bg-cover bg-center h-screen flex justify-center items-center max-xl:bg-[url('/home2.png')] max-sm:!bg-none max-sm:items-start max-sm:mt-[40px]"
+          className="bg-cover bg-center h-full flex justify-center items-center max-xl:bg-[url('/home2.png')] max-sm:!bg-none max-sm:items-start max-sm:mt-[40px] overflow-hidden"
           style={{ backgroundImage: "url('/home.png')" }}
         >
           <div className="w-[1312px] xl:mt-[-90px] md:mt-[-150px] rounded-[40px] flex flex-col  gap-[24px] max-xl:w-[770px] max-sm:w-[324px]">

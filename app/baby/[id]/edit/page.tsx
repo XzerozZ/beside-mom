@@ -187,11 +187,11 @@ const PageBabyEdit = () => {
                   <div className="flex flex-col max-sm:col-start-1 max-sm:col-end-3 max-sm:col-span-2">
                     <label htmlFor="weight">น้ำหนัก (กก.)</label>
                     <input
-                      type="text"
+                      type="number"
                       id="weight"
                       name="weight"
                       value={weight}
-                      onChange={(e) => setWeight(Number(e.target.value))}
+                      onChange={(e) => setWeight(parseFloat(e.target.value) || 0)}
                       placeholder="16.0"
                       className="border border-gray-300 rounded px-2 py-1 "
                     />
@@ -199,10 +199,10 @@ const PageBabyEdit = () => {
                   <div className="flex flex-col max-sm:col-start-3 max-sm:col-end-5 max-sm:col-span-2">
                     <label htmlFor="height">ความยาว (ซม.)</label>
                     <input
-                      type="text"
+                      type="number"
                       id="height"
                       value={length}
-                      onChange={(e) => setLength(Number(e.target.value))}
+                      onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
                       name="height"
                       placeholder="60.0"
                       className="border border-gray-300 rounded px-2 py-1 "
@@ -210,10 +210,7 @@ const PageBabyEdit = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          <div className="flex justify-end gap-4 ">
+                <div className="flex justify-end gap-4 ">
             <div className="w-[180px] max-sm:w-1/2">
               <ButtonComponents4
                 title="ยกเลิก"
@@ -231,6 +228,10 @@ const PageBabyEdit = () => {
               />
             </div>
           </div>
+            </div>
+          )}
+
+        
         </div>
       </div>
     );
