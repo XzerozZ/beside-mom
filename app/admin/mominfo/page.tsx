@@ -19,6 +19,10 @@ import {
 
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
+import StyledAlert from "../components/StyledAlert";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { useAlert } from "../hooks/useAlert";
+import { useConfirmDialog } from "../hooks/useConfirmDialog";
 import Sidebar from "../components/SideBarAdmin";
 import { useEffect } from "react";
 import { MomMappedItem, MomRawItem,MomData } from "../types";
@@ -28,6 +32,8 @@ import { MomMappedItem, MomRawItem,MomData } from "../types";
 const AllMomInfoPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
 
   const handleEdit = (id: string) => {
     router.push(`/admin/mominfo/${id}/edit`);
@@ -61,7 +67,7 @@ const AllMomInfoPage: React.FC = () => {
       } catch (error) {
         console.error("Error fetching mom data:", error);
         // Optionally handle error, e.g., show notification
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
       } finally {
         setLoading(false);
       }
@@ -70,28 +76,37 @@ const AllMomInfoPage: React.FC = () => {
   }, []);
 
   const handleDelete = (id: string) => {
-    if (!window.confirm("คุณต้องการลบข้อมูลนี้ใช่หรือไม่?")) {
-      return;
-    }
-    setMomData(momData.filter((mom) => mom.id !== id));
-    const token = localStorage.getItem("token");
-    fetch(`${process.env.NEXT_PUBLIC_url}/user/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to delete mom info");
-        }
-        alert("ลบข้อมูลสำเร็จ");
+    const performDelete = () => {
+      setMomData(momData.filter((mom) => mom.id !== id));
+      const token = localStorage.getItem("token");
+      fetch(`${process.env.NEXT_PUBLIC_url}/user/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       })
-      .catch((error) => {
-        alert("เกิดข้อผิดพลาดในการลบข้อมูล");
-        console.error(error);
-      });
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to delete mom info");
+          }
+          showSuccess("ลบข้อมูลสำเร็จ");
+        })
+        .catch((error) => {
+          showError("เกิดข้อผิดพลาดในการลบข้อมูล");
+          console.error(error);
+        });
+    };
+
+    showConfirm(
+      "คุณต้องการลบข้อมูลนี้ใช่หรือไม่?",
+      performDelete,
+      {
+        title: "ยืนยันการลบ",
+        confirmText: "ลบ",
+        severity: "error"
+      }
+    );
   };
 
   const handleAddClick = () => {
@@ -421,6 +436,22 @@ const AllMomInfoPage: React.FC = () => {
           </TableContainer>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
+      <ConfirmDialog
+        open={confirmState.open}
+        title={confirmState.title}
+        message={confirmState.message}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        severity={confirmState.severity}
+      />
     </div>
   );
 };

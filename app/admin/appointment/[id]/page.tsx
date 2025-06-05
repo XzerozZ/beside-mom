@@ -16,6 +16,10 @@ import {
 } from "@mui/material";
 import TopBarSection from "../../components/Topbar";
 import Sidebar from "../../components/SideBarAdmin";
+import StyledAlert from "../../components/StyledAlert";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import { useAlert } from "../../hooks/useAlert";
+import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 
 import { AppointmentApiData ,AppointmentAPI_id} from "../../types";
 
@@ -47,6 +51,8 @@ const statusDots = {
 const AppointmentsPage: React.FC = () => {
   const router = useRouter();
   const { id } = useParams();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
   const [searchTerm, setSearchTerm] = useState("");
   const [appointments, setAppointments] = useState<AppointmentAPI_id[]>([]);
 
@@ -57,7 +63,7 @@ const AppointmentsPage: React.FC = () => {
      
         const token = localStorage.getItem("token");
         if (!token) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push("/auth/login");
           return;
         }
@@ -99,7 +105,7 @@ const AppointmentsPage: React.FC = () => {
         setAppointments(mapped);
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการโหลดข้อมูลการนัดหมาย";
-        alert(errorMessage);
+        showError(errorMessage);
         console.error(error);
       } 
     };
@@ -122,29 +128,40 @@ const AppointmentsPage: React.FC = () => {
   };
 
   async function handleDelete(appointmentId: string): Promise<void> {
-    if (!window.confirm("คุณต้องการลบการนัดนี้ใช่หรือไม่?")) return;
-    try {
-
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("กรุณาเข้าสู่ระบบใหม่");
-        router.push("/auth/login");
-        return;
+    const performDelete = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          showError("กรุณาเข้าสู่ระบบใหม่");
+          router.push("/auth/login");
+          return;
+        }
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${appointmentId}`;
+        const response = await fetch(apiUrl, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("ลบการนัดไม่สำเร็จ");
+        setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
+        showSuccess("ลบการนัดสำเร็จ");
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลบการนัด";
+        showError(errorMessage);
+        console.error(error);
       }
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${appointmentId}`;
-      const response = await fetch(apiUrl, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error("ลบการนัดไม่สำเร็จ");
-      setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลบการนัด";
-      alert(errorMessage);
-      console.error(error);
-    } 
+    };
+
+    showConfirm(
+      "คุณต้องการลบการนัดนี้ใช่หรือไม่?",
+      performDelete,
+      {
+        title: "ยืนยันการลบ",
+        confirmText: "ลบ",
+        severity: "error"
+      }
+    );
   }
   return (
     <div className="flex bg-white">
@@ -252,6 +269,22 @@ const AppointmentsPage: React.FC = () => {
           </div>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
+      <ConfirmDialog
+        open={confirmState.open}
+        title={confirmState.title}
+        message={confirmState.message}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        severity={confirmState.severity}
+      />
     </div>
   );
 };

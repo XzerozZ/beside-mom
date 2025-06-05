@@ -13,6 +13,10 @@ import {
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
+import StyledAlert from "../components/StyledAlert";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { useAlert } from "../hooks/useAlert";
+import { useConfirmDialog } from "../hooks/useConfirmDialog";
 import { FAQ } from "../types"; // Adjust the import path as necessary
 
 
@@ -22,6 +26,8 @@ export default function Faq() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
 
   // Fetch FAQs from API
   useEffect(() => {
@@ -34,7 +40,7 @@ export default function Faq() {
         const token = localStorage.getItem('token');
         if (!token) {
           setError("No authentication token found");
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push('/auth/login');
           return;
         }
@@ -81,47 +87,54 @@ export default function Faq() {
     router.push(`/admin/faq/edit/${id}`);
   };
   
-  const handleDelete = async (id: string) => {
-    if (!confirm("คุณต้องการลบคำถามนี้ใช่หรือไม่?")) {
-      return;
-    }
-    
-    try {
-      // Get token from localStorage
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError("No authentication token found");
-        alert("กรุณาเข้าสู่ระบบใหม่");
-        router.push('/auth/login');
-        return;
-      }
-      
-      // Delete FAQ from API
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/question/${id}`;
-      const response = await fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
+  async function handleDelete(id: string) {
+    const performDelete = async () => {
+        try {
+          // Get token from localStorage
+          const token = localStorage.getItem('token');
+          if (!token) {
+            setError("No authentication token found");
+            showError("กรุณาเข้าสู่ระบบใหม่");
+            router.push('/auth/login');
+            return;
+          }
+          
+          // Delete FAQ from API
+          const apiUrl = `${process.env.NEXT_PUBLIC_url}/question/${id}`;
+          const response = await fetch(apiUrl, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+          }
+
+          const data = await response.json();
+          
+          if (data.status !== "Success") {
+            throw new Error(data.message || "Failed to delete FAQ");
+          }
+
+          // Remove FAQ from state
+          setFaqs(prev => prev.filter(faq => faq.Q_id !== id));
+          showSuccess("ลบคำถามสำเร็จ");
+        } catch (err) {
+          console.error("Error deleting FAQ:", err);
+          showError("เกิดข้อผิดพลาดในการลบคำถาม");
         }
-      });
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+      };
+    showConfirm(
+      "คุณต้องการลบคำถามนี้ใช่หรือไม่?",
+      performDelete,
+      {
+        severity: "error",
+        confirmText: "ลบ",
+        cancelText: "ยกเลิก"
       }
-
-      const data = await response.json();
-      
-      if (data.status !== "Success") {
-        throw new Error(data.message || "Failed to delete FAQ");
-      }
-
-      // Remove FAQ from state
-      setFaqs(prev => prev.filter(faq => faq.Q_id !== id));
-      alert("ลบคำถามสำเร็จ");
-    } catch (err) {
-      console.error("Error deleting FAQ:", err);
-      alert("เกิดข้อผิดพลาดในการลบคำถาม");
-    }
+    );
   };
 
   // Filter FAQs based on search term
@@ -138,6 +151,22 @@ export default function Faq() {
       />
       <div className="flex-1 p-6">
         <Container>
+          <StyledAlert
+            open={alertState.open}
+            message={alertState.message}
+            severity={alertState.severity}
+            onClose={hideAlert}
+          />
+          <ConfirmDialog
+            open={confirmState.open}
+            title={confirmState.title}
+            message={confirmState.message}
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
+            severity={confirmState.severity}
+            confirmText={confirmState.confirmText}
+            cancelText={confirmState.cancelText}
+          />
           <TopBarSection
             title="ข้อมูลคำถามที่พบบ่อย"
             searchTerm={searchTerm}

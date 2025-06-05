@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Sidebar from "../../../components/SideBarAdmin";
+import StyledAlert from "../../../components/StyledAlert";
+import { useAlert } from "../../../hooks/useAlert";
 import {
   Container,
   Box,
@@ -38,6 +40,7 @@ export default function EditDevelopmentQuiz() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
 
   const [categoryid, setCategoryid] = useState("");
   const [periodID, setPeriodID] = useState("");
@@ -75,7 +78,7 @@ export default function EditDevelopmentQuiz() {
         setSuggestion(quiz.suggestion || "");
         setBannerPreview(quiz.banner || quiz.banners || null);
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         console.error(err);
       } finally {
         setLoading(false);
@@ -123,7 +126,7 @@ export default function EditDevelopmentQuiz() {
       setSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/developmentquiz");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     } finally {
       setSaving(false);
@@ -297,6 +300,12 @@ export default function EditDevelopmentQuiz() {
           )}
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 }

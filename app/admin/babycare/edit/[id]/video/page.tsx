@@ -17,11 +17,14 @@ import {
   Alert,
 } from "@mui/material";
 import Sidebar from "../../../../components/SideBarAdmin";
+import StyledAlert from "../../../../components/StyledAlert";
+import { useAlert } from "../../../../hooks/useAlert";
 import { BabyCareData } from "@/app/admin/types";
 
 const EditBabyCareInfoVideoPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
@@ -51,7 +54,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
         const token = localStorage.getItem('token');
         if (!token) {
           setError("No authentication token found");
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push('/auth/login');
           return;
         }
@@ -209,7 +212,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         setError("No authentication token found");
-        alert("กรุณาเข้าสู่ระบบใหม่");
+        showError("กรุณาเข้าสู่ระบบใหม่");
         router.push('/auth/login');
         return;
       }
@@ -251,7 +254,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
       const result = await response.json();
       console.log("API response:", result);
 
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/babycare");
     } catch (err) {
       console.error("Error updating data:", err);
@@ -547,6 +550,12 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
           </Box>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 };

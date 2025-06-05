@@ -15,12 +15,15 @@ import {
   Alert,
 } from "@mui/material";
 import Sidebar from "../../../../components/SideBarAdmin";
+import StyledAlert from "../../../../components/StyledAlert";
+import { useAlert } from "../../../../hooks/useAlert";
 
 import { BabyCareData } from "@/app/admin/types";
 
 const EditBabyCareInfoPicturePage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +46,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
         const token = localStorage.getItem('token');
         if (!token) {
           setError("No authentication token found");
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push('/auth/login');
           return;
         }
@@ -141,7 +144,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         setError("No authentication token found");
-        alert("กรุณาเข้าสู่ระบบใหม่");
+        showError("กรุณาเข้าสู่ระบบใหม่");
         router.push('/auth/login');
         return;
       }
@@ -192,12 +195,12 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
       const result = await response.json();
       console.log("API response:", result);
 
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/babycare");
     } catch (err) {
       console.error("Error updating data:", err);
       setError(err instanceof Error ? err.message : "An unknown error occurred");
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
     } finally {
       setLoading(false);
     }
@@ -419,6 +422,12 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
           </Box>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 };

@@ -13,10 +13,13 @@ import {
   Paper,
 } from "@mui/material";
 import Sidebar from "../components/SideBarAdmin";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import StyledAlert from "../components/StyledAlert";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { useAlert } from "../hooks/useAlert";
+import { useConfirmDialog } from "../hooks/useConfirmDialog";
+
 import AddIcon from "@mui/icons-material/Add";
-import SearchIcon from "@mui/icons-material/Search";
+
 import { useRouter } from "next/navigation";
 
 
@@ -24,6 +27,8 @@ import { Quizdevelopment } from "../types";
 
 export default function DevelopmentQuizPage() {
   const router = useRouter();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
   const [quizList, setQuizList] = useState<Quizdevelopment[]>([]);
   const [search, setSearch] = useState("");
   const [periodFilter, setPeriodFilter] = useState<string>("ทั้งหมด");
@@ -52,32 +57,44 @@ export default function DevelopmentQuizPage() {
       });
   }, []);
   async function handleDelete(quiz_id: number) {
-    const token = localStorage.getItem("token");
-    const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz`;
-    if (!apiUrl) {
-    console.error("API URL is not defined");
-    return;
-    }
-    if (!window.confirm("คุณต้องการลบคำถามนี้หรือไม่?")) {
-    return;
-    }
-    try {
-    const res = await fetch(`${apiUrl}/${quiz_id}`, {
-      method: "DELETE",
-      headers: {
-      Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
-    if (res.ok) {
-      setQuizList((prev) => prev.filter((q) => q.quiz_id !== quiz_id));
-    } else {
-      const data = await res.json();
-      alert(data.message || "เกิดข้อผิดพลาดในการลบคำถาม");
-    }
-    } catch (error) {
-    alert("เกิดข้อผิดพลาดในการลบคำถาม");
-    console.error("Error deleting quiz:", error);
-    }
+    const performDelete = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz`;
+        if (!apiUrl) {
+          console.error("API URL is not defined");
+          return;
+        }
+        
+        const res = await fetch(`${apiUrl}/${quiz_id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        });
+        
+        if (res.ok) {
+          setQuizList((prev) => prev.filter((q) => q.quiz_id !== quiz_id));
+          showSuccess("ลบคำถามสำเร็จ");
+        } else {
+          const data = await res.json();
+          showError(data.message || "เกิดข้อผิดพลาดในการลบคำถาม");
+        }
+      } catch (error) {
+        showError("เกิดข้อผิดพลาดในการลบคำถาม");
+        console.error("Error deleting quiz:", error);
+      }
+    };
+
+    showConfirm(
+      "คุณต้องการลบคำถามนี้หรือไม่?",
+      performDelete,
+      {
+        title: "ยืนยันการลบ",
+        confirmText: "ลบ",
+        severity: "error"
+      }
+    );
   }
 
   // Group quiz by period
@@ -364,6 +381,22 @@ export default function DevelopmentQuizPage() {
           })}
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
+      <ConfirmDialog
+        open={confirmState.open}
+        title={confirmState.title}
+        message={confirmState.message}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        severity={confirmState.severity}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </div>
   );
 }

@@ -15,9 +15,12 @@ import {
   FormHelperText,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
+import StyledAlert from "../../../components/StyledAlert";
+import { useAlert } from "../../../hooks/useAlert";
 
 const AddBabyCareInfoVideoPage: React.FC = () => {
   const router = useRouter();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
   
@@ -148,7 +151,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error("No token found");
-        alert("กรุณาเข้าสู่ระบบใหม่");
+        showError("กรุณาเข้าสู่ระบบใหม่");
         router.push('/auth/login');
         return;
       }
@@ -190,11 +193,11 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
       const result = await response.json();
       console.log("API response:", result);
 
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/babycare");
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
     }
   };  return (
     <div className="flex bg-white min-h-screen">
@@ -436,6 +439,12 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
           </Box>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 };

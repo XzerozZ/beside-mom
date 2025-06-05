@@ -30,6 +30,8 @@ import {
   Legend,
 } from "recharts";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
+import StyledAlert from "@/app/admin/components/StyledAlert";
+import { useAlert } from "@/app/admin/hooks/useAlert";
 import { MomInfo, BabyInfo, GrowthData , KidApiDataEdit,GrowthApiDataEdit,MomApiDataEdit} from "@/app/admin/types";
 
 
@@ -38,6 +40,7 @@ import { MomInfo, BabyInfo, GrowthData , KidApiDataEdit,GrowthApiDataEdit,MomApi
 export default function EditMomInfo() {
   const params = useParams();
   const router = useRouter();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
     img: "",
@@ -93,7 +96,7 @@ export default function EditMomInfo() {
           if (result.kids?.[0]?.u_id) setSelectedBabyId(result.kids[0].u_id);
         }
       } catch (e) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         console.error(e);
       }
     };
@@ -249,10 +252,10 @@ export default function EditMomInfo() {
         }
       }
 
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/mominfo");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     }
   };
@@ -769,6 +772,12 @@ export default function EditMomInfo() {
           </Box>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 }

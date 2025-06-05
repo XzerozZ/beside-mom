@@ -20,6 +20,8 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
+import StyledAlert from "@/app/admin/components/StyledAlert";
+import { useAlert } from "@/app/admin/hooks/useAlert";
 
 const defaultKid = {
   img: "",
@@ -37,6 +39,7 @@ const defaultKid = {
 export default function AddKid() {
   const router = useRouter();
   const params = useParams();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const [kid, setKid] = useState({ ...defaultKid });
 
   const handleChange = (
@@ -58,7 +61,7 @@ export default function AddKid() {
 
   const validateForm = () => {
     if (!kid.firstName || !kid.lastName || !kid.gender || !kid.birthDate) {
-      alert("กรุณากรอกข้อมูลให้ครบถ้วน (ชื่อ, นามสกุล, วันเกิด, เพศ)");
+      showError("กรุณากรอกข้อมูลให้ครบถ้วน (ชื่อ, นามสกุล, วันเกิด, เพศ)");
       return false;
     }
     return true;
@@ -69,7 +72,7 @@ export default function AddKid() {
     if (!validateForm()) return;
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
       return;
     }
@@ -99,10 +102,10 @@ export default function AddKid() {
         body: formData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push(`/admin/mominfo/${params.id}`);
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     }
   };  return (
@@ -199,6 +202,12 @@ export default function AddKid() {
           </form>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 }

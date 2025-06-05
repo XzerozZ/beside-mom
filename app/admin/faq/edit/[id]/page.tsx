@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import StyledAlert from "../../../components/StyledAlert";
+import { useAlert } from "../../../hooks/useAlert";
 import {
   Box,
   Button,
@@ -14,6 +16,7 @@ const EditFaq: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
 
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -24,7 +27,7 @@ const EditFaq: React.FC = () => {
     const fetchFaq = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        alert("กรุณาเข้าสู่ระบบใหม่");
+        showError("กรุณาเข้าสู่ระบบใหม่");
         router.push("/auth/login");
         return;
       }
@@ -41,7 +44,7 @@ const EditFaq: React.FC = () => {
         setQuestion(data.result.question);
         setAnswer(data.result.answer);
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         console.error(err);
       } finally {
         setLoading(false);
@@ -54,7 +57,7 @@ const EditFaq: React.FC = () => {
   const handleUpdate = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
       return;
     }
@@ -72,10 +75,10 @@ const EditFaq: React.FC = () => {
         body: formData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("แก้ไขข้อมูลสำเร็จ");
+      showSuccess("แก้ไขข้อมูลสำเร็จ");
       router.push("/admin/faq");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการแก้ไขข้อมูล");
+      showError("เกิดข้อผิดพลาดในการแก้ไขข้อมูล");
       console.error(err);
     }
   };

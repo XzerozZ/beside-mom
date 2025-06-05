@@ -4,6 +4,8 @@
 import { useRouter } from "next/navigation";
 import { useState} from "react";
 import Image from "next/image";
+import StyledAlert from "../../components/StyledAlert";
+import { useAlert } from "../../hooks/useAlert";
 import {
   Container,
   TextField,
@@ -41,6 +43,7 @@ const defaultBaby = {
 
 export default function EditMomInfo() {
   const router = useRouter();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
     img: "",
@@ -89,13 +92,13 @@ export default function EditMomInfo() {
   const validateForm = () => {
     // ตรวจสอบข้อมูลแม่
     if (!momInfo.firstName || !momInfo.lastName || !momInfo.email) {
-      alert("กรุณากรอกข้อมูลคุณแม่ให้ครบถ้วน");
+      showError("กรุณากรอกข้อมูลคุณแม่ให้ครบถ้วน");
       return false;
     }
     // ตรวจสอบข้อมูลทารก (เฉพาะตัวแรก)
     const baby = babyInfo[0];
     if (!baby.firstName || !baby.lastName || !baby.birthDate || !baby.gender) {
-      alert("กรุณากรอกข้อมูลทารกให้ครบถ้วน (ชื่อ, นามสกุล, วันเกิด, เพศ)");
+      showError("กรุณากรอกข้อมูลทารกให้ครบถ้วน (ชื่อ, นามสกุล, วันเกิด, เพศ)");
       return false;
     }
     return true;
@@ -106,7 +109,7 @@ export default function EditMomInfo() {
     if (!validateForm()) return;
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
       return;
     }
@@ -158,10 +161,10 @@ export default function EditMomInfo() {
         body: formData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/mominfo");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     }
   };  return (

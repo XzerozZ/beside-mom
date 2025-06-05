@@ -14,12 +14,18 @@ import {
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
+import StyledAlert from "../components/StyledAlert";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { useAlert } from "../hooks/useAlert";
+import { useConfirmDialog } from "../hooks/useConfirmDialog";
 import { MomStory } from "../types";
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [data, setData] = useState<MomStory[]>([]);
   const [loading, setLoading] = useState(true);
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -27,7 +33,7 @@ const MomstoryPage: React.FC = () => {
         setLoading(true);
         const token = localStorage.getItem("token");
         if (!token) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push("/auth/login");
           return;
         }
@@ -42,7 +48,7 @@ const MomstoryPage: React.FC = () => {
         if (data.status !== "Success") throw new Error(data.message || "Error");
         setData(data.result || []);
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         console.error(err);
       } finally {
         setLoading(false);
@@ -66,33 +72,44 @@ const MomstoryPage: React.FC = () => {
   );
 
   async function handleDelete(id: string): Promise<void> {
-    if (!window.confirm("คุณต้องการลบเรื่องเล่านี้ใช่หรือไม่?")) return;
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("กรุณาเข้าสู่ระบบใหม่");
-        router.push("/auth/login");
-        return;
+    const performDelete = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        if (!token) {
+          showError("กรุณาเข้าสู่ระบบใหม่");
+          router.push("/auth/login");
+          return;
+        }
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${id}`;
+        const response = await fetch(apiUrl, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("API error");
+        const result = await response.json();
+        if (result.status !== "Success") throw new Error(result.message || "Error");
+        setData((prev) => prev.filter((item) => item.id !== id));
+        showSuccess("ลบเรื่องเล่าสำเร็จ");
+      } catch (err) {
+        showError("เกิดข้อผิดพลาดในการลบข้อมูล");
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${id}`;
-      const response = await fetch(apiUrl, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error("API error");
-      const result = await response.json();
-      if (result.status !== "Success") throw new Error(result.message || "Error");
-      setData((prev) => prev.filter((item) => item.id !== id));
-      alert("ลบเรื่องเล่าสำเร็จ");
-    } catch (err) {
-      alert("เกิดข้อผิดพลาดในการลบข้อมูล");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    showConfirm(
+      "คุณต้องการลบเรื่องเล่านี้ใช่หรือไม่?",
+      performDelete,
+      {
+        title: "ยืนยันการลบ",
+        confirmText: "ลบ",
+        severity: "error"
+      }
+    );
   }
   return (
     <div className="flex bg-white min-h-screen">
@@ -182,6 +199,22 @@ const MomstoryPage: React.FC = () => {
           )}
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
+      <ConfirmDialog
+        open={confirmState.open}
+        title={confirmState.title}
+        message={confirmState.message}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        severity={confirmState.severity}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </div>
   );
 };

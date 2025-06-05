@@ -13,6 +13,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../../../components/SideBarAdmin";
+import StyledAlert from "../../../../components/StyledAlert";
+import { useAlert } from "../../../../hooks/useAlert";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -83,6 +85,7 @@ const formatDate = (dateStr: string | null) => {
 const EvaluateList: React.FC = () => {
   const params = useParams();
   const kid_id = params.kid_id as string;
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const [loading, setLoading] = useState(true);
   const [evaluates, setEvaluates] = useState<EvaluateData[]>([]);
   const [error, setError] = useState("");
@@ -101,7 +104,7 @@ const EvaluateList: React.FC = () => {
         const data = await res.json();
         setEvaluates(data.result || []);
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         console.error(err);
       } finally {
         setLoading(false);
@@ -176,6 +179,12 @@ const EvaluateList: React.FC = () => {
           )}
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 };

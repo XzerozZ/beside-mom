@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useRef } from "react";
 import Sidebar from "../../components/SideBarAdmin";
+import StyledAlert from "../../components/StyledAlert";
+import { useAlert } from "../../hooks/useAlert";
 import {
   Container,
   Box,
@@ -36,6 +38,7 @@ const periodOptions = [
 
 export default function AddDevelopmentQuiz() {
   const router = useRouter();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const [categoryid, setCategoryid] = useState("");
   const [periodID, setPeriodID] = useState("");
   const [question, setQuestion] = useState("");
@@ -87,7 +90,7 @@ export default function AddDevelopmentQuiz() {
      
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     } 
   };
@@ -261,6 +264,12 @@ export default function AddDevelopmentQuiz() {
   
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 }

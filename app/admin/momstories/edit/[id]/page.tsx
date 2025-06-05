@@ -14,12 +14,15 @@ import {
   FormHelperText,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
+import StyledAlert from "../../../components/StyledAlert";
+import { useAlert } from "../../../hooks/useAlert";
 
 const EditMomStoryPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -39,7 +42,7 @@ const EditMomStoryPage: React.FC = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push("/auth/login");
           return;
         }
@@ -61,7 +64,7 @@ const EditMomStoryPage: React.FC = () => {
           videoMethod: story.link ? "link" : null,
         }));
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         console.error(err);
       }
     };
@@ -146,7 +149,7 @@ const EditMomStoryPage: React.FC = () => {
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
       return;
     }
@@ -173,10 +176,10 @@ const EditMomStoryPage: React.FC = () => {
         body: apiData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/momstories");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     }
   };  return (
