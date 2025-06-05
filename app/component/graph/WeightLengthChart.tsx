@@ -27,7 +27,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
       <ResponsiveContainer className="w-[400px] max-xl:w-full" height={500}>
         <ComposedChart
           data={RealWeight}
-          margin={{ top: 20, right: 40, left: 30, bottom: 20 }}
+          margin={{ top: 20, right: 40, left: 45, bottom: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
