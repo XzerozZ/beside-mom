@@ -21,6 +21,7 @@ import {
   SelectChangeEvent,
   MenuItem,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 
@@ -53,6 +54,7 @@ export default function EditMomInfo() {
   });
 
   const [babyInfo, setBabyInfo] = useState<BabyInfo[]>([{ ...defaultBaby }]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChangemMom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -107,10 +109,16 @@ export default function EditMomInfo() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
     const token = localStorage.getItem("token");
     if (!token) {
       showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
+      setIsSubmitting(false);
       return;
     }
     try {
@@ -166,6 +174,8 @@ export default function EditMomInfo() {
     } catch (err) {
       showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };  return (
     <div className="flex bg-white min-h-screen">
@@ -477,16 +487,18 @@ export default function EditMomInfo() {
               ยกเลิก
             </Button>
             <Button
-              
               variant="contained"
+              disabled={isSubmitting}
               sx={{
                 bgcolor: "#B36868",
                 "&:hover": { bgcolor: "#934343" },
+                "&:disabled": { bgcolor: "#999999" },
               }}
               className="w-40"
               onClick={handleSubmit}
+              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              บันทึก
+              {isSubmitting ? "กำลังบันทึก..." : "บันทึก"}
             </Button>
           </Box>
         </Container>

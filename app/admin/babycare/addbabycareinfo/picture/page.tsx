@@ -11,6 +11,7 @@ import {
   Box,
   Grid,
   FormLabel,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
 import StyledAlert from "../../../components/StyledAlert";
@@ -34,6 +35,7 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
     type: "image",
     banners: null,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,6 +47,10 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
 
     try {
       // Get token from localStorage
@@ -100,6 +106,8 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
       showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -392,13 +400,16 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
+              disabled={isSubmitting}
               sx={{
                 bgcolor: "#B36868",
                 "&:hover": { bgcolor: "#934343" },
+                "&:disabled": { bgcolor: "#999999" },
               }}
               onClick={handleSubmit}
+              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              บันทึกข้อมูล
+              {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </Button>
           </Box>
         </Container>

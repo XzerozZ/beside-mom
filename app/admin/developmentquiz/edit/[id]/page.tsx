@@ -290,10 +290,19 @@ export default function EditDevelopmentQuiz() {
                 <Button
                   type="submit"
                   variant="contained"
-                  sx={{ bgcolor: "#B37C6B", minWidth: 120, fontWeight: 500, fontSize: 16, boxShadow: "none", '&:hover': { bgcolor: "#a06b5c" } }}
+                  sx={{ 
+                    bgcolor: "#B37C6B", 
+                    minWidth: 120, 
+                    fontWeight: 500, 
+                    fontSize: 16, 
+                    boxShadow: "none", 
+                    '&:hover': { bgcolor: "#a06b5c" },
+                    '&:disabled': { bgcolor: "#999999" }
+                  }}
                   disabled={saving}
+                  startIcon={saving ? <CircularProgress size={20} color="inherit" /> : null}
                 >
-                  บันทึกข้อมูล
+                  {saving ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
                 </Button>
               </Box>
             </form>

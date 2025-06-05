@@ -12,6 +12,7 @@ import {
   Grid,
   FormLabel,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
 import StyledAlert from "../../../components/StyledAlert";
@@ -35,6 +36,7 @@ const EditMomStoryPage: React.FC = () => {
     videoPreview: "",
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch story data
   useEffect(() => {
@@ -134,6 +136,10 @@ const EditMomStoryPage: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
 
     const newErrors: { [key: string]: string } = {};
     if (!formData.title) newErrors.title = "กรุณากรอกหัวข้อ";
@@ -144,6 +150,7 @@ const EditMomStoryPage: React.FC = () => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setIsSubmitting(false);
       return;
     }
 
@@ -151,6 +158,7 @@ const EditMomStoryPage: React.FC = () => {
     if (!token) {
       showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
+      setIsSubmitting(false);
       return;
     }
 
@@ -181,6 +189,8 @@ const EditMomStoryPage: React.FC = () => {
     } catch (err) {
       showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };  return (
     <div className="flex bg-white min-h-screen">
@@ -443,12 +453,15 @@ const EditMomStoryPage: React.FC = () => {
               <Button
                 type="submit"
                 variant="contained"
+                disabled={isSubmitting}
                 sx={{
                   bgcolor: "#B36868",
                   "&:hover": { bgcolor: "#934343" },
+                  "&:disabled": { bgcolor: "#999999" },
                 }}
+                startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
               >
-                บันทึกข้อมูล
+                {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
               </Button>
             </Box>
           </Box>

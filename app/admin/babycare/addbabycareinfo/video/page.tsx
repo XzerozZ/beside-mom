@@ -13,6 +13,7 @@ import {
   Grid,
   FormLabel,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
 import StyledAlert from "../../../components/StyledAlert";
@@ -46,6 +47,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [videoMethod, setVideoMethod] = useState<'file' | 'link' | null>(null);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -428,13 +430,16 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
+              disabled={isSubmitting}
               sx={{
                 bgcolor: "#B36868",
                 "&:hover": { bgcolor: "#934343" },
+                "&:disabled": { bgcolor: "#999999" },
               }}
               onClick={handleSubmit}
+              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              บันทึกข้อมูล
+              {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </Button>
           </Box>
         </Container>
