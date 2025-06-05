@@ -32,9 +32,9 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
 
 
   return (
-    <div className="w-64 bg-white h-screen">
+    <div className="w-64 bg-white h-screen flex flex-col">
       {/* Profile Section */}
-      <div className="p-6 border-b">
+      <div className="p-6 border-b flex-shrink-0">
         <div className="flex flex-row items-center">
           <div className="w-9 h-9 rounded-full overflow-hidden relative">
             <Image
@@ -53,7 +53,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
       </div>
 
       {/* Menu Items */}
-      <nav className="">
+      <nav className="flex-1 overflow-y-auto relative">
         {menuItems.map((item) => (
           <div key={item.id} className="w-full ">
             <div className="relative flex row">
@@ -256,7 +256,9 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
             </div>
           </div>
         ))}
-        <div className="absolute bottom-4 w-full">
+        
+        {/* Logout Button */}
+        <div className="p-4 border-t mt-4">
           <button
             onClick={() => {
               // Remove auth data from localStorage
@@ -269,7 +271,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
               router.push('/auth/login');
               
             }}
-            className="flex items-center w-64 px-6 py-4 text-neutral05 hover:bg-gray-100 transition-colors"
+            className="flex items-center w-full px-2 py-3 text-neutral05 hover:bg-gray-100 transition-colors rounded-md"
           >
             <svg
               width="21"
@@ -286,7 +288,6 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
               />
             </svg>
             <span className="ml-2">ออกจากระบบ</span>
-       
           </button>
         </div>
       </nav>
