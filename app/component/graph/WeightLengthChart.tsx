@@ -24,7 +24,7 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <ResponsiveContainer className="w-[400px] max-xl:w-full" height={500}>
+      <ResponsiveContainer className="w-[400px] max-xl:w-full" height={550}>
         <ComposedChart
           data={RealWeight}
           margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
