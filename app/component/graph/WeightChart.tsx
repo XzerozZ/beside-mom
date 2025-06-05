@@ -137,8 +137,8 @@ const SdAreaLineChart: FC<ChartProps> = (props) => {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <ResponsiveContainer className="w-[400px] max-xl:w-full" height={550}>
-        <ComposedChart data={processedData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+      <ResponsiveContainer className="w-[400px] max-xl:w-full" height={500}>
+        <ComposedChart data={processedData} margin={{ top: 20, right: 30, left: 0, bottom: 30 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" label={{ value: 'Month', position: 'insideBottom', offset: -5 }} />
           <YAxis label={{ value: 'Weight (kg)', angle: -90 }} ticks={[0, 2, 4, 6, 8, 10, 12, 14, 16]} />

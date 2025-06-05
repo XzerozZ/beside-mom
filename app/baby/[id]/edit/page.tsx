@@ -164,7 +164,7 @@ const PageBabyEdit = () => {
             ))}
           </div>
           {showInput && (
-            <div className=" max-xl:w-[770px] max-sm:w-[324px] flex gap-3">
+            <div className=" max-xl:w-[770px] max-sm:w-[324px] flex-col gap-3">
               <div className="flex flex-col ">
                 <div className="grid grid-cols-[1fr_1fr_1fr] gap-[64px] max-sm:gap-2  max-sm:grid-cols-[1fr_1fr_1fr_1fr] ">
                   <div className="flex flex-row gap-1 max-sm:col-span-4 max-sm:col-start-1">
