@@ -154,6 +154,12 @@ const MomstoryPage: React.FC = () => {
                       variant="h6"
                       component="div"
                       className="text-base"
+                      sx={{ 
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                width: '100%'
+                              }}
                     >
                       {item.title}
                     </Typography>

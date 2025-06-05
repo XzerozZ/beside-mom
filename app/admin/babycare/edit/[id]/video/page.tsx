@@ -509,7 +509,8 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                 value={formData.description}
                 onChange={handleChange}
                 multiline
-                rows={4}
+                minRows={4}
+                maxRows={19}
                 sx={{ mb: 2 }}
               />
             </Grid>

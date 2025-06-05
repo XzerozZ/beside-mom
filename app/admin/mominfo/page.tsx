@@ -256,8 +256,11 @@ const AllMomInfoPage: React.FC = () => {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="font-bold text-center">
-                    การดำเนินการ
+                  <TableCell className="font-bold text-center ">
+                    <div className="flex items-center justify-center ">
+                      การดำเนินการ
+                    </div>
+                    
                   </TableCell>
                 </TableRow>
               </TableHead>

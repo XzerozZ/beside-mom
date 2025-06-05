@@ -32,7 +32,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
 
 
   return (
-    <div className="w-64 bg-white  h-screen">
+    <div className="w-64 bg-white h-screen">
       {/* Profile Section */}
       <div className="p-6 border-b">
         <div className="flex flex-row items-center">

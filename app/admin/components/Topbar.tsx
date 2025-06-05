@@ -124,6 +124,8 @@ const TopBarSection: React.FC<TopBarSectionProps> = ({
               sx={{
                 backgroundColor: "#B36868",
                 "&:hover": { backgroundColor: "#965757" },
+                minWidth: 120,
+                height: 40,
               }}
             >
               {title === "ข้อมูลเรื่องเล่าจากคุณแม่ทั้งหมด"
