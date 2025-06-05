@@ -149,11 +149,11 @@ function AppointmentPageContent() {
   };
 
   return (
-    <div className="flex bg-white">
+    <div className="flex bg-white min-h-screen">
       <Sidebar selectedItem="5"
       />
-      <div className="flex-1 p-6 h-full">
-        <Container className="h-full">
+      <div className="flex-1 p-6">
+        <Container>
           <TopBarSection
             title="ข้อมูลการตรวจตามนัด"
             searchTerm={searchTerm}
@@ -167,10 +167,10 @@ function AppointmentPageContent() {
               <CircularProgress />
             </div>
           ) : (
-            <TableContainer className="h-full overflow-visible">
-              <Table className="h-full overflow-visible">
-                <TableHead className="h-full">
-                  <TableRow className="h-full">
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
                     <TableCell
                       className="font-bold text-center cursor-pointer"
                       onClick={() => handleSort("user_id")}

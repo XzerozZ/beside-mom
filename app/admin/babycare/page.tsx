@@ -111,7 +111,7 @@ const MomstoryPage: React.FC = () => {
     }
   };
   return (
-    <div className="flex bg-white">
+    <div className="flex bg-white min-h-screen">
       <Sidebar 
       selectedItem="3"
       

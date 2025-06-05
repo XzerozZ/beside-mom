@@ -98,11 +98,9 @@ export default function MomInfoId() {
 
   // Get selected baby's growth data for chart
   const selectedBaby = babyInfo.find((b) => b.id === selectedBabyId);
-  const growthData = selectedBaby?.growthData || [];
-
-  return (
-    <div className="flex bg-white">
-    <Sidebar 
+  const growthData = selectedBaby?.growthData || [];  return (
+    <div className="flex bg-white min-h-screen">
+      <Sidebar 
        selectedItem="1"
       />
       <div className="flex-1 p-6">

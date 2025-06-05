@@ -140,12 +140,10 @@ const AddMomStoryPage: React.FC = () => {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     }
-  };
-
-  return (
-    <div className="flex bg-white">
-     <Sidebar 
-       selectedItem="2"
+  };  return (
+    <div className="flex bg-white min-h-screen">
+      <Sidebar 
+      selectedItem="2"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg">

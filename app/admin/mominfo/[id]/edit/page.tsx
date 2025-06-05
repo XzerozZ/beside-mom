@@ -269,12 +269,10 @@ export default function EditMomInfo() {
       u8arr[n] = bstr.charCodeAt(n);
     }
     return new Blob([u8arr], { type: mime });
-  }
-
-  return (
-    <div className="flex bg-white">
-     <Sidebar 
-       selectedItem="1"
+  }  return (
+    <div className="flex bg-white min-h-screen">
+      <Sidebar 
+      selectedItem="1"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>

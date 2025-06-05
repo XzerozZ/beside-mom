@@ -196,11 +196,9 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
       console.error("Error submitting form:", error);
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
     }
-  };
-
-  return (
-    <div className="flex bg-white">
-      <Sidebar 
+  };  return (
+    <div className="flex bg-white min-h-screen">
+     <Sidebar 
       selectedItem="3"
       />
       <div className="flex-1 p-6">
