@@ -177,7 +177,23 @@ function AppointmentPageContent() {
                     >
                       <div className="flex items-center justify-center gap-1">
                         ID
-                        {/* ...sort icon... */}
+                        <span className="w-4 h-4 inline-flex">
+                        <svg
+                          width="21"
+                          height="20"
+                          viewBox="0 0 21 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                            stroke="#4D4D4D"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
                       </div>
                     </TableCell>
                     <TableCell
@@ -186,7 +202,23 @@ function AppointmentPageContent() {
                     >
                       <div className="flex items-center justify-center gap-1">
                         ชื่อ นามสกุล
-                        {/* ...sort icon... */}
+                        <span className="w-4 h-4 inline-flex">
+                        <svg
+                          width="21"
+                          height="20"
+                          viewBox="0 0 21 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                            stroke="#4D4D4D"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
                       </div>
                     </TableCell>
                     <TableCell
@@ -195,7 +227,23 @@ function AppointmentPageContent() {
                     >
                       <div className="flex items-center justify-center gap-1">
                         วันที่
-                        {/* ...sort icon... */}
+                        <span className="w-4 h-4 inline-flex">
+                        <svg
+                          width="21"
+                          height="20"
+                          viewBox="0 0 21 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                            stroke="#4D4D4D"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
                       </div>
                     </TableCell>
                     <TableCell className="font-bold text-center">เวลา</TableCell>
@@ -205,7 +253,23 @@ function AppointmentPageContent() {
                     >
                       <div className="flex items-center justify-center gap-1">
                         แพทย์
-                        {/* ...sort icon... */}
+                        <span className="w-4 h-4 inline-flex">
+                        <svg
+                          width="21"
+                          height="20"
+                          viewBox="0 0 21 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                            stroke="#4D4D4D"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
                       </div>
                       {doctorDropdownOpen && (
                         <div className="absolute z-10 mt-2 right-0 min-w-[150px] bg-white shadow-lg rounded-md border border-gray-200">
