@@ -13,12 +13,17 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
+import StyledAlert from "@/app/admin/components/StyledAlert";
+import { useAlert } from "@/app/admin/hooks/useAlert";
 import { doctors } from "@/app/admin/types";
 export default function Babygraphs() {
   const router = useRouter();
   const { id } = useParams();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
  
 
@@ -39,7 +44,7 @@ export default function Babygraphs() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push("/auth/login");
           return;
         }
@@ -55,12 +60,12 @@ export default function Babygraphs() {
           momname: data.result.fname + " " + data.result.lname,
         }));
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
         console.error(err);
       }
     };
     fetchMomInfo();
-  }, [id, router]);
+  }, [id, router, showError]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAppointmentmomInfo({
@@ -79,10 +84,16 @@ export default function Babygraphs() {
   // Submit appointment
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isSubmitting) return; // ป้องกันการกดซ้ำ
+    
+    setIsSubmitting(true);
+    
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
+      setIsSubmitting(false);
       return;
     }
     try {
@@ -109,11 +120,13 @@ export default function Babygraphs() {
         body: formData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push(`/admin/appointment/${id}`);
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -124,6 +137,12 @@ export default function Babygraphs() {
       />
       <div className="flex-1 p-6 w-full ">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
+          <StyledAlert
+            open={alertState.open}
+            message={alertState.message}
+            severity={alertState.severity}
+            onClose={hideAlert}
+          />
           <Typography gutterBottom className="mt-7 font-bold text-2x text-neutral05">
             การเพิ่มข้อมูลการนัดหมาย
           </Typography>
@@ -249,13 +268,16 @@ export default function Babygraphs() {
               <Button
                 type="submit"
                 variant="contained"
+                disabled={isSubmitting}
                 sx={{
                   bgcolor: "#B36868",
                   "&:hover": { bgcolor: "#934343" },
+                  "&:disabled": { bgcolor: "#999999" },
                 }}
                 className="w-40"
+                startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
               >
-                บันทึก
+                {isSubmitting ? "กำลังบันทึก..." : "บันทึก"}
               </Button>
             </Box>
           </form>

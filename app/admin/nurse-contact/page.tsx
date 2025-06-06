@@ -3,21 +3,35 @@
 import React, { useState } from "react";
 import {
   Container,
- 
   Button,
   TextField,
-
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "../components/SideBarAdmin";
 
 const ContactNurseInfo: React.FC = () => {
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [editNumber, seteditNumber] = useState({
     field: "",
   });
 
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
+    try {
+      // Add your submit logic here
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulated API call
+      console.log("บันทึกข้อมูลสำเร็จ");
+    } catch {
+      console.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="flex bg-white ">
+    <div className="flex bg-white min-h-screen">
       <Sidebar 
        selectedItem="6"
       />
@@ -68,14 +82,18 @@ const ContactNurseInfo: React.FC = () => {
             </Button>
             <Button
               variant="contained"
+              disabled={isSubmitting}
+              onClick={handleSubmit}
               sx={{
                 backgroundColor: "#B36868",
                 "&:hover": { backgroundColor: "#965757" },
+                "&:disabled": { backgroundColor: "#999999" },
               }}
               size="small"
               className="w-40"
+              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              บันทึกข้อมูล
+              {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </Button>
           </div>
         </Container>

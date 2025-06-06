@@ -4,6 +4,7 @@
 import { useRouter } from "next/navigation";
 import { useState} from "react";
 import Image from "next/image";
+import { useAlert } from "../../hooks/useAlert";
 import {
   Container,
   TextField,
@@ -19,6 +20,7 @@ import {
   SelectChangeEvent,
   MenuItem,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 
@@ -41,6 +43,7 @@ const defaultBaby = {
 
 export default function EditMomInfo() {
   const router = useRouter();
+  const { showSuccess, showError } = useAlert();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
     img: "",
@@ -50,6 +53,7 @@ export default function EditMomInfo() {
   });
 
   const [babyInfo, setBabyInfo] = useState<BabyInfo[]>([{ ...defaultBaby }]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChangemMom = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -89,13 +93,13 @@ export default function EditMomInfo() {
   const validateForm = () => {
     // ตรวจสอบข้อมูลแม่
     if (!momInfo.firstName || !momInfo.lastName || !momInfo.email) {
-      alert("กรุณากรอกข้อมูลคุณแม่ให้ครบถ้วน");
+      showError("กรุณากรอกข้อมูลคุณแม่ให้ครบถ้วน");
       return false;
     }
     // ตรวจสอบข้อมูลทารก (เฉพาะตัวแรก)
     const baby = babyInfo[0];
     if (!baby.firstName || !baby.lastName || !baby.birthDate || !baby.gender) {
-      alert("กรุณากรอกข้อมูลทารกให้ครบถ้วน (ชื่อ, นามสกุล, วันเกิด, เพศ)");
+      showError("กรุณากรอกข้อมูลทารกให้ครบถ้วน (ชื่อ, นามสกุล, วันเกิด, เพศ)");
       return false;
     }
     return true;
@@ -104,10 +108,16 @@ export default function EditMomInfo() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
+      setIsSubmitting(false);
       return;
     }
     try {
@@ -158,18 +168,18 @@ export default function EditMomInfo() {
         body: formData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/mominfo");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  return (
-    <div className="flex bg-white">
+  };  return (
+    <div className="flex bg-white min-h-screen">
       <Sidebar 
-       selectedItem="1"
+      selectedItem="1"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -476,16 +486,18 @@ export default function EditMomInfo() {
               ยกเลิก
             </Button>
             <Button
-              
               variant="contained"
+              disabled={isSubmitting}
               sx={{
                 bgcolor: "#B36868",
                 "&:hover": { bgcolor: "#934343" },
+                "&:disabled": { bgcolor: "#999999" },
               }}
               className="w-40"
               onClick={handleSubmit}
+              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              บันทึก
+              {isSubmitting ? "กำลังบันทึก..." : "บันทึก"}
             </Button>
           </Box>
         </Container>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -15,12 +14,18 @@ import {
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import Sidebar from "../components/SideBarAdmin";
+import StyledAlert from "../components/StyledAlert";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { useAlert } from "../hooks/useAlert";
+import { useConfirmDialog } from "../hooks/useConfirmDialog";
 import { useEffect } from "react";
 import { ContentBabycareItem} from "../types";
 
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
   const handleAddClick = () => {
     console.log("Add button clicked");
   };
@@ -59,11 +64,11 @@ const MomstoryPage: React.FC = () => {
           }
         } catch (error) {
           console.log("Error fetching data:", error);
-          alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+          showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         } 
       };
       fetchData();
-    }, []);
+    }, [showError]);
 
   
   const filteredData = data.filter(
@@ -73,20 +78,17 @@ const MomstoryPage: React.FC = () => {
   );
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("คุณต้องการลบข้อมูลนี้ใช่หรือไม่?")) {
-      return;
-    }
+    const performDelete = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          showError("กรุณาเข้าสู่ระบบใหม่");
+          router.push('/auth/login');
+          return;
+        }
 
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("กรุณาเข้าสู่ระบบใหม่");
-        router.push('/auth/login');
-        return;
-      }
-
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${id}`;
-      const response = await fetch(apiUrl, {
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${id}`;
+        const response = await fetch(apiUrl, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -104,20 +106,47 @@ const MomstoryPage: React.FC = () => {
       }
 
       setData(prev => prev.filter(item => item.id.toString() !== id));
-      alert("ลบข้อมูลสำเร็จ");
+      showSuccess("ลบข้อมูลสำเร็จ");
     } catch (err) {
       console.error("Error deleting item:", err);
-      alert("เกิดข้อผิดพลาดในการลบข้อมูล");
+      showError("เกิดข้อผิดพลาดในการลบข้อมูล");
     }
+    };
+
+    showConfirm(
+      "คุณต้องการลบข้อมูลนี้ใช่หรือไม่?",
+      performDelete,
+      {
+        title: "ยืนยันการลบ",
+        confirmText: "ลบ",
+        severity: "error"
+      }
+    );
   };
   return (
-    <div className="flex bg-white">
+    <div className="flex bg-white min-h-screen">
       <Sidebar 
       selectedItem="3"
       
       />
       <div className="flex-1 p-6">
         <Container>
+          <StyledAlert
+            open={alertState.open}
+            message={alertState.message}
+            severity={alertState.severity}
+            onClose={hideAlert}
+          />
+          <ConfirmDialog
+            open={confirmState.open}
+            title={confirmState.title}
+            message={confirmState.message}
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
+            confirmText={confirmState.confirmText}
+            cancelText={confirmState.cancelText}
+            severity={confirmState.severity}
+          />
           <TopBarSection
             title="ข้อมูลการดูแลทารก"
             searchTerm={searchTerm}
@@ -154,6 +183,12 @@ const MomstoryPage: React.FC = () => {
                       variant="h6"
                       component="div"
                       className="text-base"
+                      sx={{ 
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                width: '100%'
+                              }}
                     >
                       {item.title}
                     </Typography>

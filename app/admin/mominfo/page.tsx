@@ -19,6 +19,10 @@ import {
 
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
+import StyledAlert from "../components/StyledAlert";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { useAlert } from "../hooks/useAlert";
+import { useConfirmDialog } from "../hooks/useConfirmDialog";
 import Sidebar from "../components/SideBarAdmin";
 import { useEffect } from "react";
 import { MomMappedItem, MomRawItem,MomData } from "../types";
@@ -28,6 +32,8 @@ import { MomMappedItem, MomRawItem,MomData } from "../types";
 const AllMomInfoPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const { alert: alertState, showError, hideAlert } = useAlert();
+  const { confirmState, handleConfirm, handleCancel } = useConfirmDialog();
 
   const handleEdit = (id: string) => {
     router.push(`/admin/mominfo/${id}/edit`);
@@ -61,39 +67,15 @@ const AllMomInfoPage: React.FC = () => {
       } catch (error) {
         console.error("Error fetching mom data:", error);
         // Optionally handle error, e.g., show notification
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
       } finally {
         setLoading(false);
       }
     };
     fetchMomData();
-  }, []);
+  }, [showError]);
 
-  const handleDelete = (id: string) => {
-    if (!window.confirm("คุณต้องการลบข้อมูลนี้ใช่หรือไม่?")) {
-      return;
-    }
-    setMomData(momData.filter((mom) => mom.id !== id));
-    const token = localStorage.getItem("token");
-    fetch(`${process.env.NEXT_PUBLIC_url}/user/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to delete mom info");
-        }
-        alert("ลบข้อมูลสำเร็จ");
-      })
-      .catch((error) => {
-        alert("เกิดข้อผิดพลาดในการลบข้อมูล");
-        console.error(error);
-      });
-  };
-
+  
   const handleAddClick = () => {
     console.log("Add new mom");
   };
@@ -143,7 +125,7 @@ const AllMomInfoPage: React.FC = () => {
 
   return (
     
-    <div className="flex bg-white">
+    <div className="flex bg-white min-h-screen">
       {loading && (
       <Box
         sx={{
@@ -256,8 +238,11 @@ const AllMomInfoPage: React.FC = () => {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="font-bold text-center">
-                    การดำเนินการ
+                  <TableCell className="font-bold text-center ">
+                    <div className="flex items-center justify-center ">
+                      การดำเนินการ
+                    </div>
+                    
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -386,29 +371,7 @@ const AllMomInfoPage: React.FC = () => {
                         >
                           แก้ไข
                         </Button>
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          sx={{ color: "#999999", borderColor: "#999999" }}
-                          className="text-neutral05"
-                          startIcon={
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M12.9165 3.83333H15.3332V4.5H4.6665V3.83333H7.08317H7.29028L7.43672 3.68689L8.12361 3H11.8761L12.563 3.68689L12.7094 3.83333H12.9165ZM6.6665 17C6.02598 17 5.49984 16.4739 5.49984 15.8333V6.33333H14.4998V15.8333C14.4998 16.4739 13.9737 17 13.3332 17H6.6665Z"
-                                stroke="#4D4D4D"
-                              />
-                            </svg>
-                          }
-                          onClick={() => handleDelete(mom.id)}
-                        >
-                          ลบ
-                        </Button>
+                        
                       </Box>
                     </TableCell>
                   </TableRow>
@@ -418,6 +381,22 @@ const AllMomInfoPage: React.FC = () => {
           </TableContainer>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
+      <ConfirmDialog
+        open={confirmState.open}
+        title={confirmState.title}
+        message={confirmState.message}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        severity={confirmState.severity}
+      />
     </div>
   );
 };

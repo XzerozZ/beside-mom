@@ -11,11 +11,15 @@ import {
   Box,
   Grid,
   FormLabel,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
+import StyledAlert from "../../../components/StyledAlert";
+import { useAlert } from "../../../hooks/useAlert";
 
 const AddBabyCareInfoPicturePage: React.FC = () => {
   const router = useRouter();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   type FormData = {
     title: string;
     description: string;
@@ -31,6 +35,7 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
     type: "image",
     banners: null,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,13 +47,17 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
 
     try {
       // Get token from localStorage
       const token = localStorage.getItem('token');
       if (!token) {
         console.error("No token found");
-        alert("กรุณาเข้าสู่ระบบใหม่");
+        showError("กรุณาเข้าสู่ระบบใหม่");
         router.push('/auth/login');
         return;
       }
@@ -92,16 +101,18 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
       const result = await response.json();
       console.log("API response:", result);
 
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/babycare");
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="flex bg-white">
+    <div className="flex bg-white min-h-screen">
      <Sidebar 
       selectedItem="3"
       />
@@ -208,9 +219,34 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
                       objectFit: "cover",
                     }}
                   />
+                  <Button
+                    variant="contained"
+                    size="small"
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      minWidth: "30px",
+                      width: "30px",
+                      height: "30px",
+                      padding: 0,
+                      borderRadius: "0 0 0 4px",
+                      bgcolor: "rgba(179, 104, 104, 0.8)",
+                      "&:hover": { bgcolor: "#B36868" },
+                    }}
+                    onClick={() => {
+                      setFormData(prev => ({
+                        ...prev,
+                        link: prev.link.filter((_, i) => i !== idx)
+                      }));
+                    }}
+                  >
+                    ✕
+                  </Button>
                 </Box>
                 ))}
               </Box>
+
               <Typography
                 variant="h6"
                 component="div"
@@ -286,39 +322,64 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
                         border: "1px solid #ddd",
                       }}
                     />
+                    <Button
+                      variant="contained"
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        minWidth: "30px",
+                        width: "30px",
+                        height: "30px",
+                        padding: 0,
+                        borderRadius: "0 0 0 4px",
+                        bgcolor: "rgba(179, 104, 104, 0.8)",
+                        "&:hover": { bgcolor: "#B36868" },
+                      }}
+                      onClick={() => {
+                        setFormData(prev => ({
+                          ...prev,
+                          banners: null
+                        }));
+                      }}
+                    >
+                      ✕
+                    </Button>
                   </div>
                 </Box>
               )}
             </Grid>
             <Grid item xs={12} sm={6}>
               <Typography
-                variant="h6"
-                component="div"
-                gutterBottom
-                sx={{ mt: 2 }}
-                className="text-lg text-neutral05 font-semibold"
+              variant="h6"
+              component="div"
+              gutterBottom
+              sx={{ mt: 2 }}
+              className="text-lg text-neutral05 font-semibold"
               >
-                ข้อมูลทั่วไป
+              ข้อมูลทั่วไป
               </Typography>
               <FormLabel className="">หัวข้อ</FormLabel>
               <TextField
-                fullWidth
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                sx={{ mb: 2 }}
+              fullWidth
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
               />
               <FormLabel className="">รายละเอียด</FormLabel>
               <TextField
-                fullWidth
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                multiline
-                rows={4}
-                sx={{ mb: 2 }}
+              fullWidth
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              multiline
+              minRows={4}
+              maxRows={19}
+              sx={{ mb: 2 }}
               />
-        
+          
             </Grid>
           </Grid>
           <Box
@@ -339,17 +400,26 @@ const AddBabyCareInfoPicturePage: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
+              disabled={isSubmitting}
               sx={{
                 bgcolor: "#B36868",
                 "&:hover": { bgcolor: "#934343" },
+                "&:disabled": { bgcolor: "#999999" },
               }}
               onClick={handleSubmit}
+              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              บันทึกข้อมูล
+              {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </Button>
           </Box>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 };

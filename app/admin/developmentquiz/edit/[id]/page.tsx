@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Sidebar from "../../../components/SideBarAdmin";
+import StyledAlert from "../../../components/StyledAlert";
+import { useAlert } from "../../../hooks/useAlert";
 import {
   Container,
   Box,
@@ -38,6 +40,7 @@ export default function EditDevelopmentQuiz() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const { alert: alertState, showError, hideAlert } = useAlert();
 
   const [categoryid, setCategoryid] = useState("");
   const [periodID, setPeriodID] = useState("");
@@ -75,14 +78,14 @@ export default function EditDevelopmentQuiz() {
         setSuggestion(quiz.suggestion || "");
         setBannerPreview(quiz.banner || quiz.banners || null);
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
     if (id) fetchQuiz();
-  }, [id]);
+  }, [id, showError]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -123,7 +126,7 @@ export default function EditDevelopmentQuiz() {
       setSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/developmentquiz");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     } finally {
       setSaving(false);
@@ -287,16 +290,31 @@ export default function EditDevelopmentQuiz() {
                 <Button
                   type="submit"
                   variant="contained"
-                  sx={{ bgcolor: "#B37C6B", minWidth: 120, fontWeight: 500, fontSize: 16, boxShadow: "none", '&:hover': { bgcolor: "#a06b5c" } }}
+                  sx={{ 
+                    bgcolor: "#B37C6B", 
+                    minWidth: 120, 
+                    fontWeight: 500, 
+                    fontSize: 16, 
+                    boxShadow: "none", 
+                    '&:hover': { bgcolor: "#a06b5c" },
+                    '&:disabled': { bgcolor: "#999999" }
+                  }}
                   disabled={saving}
+                  startIcon={saving ? <CircularProgress size={20} color="inherit" /> : null}
                 >
-                  บันทึกข้อมูล
+                  {saving ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
                 </Button>
               </Box>
             </form>
           )}
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 }

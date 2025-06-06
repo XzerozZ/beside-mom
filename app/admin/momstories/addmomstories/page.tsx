@@ -12,13 +12,17 @@ import {
   Grid,
   FormLabel,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../components/SideBarAdmin";
+import StyledAlert from "../../components/StyledAlert";
+import { useAlert } from "../../hooks/useAlert";
 
 const AddMomStoryPage: React.FC = () => {
   const router = useRouter();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -31,6 +35,7 @@ const AddMomStoryPage: React.FC = () => {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Handle text input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +97,10 @@ const AddMomStoryPage: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
 
     const newErrors: { [key: string]: string } = {};
     if (!formData.title) newErrors.title = "กรุณากรอกหัวข้อ";
@@ -102,13 +111,15 @@ const AddMomStoryPage: React.FC = () => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setIsSubmitting(false);
       return;
     }
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
+      setIsSubmitting(false);
       return;
     }
 
@@ -134,21 +145,29 @@ const AddMomStoryPage: React.FC = () => {
         body: apiData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/momstories");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="flex bg-white">
-     <Sidebar 
-       selectedItem="2"
+    <div className="flex bg-white min-h-screen">
+      <Sidebar 
+      selectedItem="2"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg">
+          <StyledAlert
+            open={alertState.open}
+            message={alertState.message}
+            severity={alertState.severity}
+            onClose={hideAlert}
+          />
           <Typography
             variant="h6"
             gutterBottom
@@ -348,7 +367,8 @@ const AddMomStoryPage: React.FC = () => {
                 value={formData.description}
                 onChange={handleChange}
                 multiline
-                rows={4}
+                minRows={4}
+                maxRows={19}
                 sx={{ mb: 1 }}
                 error={!!errors.description}
                 helperText={errors.description}
@@ -374,13 +394,16 @@ const AddMomStoryPage: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
+              disabled={isSubmitting}
               sx={{
                 bgcolor: "#B36868",
                 "&:hover": { bgcolor: "#934343" },
+                "&:disabled": { bgcolor: "#999999" },
               }}
               onClick={handleSubmit}
+              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              บันทึกข้อมูล
+              {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </Button>
           </Box>
         </Container>

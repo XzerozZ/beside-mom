@@ -13,11 +13,15 @@ import {
   Grid,
   FormLabel,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
+import StyledAlert from "../../../components/StyledAlert";
+import { useAlert } from "../../../hooks/useAlert";
 
 const AddBabyCareInfoVideoPage: React.FC = () => {
   const router = useRouter();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
   
@@ -43,6 +47,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [videoMethod, setVideoMethod] = useState<'file' | 'link' | null>(null);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -129,6 +134,10 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
     // Validation
     const newErrors: {[key: string]: string} = {};
     
@@ -140,6 +149,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setIsSubmitting(false);
       return;
     }
 
@@ -148,8 +158,9 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error("No token found");
-        alert("กรุณาเข้าสู่ระบบใหม่");
+        showError("กรุณาเข้าสู่ระบบใหม่");
         router.push('/auth/login');
+        setIsSubmitting(false);
         return;
       }
 
@@ -190,17 +201,17 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
       const result = await response.json();
       console.log("API response:", result);
 
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/babycare");
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  return (
-    <div className="flex bg-white">
-      <Sidebar 
+  };  return (
+    <div className="flex bg-white min-h-screen">
+     <Sidebar 
       selectedItem="3"
       />
       <div className="flex-1 p-6">
@@ -399,7 +410,9 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
                 value={formData.description}
                 onChange={handleChange}
                 multiline
-                rows={4}
+                minRows={4}
+                maxRows={19}
+              
                 sx={{ mb: 1 }}
                 error={!!errors.description}
                 helperText={errors.description}
@@ -425,17 +438,26 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
+              disabled={isSubmitting}
               sx={{
                 bgcolor: "#B36868",
                 "&:hover": { bgcolor: "#934343" },
+                "&:disabled": { bgcolor: "#999999" },
               }}
               onClick={handleSubmit}
+              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              บันทึกข้อมูล
+              {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </Button>
           </Box>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 };

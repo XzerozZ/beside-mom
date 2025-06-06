@@ -14,10 +14,13 @@ import {
   MenuItem,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
+import StyledAlert from "@/app/admin/components/StyledAlert";
+import { useAlert } from "@/app/admin/hooks/useAlert";
 import { doctors } from "@/app/admin/types";
 export default function Babygraphs() {
   const router = useRouter();
   const { id } = useParams();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
 
 
   const [appointmentmomInfo, setAppointmentmomInfo] = useState({
@@ -39,7 +42,7 @@ export default function Babygraphs() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push("/auth/login");
           return;
         }
@@ -65,12 +68,12 @@ export default function Babygraphs() {
         });
        
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลนัดหมาย");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูลนัดหมาย");
         console.error(err);
       }
     };
     fetchAppointment();
-  }, [id, router]);
+  }, [id, router, showError]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAppointmentmomInfo({
@@ -84,7 +87,7 @@ export default function Babygraphs() {
     e.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
       return;
     }
@@ -110,10 +113,10 @@ export default function Babygraphs() {
         body: formData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push(`/admin/appointment/${appointmentmomInfo.u_id}`);
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     }
   };
@@ -125,6 +128,12 @@ export default function Babygraphs() {
   
       />
       <Container maxWidth="lg" sx={{ mb: 4 }}>
+        <StyledAlert
+          open={alertState.open}
+          message={alertState.message}
+          severity={alertState.severity}
+          onClose={hideAlert}
+        />
         <Typography
           gutterBottom
           className="mt-7 font-bold text-2x text-neutral05"

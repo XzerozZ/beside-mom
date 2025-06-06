@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useRef } from "react";
 import Sidebar from "../../components/SideBarAdmin";
+import StyledAlert from "../../components/StyledAlert";
+import { useAlert } from "../../hooks/useAlert";
 import {
   Container,
   Box,
@@ -11,7 +13,7 @@ import {
   MenuItem,
   FormLabel,
   Alert,
-
+  CircularProgress,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 
@@ -36,6 +38,7 @@ const periodOptions = [
 
 export default function AddDevelopmentQuiz() {
   const router = useRouter();
+  const { alert: alertState, showError, hideAlert } = useAlert();
   const [categoryid, setCategoryid] = useState("");
   const [periodID, setPeriodID] = useState("");
   const [question, setQuestion] = useState("");
@@ -47,6 +50,7 @@ export default function AddDevelopmentQuiz() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -57,8 +61,13 @@ export default function AddDevelopmentQuiz() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
     setError("");
     setSuccess("");
+    
     try {
       const formData = new FormData();
       formData.append("categoryid", categoryid);
@@ -87,9 +96,11 @@ export default function AddDevelopmentQuiz() {
      
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
-    } 
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -252,15 +263,31 @@ export default function AddDevelopmentQuiz() {
                 <Button
                   type="submit"
                   variant="contained"
-                  sx={{ bgcolor: "#B37C6B", minWidth: 120, fontWeight: 500, fontSize: 16, boxShadow: "none", '&:hover': { bgcolor: "#a06b5c" } }}
+                  disabled={isSubmitting}
+                  sx={{ 
+                    bgcolor: "#B37C6B", 
+                    minWidth: 120, 
+                    fontWeight: 500, 
+                    fontSize: 16, 
+                    boxShadow: "none", 
+                    '&:hover': { bgcolor: "#a06b5c" },
+                    '&:disabled': { bgcolor: "#999999" }
+                  }}
+                  startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
                 >
-                  เพิ่มข้อมูล
+                  {isSubmitting ? "กำลังบันทึก..." : "เพิ่มข้อมูล"}
                 </Button>
               </Box>
             </form>
   
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 }

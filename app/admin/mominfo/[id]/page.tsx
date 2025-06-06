@@ -18,6 +18,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
+import StyledAlert from "@/app/admin/components/StyledAlert";
+import { useAlert } from "@/app/admin/hooks/useAlert";
 import { MomInfo, BabyInfo} from "@/app/admin/types";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import {MomApiResponse, KidApiData, GrowthApiData} from "@/app/admin/types";
@@ -27,6 +29,7 @@ import {MomApiResponse, KidApiData, GrowthApiData} from "@/app/admin/types";
 export default function MomInfoId() {
   const params = useParams();
   const router = useRouter();
+  const { alert: alertState, showError, hideAlert } = useAlert();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
     img: "",
@@ -84,13 +87,13 @@ export default function MomInfoId() {
         setBabyInfo(babydata);
         if (babydata.length > 0) setSelectedBabyId(babydata[0].id);
       } catch (error) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
         console.error("Error fetching mom info:", error);
       }
     };
 
     fetchData();
-  }, [params.id]);
+  }, [params.id, showError]);
 
   const handleBabySelect = (id: string) => {
     setSelectedBabyId(id);
@@ -98,11 +101,9 @@ export default function MomInfoId() {
 
   // Get selected baby's growth data for chart
   const selectedBaby = babyInfo.find((b) => b.id === selectedBabyId);
-  const growthData = selectedBaby?.growthData || [];
-
-  return (
-    <div className="flex bg-white">
-    <Sidebar 
+  const growthData = selectedBaby?.growthData || [];  return (
+    <div className="flex bg-white min-h-screen">
+      <Sidebar 
        selectedItem="1"
       />
       <div className="flex-1 p-6">
@@ -460,6 +461,12 @@ export default function MomInfoId() {
           </Box>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAlert } from "../../hooks/useAlert";
 import {
  
   Box,
@@ -14,6 +15,7 @@ import Sidebar from "../../components/SideBarAdmin";
 
 const AddFag: React.FC = () => {
   const router = useRouter();
+  const { showSuccess, showError } = useAlert();
   // State for individual question and answer inputs
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -27,7 +29,7 @@ const AddFag: React.FC = () => {
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
       return;
     }
@@ -50,12 +52,12 @@ const AddFag: React.FC = () => {
 
       if (!response.ok) throw new Error("API error");
 
-      alert("เพิ่มคำถามสำเร็จ");
+      showSuccess("เพิ่มคำถามสำเร็จ");
       setQuestion("");
       setAnswer("");
       router.push("/admin/faq");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการเพิ่มคำถาม");
+      showError("เกิดข้อผิดพลาดในการเพิ่มคำถาม");
       console.error(err);
     }
   };
@@ -94,7 +96,7 @@ const AddFag: React.FC = () => {
         </Box>
 
         {/* Buttons */}
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-4 gap-2">
           <Button
             variant="outlined"
             sx={{

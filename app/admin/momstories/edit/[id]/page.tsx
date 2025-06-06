@@ -12,14 +12,17 @@ import {
   Grid,
   FormLabel,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
+import { useAlert } from "../../../hooks/useAlert";
 
 const EditMomStoryPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
+  const { showSuccess, showError } = useAlert();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -32,6 +35,7 @@ const EditMomStoryPage: React.FC = () => {
     videoPreview: "",
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch story data
   useEffect(() => {
@@ -39,7 +43,7 @@ const EditMomStoryPage: React.FC = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push("/auth/login");
           return;
         }
@@ -61,12 +65,12 @@ const EditMomStoryPage: React.FC = () => {
           videoMethod: story.link ? "link" : null,
         }));
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
         console.error(err);
       }
     };
     fetchData();
-  }, [params.id, router]);
+  }, [params.id, router, showError]);
 
   // Handle text input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,6 +135,10 @@ const EditMomStoryPage: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
 
     const newErrors: { [key: string]: string } = {};
     if (!formData.title) newErrors.title = "กรุณากรอกหัวข้อ";
@@ -141,13 +149,15 @@ const EditMomStoryPage: React.FC = () => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setIsSubmitting(false);
       return;
     }
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
+      setIsSubmitting(false);
       return;
     }
 
@@ -173,18 +183,18 @@ const EditMomStoryPage: React.FC = () => {
         body: apiData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/momstories");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  return (
-    <div className="flex bg-white">
-     <Sidebar 
-       selectedItem="2"
+  };  return (
+    <div className="flex bg-white min-h-screen">
+      <Sidebar 
+      selectedItem="2"
       />
       <div className="flex-1 p-6">
         <Container maxWidth="lg">
@@ -415,7 +425,8 @@ const EditMomStoryPage: React.FC = () => {
                   value={formData.description}
                   onChange={handleChange}
                   multiline
-                  rows={4}
+                  minRows={4}
+                  maxRows={19}
                   sx={{ mt: 1, mb: 3 }}
                   error={!!errors.description}
                   helperText={errors.description}
@@ -441,12 +452,15 @@ const EditMomStoryPage: React.FC = () => {
               <Button
                 type="submit"
                 variant="contained"
+                disabled={isSubmitting}
                 sx={{
                   bgcolor: "#B36868",
                   "&:hover": { bgcolor: "#934343" },
+                  "&:disabled": { bgcolor: "#999999" },
                 }}
+                startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
               >
-                บันทึกข้อมูล
+                {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
               </Button>
             </Box>
           </Box>

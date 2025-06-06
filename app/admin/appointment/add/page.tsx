@@ -18,11 +18,14 @@ import {
 
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
+import StyledAlert from "@/app/admin/components/StyledAlert";
+import { useAlert } from "@/app/admin/hooks/useAlert";
 import { doctors } from "@/app/admin/types";
 import { MomApiData } from "@/app/admin/types";
 
 export default function AppointmentAdd() {
   const router = useRouter();
+  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const [searchTermName, setSearchTermName] = useState("");
   const [searchTermID, setSearchTermID] = useState("");
   const [allmomInfo, setAllMomInfo] = useState<{ id: string; momname: string }[]>([]);
@@ -43,7 +46,7 @@ export default function AppointmentAdd() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
+          showError("กรุณาเข้าสู่ระบบใหม่");
           router.push("/auth/login");
           return;
         }
@@ -60,12 +63,12 @@ export default function AppointmentAdd() {
         }));
         setAllMomInfo(moms);
       } catch (err) {
-        alert("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
         console.error(err);
       }
     };
     fetchAllMoms();
-  }, [router]);
+  }, [router, showError]);
 
   // ฟิลเตอร์
   const filteredMomsName = searchTermName
@@ -95,7 +98,7 @@ export default function AppointmentAdd() {
     e.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("กรุณาเข้าสู่ระบบใหม่");
+      showError("กรุณาเข้าสู่ระบบใหม่");
       router.push("/auth/login");
       return;
     }
@@ -122,10 +125,10 @@ export default function AppointmentAdd() {
         body: formData,
       });
       if (!response.ok) throw new Error("API error");
-      alert("บันทึกข้อมูลสำเร็จ");
+      showSuccess("บันทึกข้อมูลสำเร็จ");
       router.push("/admin/appointment");
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       console.error(err);
     }
   };
@@ -382,6 +385,12 @@ export default function AppointmentAdd() {
           </Box>
         </Container>
       </div>
+      <StyledAlert
+        open={alertState.open}
+        message={alertState.message}
+        severity={alertState.severity}
+        onClose={hideAlert}
+      />
     </div>
   );
 }
