@@ -44,7 +44,13 @@ const Loginpage = () => {
           router.push("/admin/mominfo");
         }
       } else {
-        alert(data.message || "Login failed");
+       
+        Swal.fire({
+          title: "เข้าสู่ระบบไม่สำเร็จ",
+          text: data.message || "กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่านของคุณ",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+        });
       }
     } catch (error) {
       Swal.fire({
