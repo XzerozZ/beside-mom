@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { AlertColor } from "@mui/material";
 
 interface AlertState {
@@ -16,26 +16,26 @@ export const useAlert = () => {
     severity: "info",
   });
 
-  const showAlert = (message: string, severity: AlertColor = "info") => {
+  const showAlert = useCallback((message: string, severity: AlertColor = "info") => {
     setAlert({
       open: true,
       message,
       severity,
     });
-  };
+  }, []);
 
-  const hideAlert = () => {
+  const hideAlert = useCallback(() => {
     setAlert(prev => ({
       ...prev,
       open: false,
     }));
-  };
+  }, []);
 
-  // Convenience methods
-  const showSuccess = (message: string) => showAlert(message, "success");
-  const showError = (message: string) => showAlert(message, "error");
-  const showWarning = (message: string) => showAlert(message, "warning");
-  const showInfo = (message: string) => showAlert(message, "info");
+  // Convenience methods - now stable with useCallback
+  const showSuccess = useCallback((message: string) => showAlert(message, "success"), [showAlert]);
+  const showError = useCallback((message: string) => showAlert(message, "error"), [showAlert]);
+  const showWarning = useCallback((message: string) => showAlert(message, "warning"), [showAlert]);
+  const showInfo = useCallback((message: string) => showAlert(message, "info"), [showAlert]);
 
   return {
     alert,

@@ -55,7 +55,7 @@ const MomstoryPage: React.FC = () => {
       }
     };
     fetchStories();
-  }, [router]);
+  }, [router, showError]);
 
   const handleAddClick = () => {
     router.push("/admin/momstories/add");
