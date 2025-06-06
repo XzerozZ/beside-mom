@@ -244,7 +244,7 @@ const AppointmentsPage: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex mt-6">
+                <div className="flex mt-6 gap-2">
                   <Button
                     size="small"
                     variant="outlined"
