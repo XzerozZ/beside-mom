@@ -23,7 +23,7 @@ const ContactNurseInfo: React.FC = () => {
       // Add your submit logic here
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulated API call
       console.log("บันทึกข้อมูลสำเร็จ");
-    } catch (error) {
+    } catch {
       console.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
     } finally {
       setIsSubmitting(false);

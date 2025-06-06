@@ -85,7 +85,7 @@ const formatDate = (dateStr: string | null) => {
 const EvaluateList: React.FC = () => {
   const params = useParams();
   const kid_id = params.kid_id as string;
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { alert: alertState, showError, hideAlert } = useAlert();
   const [loading, setLoading] = useState(true);
   const [evaluates, setEvaluates] = useState<EvaluateData[]>([]);
   const [error, setError] = useState("");
@@ -111,7 +111,7 @@ const EvaluateList: React.FC = () => {
       }
     };
     if (kid_id) fetchEvaluates();
-  }, [kid_id]);
+  }, [kid_id, showError]);
 
   return (
     <div className="flex bg-white min-h-screen">

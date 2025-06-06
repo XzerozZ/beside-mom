@@ -68,7 +68,7 @@ const MomstoryPage: React.FC = () => {
         } 
       };
       fetchData();
-    }, []);
+    }, [showError]);
 
   
   const filteredData = data.filter(

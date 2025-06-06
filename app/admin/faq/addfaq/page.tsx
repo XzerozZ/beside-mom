@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import StyledAlert from "../../components/StyledAlert";
 import { useAlert } from "../../hooks/useAlert";
 import {
  
@@ -16,7 +15,7 @@ import Sidebar from "../../components/SideBarAdmin";
 
 const AddFag: React.FC = () => {
   const router = useRouter();
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { showSuccess, showError } = useAlert();
   // State for individual question and answer inputs
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");

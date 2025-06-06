@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { AlertColor } from "@mui/material/Alert";
 
 interface ConfirmState {
@@ -31,7 +31,7 @@ export const useConfirmDialog = () => {
     onConfirm: () => {},
   });
 
-  const showConfirm = (
+  const showConfirm = useCallback((
     message: string,
     onConfirmCallback: () => void,
     options: ConfirmOptions = {}
@@ -45,16 +45,16 @@ export const useConfirmDialog = () => {
       severity: options.severity || "warning",
       onConfirm: onConfirmCallback,
     });
-  };
+  }, []);
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     confirmState.onConfirm();
     setConfirmState(prev => ({ ...prev, open: false }));
-  };
+  }, [confirmState]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setConfirmState(prev => ({ ...prev, open: false }));
-  };
+  }, []);
 
   return {
     confirmState,

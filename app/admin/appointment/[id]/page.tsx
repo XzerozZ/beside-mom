@@ -110,7 +110,7 @@ const AppointmentsPage: React.FC = () => {
       } 
     };
     fetchAppointments();
-  }, [id, router]);
+  }, [id, router, showError]);
 
   const filteredAppointments = appointments.filter(
     (appointment) =>

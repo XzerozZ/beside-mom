@@ -8,7 +8,6 @@ import {
   DialogActions,
   Button,
   Typography,
-  Box,
 } from "@mui/material";
 import { AlertColor } from "@mui/material/Alert";
 

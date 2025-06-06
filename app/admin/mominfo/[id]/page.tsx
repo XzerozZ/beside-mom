@@ -29,7 +29,7 @@ import {MomApiResponse, KidApiData, GrowthApiData} from "@/app/admin/types";
 export default function MomInfoId() {
   const params = useParams();
   const router = useRouter();
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { alert: alertState, showError, hideAlert } = useAlert();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
     img: "",
@@ -93,7 +93,7 @@ export default function MomInfoId() {
     };
 
     fetchData();
-  }, [params.id]);
+  }, [params.id, showError]);
 
   const handleBabySelect = (id: string) => {
     setSelectedBabyId(id);

@@ -40,7 +40,7 @@ export default function EditDevelopmentQuiz() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { alert: alertState, showError, hideAlert } = useAlert();
 
   const [categoryid, setCategoryid] = useState("");
   const [periodID, setPeriodID] = useState("");
@@ -85,7 +85,7 @@ export default function EditDevelopmentQuiz() {
       }
     };
     if (id) fetchQuiz();
-  }, [id]);
+  }, [id, showError]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

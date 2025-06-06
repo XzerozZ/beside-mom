@@ -101,7 +101,7 @@ export default function EditMomInfo() {
       }
     };
     fetchData();
-  }, [params.id]);
+  }, [params.id, showError]);
 
   const handleBabySelect = (id: string) => {
     setSelectedBabyId(id);

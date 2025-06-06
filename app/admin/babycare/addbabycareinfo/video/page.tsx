@@ -134,6 +134,10 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
     // Validation
     const newErrors: {[key: string]: string} = {};
     
@@ -145,6 +149,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setIsSubmitting(false);
       return;
     }
 
@@ -155,6 +160,7 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
         console.error("No token found");
         showError("กรุณาเข้าสู่ระบบใหม่");
         router.push('/auth/login');
+        setIsSubmitting(false);
         return;
       }
 
@@ -200,6 +206,8 @@ const AddBabyCareInfoVideoPage: React.FC = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
       showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    } finally {
+      setIsSubmitting(false);
     }
   };  return (
     <div className="flex bg-white min-h-screen">

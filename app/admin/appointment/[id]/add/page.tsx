@@ -65,7 +65,7 @@ export default function Babygraphs() {
       }
     };
     fetchMomInfo();
-  }, [id, router]);
+  }, [id, router, showError]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAppointmentmomInfo({

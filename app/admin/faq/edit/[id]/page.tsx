@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import StyledAlert from "../../../components/StyledAlert";
 import { useAlert } from "../../../hooks/useAlert";
 import {
   Box,
@@ -16,7 +15,7 @@ const EditFaq: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { showSuccess, showError } = useAlert();
 
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -51,7 +50,7 @@ const EditFaq: React.FC = () => {
       }
     };
     fetchFaq();
-  }, [id, router]);
+  }, [id, router, showError]);
 
   // Update FAQ
   const handleUpdate = async () => {

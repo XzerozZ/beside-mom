@@ -38,7 +38,7 @@ const periodOptions = [
 
 export default function AddDevelopmentQuiz() {
   const router = useRouter();
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { alert: alertState, showError, hideAlert } = useAlert();
   const [categoryid, setCategoryid] = useState("");
   const [periodID, setPeriodID] = useState("");
   const [question, setQuestion] = useState("");

@@ -32,8 +32,8 @@ import { MomMappedItem, MomRawItem,MomData } from "../types";
 const AllMomInfoPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
-  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
+  const { alert: alertState, showError, hideAlert } = useAlert();
+  const { confirmState, handleConfirm, handleCancel } = useConfirmDialog();
 
   const handleEdit = (id: string) => {
     router.push(`/admin/mominfo/${id}/edit`);
@@ -73,7 +73,7 @@ const AllMomInfoPage: React.FC = () => {
       }
     };
     fetchMomData();
-  }, []);
+  }, [showError]);
 
   
   const handleAddClick = () => {

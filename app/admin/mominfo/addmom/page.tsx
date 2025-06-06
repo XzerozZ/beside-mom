@@ -4,7 +4,6 @@
 import { useRouter } from "next/navigation";
 import { useState} from "react";
 import Image from "next/image";
-import StyledAlert from "../../components/StyledAlert";
 import { useAlert } from "../../hooks/useAlert";
 import {
   Container,
@@ -44,7 +43,7 @@ const defaultBaby = {
 
 export default function EditMomInfo() {
   const router = useRouter();
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { showSuccess, showError } = useAlert();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
     img: "",

@@ -77,7 +77,7 @@ export default function Faq() {
     };
 
     fetchFAQs();
-  }, [router]);
+  }, [router, showError]);
 
   const handleAddClick = () => {
     router.push("/admin/faq/add");

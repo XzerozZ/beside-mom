@@ -15,7 +15,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
-import StyledAlert from "../../../components/StyledAlert";
 import { useAlert } from "../../../hooks/useAlert";
 
 const EditMomStoryPage: React.FC = () => {
@@ -23,7 +22,7 @@ const EditMomStoryPage: React.FC = () => {
   const params = useParams();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
-  const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  const { showSuccess, showError } = useAlert();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -71,7 +70,7 @@ const EditMomStoryPage: React.FC = () => {
       }
     };
     fetchData();
-  }, [params.id, router]);
+  }, [params.id, router, showError]);
 
   // Handle text input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

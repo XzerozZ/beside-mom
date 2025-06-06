@@ -90,7 +90,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
     };
 
     fetchData();
-  }, [params.id, router]);
+  }, [params.id, router, showError]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
