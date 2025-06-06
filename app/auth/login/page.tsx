@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Swal from "sweetalert2";
 const Loginpage = () => {
   const router = useRouter();
 
@@ -26,7 +27,12 @@ const Loginpage = () => {
       const data = await response.json();
 
       if (data.status === "Success" && data.result?.token) {
-        alert("Login successful");
+        Swal.fire({
+          title: "เข้าสู่ระบบสำเร็จ",
+          text: "ยินดีต้อนรับคุณแม่",
+          icon: "success",
+          confirmButtonText: "ตกลง",
+        });
         localStorage.setItem("token", data.result.token);
         localStorage.setItem("name", data.result.name);
         localStorage.setItem("role", data.result.role);
@@ -41,7 +47,12 @@ const Loginpage = () => {
         alert(data.message || "Login failed");
       }
     } catch (error) {
-      alert("An error occurred during login");
+      Swal.fire({
+        title: "เข้าสู่ระบบไม่สำเร็จ",
+        text: "กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่านของคุณ",
+        icon: "error",
+        confirmButtonText: "ตกลง",
+      });
       console.error("Login error:", error);
     }
   };

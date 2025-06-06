@@ -23,14 +23,14 @@ const PageFP = () => {
         Swal.fire({
           title: "Password reset link sent to your email!",
           icon: "success",
-          timer: 1000,
+          timer: 3000,
         });
           window.location.href = "/auth/verify";
       } else {
         Swal.fire({
           title: "Failed to send password reset link",
           icon: "error",
-          timer: 1000,
+          timer: 3000,
         });
       }
     } catch (error) {

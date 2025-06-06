@@ -1,10 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 
-import {
-  ButtonComponents,
-  ButtonComponents4,
-} from "@/app/component/button";
+import { ButtonComponents, ButtonComponents4 } from "@/app/component/button";
 import { GrowthEdit } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
@@ -76,7 +73,6 @@ const PageBabyEdit = () => {
         throw new Error("Failed to add baby data");
       }
 
-     
       setShowInput(false); // Hide input form
       alert("ข้อมูลถูกบันทึกเรียบร้อยแล้ว");
     } catch (error) {
@@ -102,7 +98,7 @@ const PageBabyEdit = () => {
         return;
       }
     };
-      fetchData();
+    fetchData();
     if (token) {
       fetchBabyData(token!, babyId!);
     } else {
@@ -111,7 +107,7 @@ const PageBabyEdit = () => {
     setLoading(false);
 
     fetchData();
-  }, [token,babyId]);
+  }, [token, babyId]);
 
   if (loading) {
     return (
@@ -164,7 +160,7 @@ const PageBabyEdit = () => {
             ))}
           </div>
           {showInput && (
-            <div className=" max-xl:w-[770px] max-sm:w-[324px]">
+            <div className=" max-xl:w-[770px] max-sm:w-[324px] flex-col ">
               <div className="flex flex-col ">
                 <div className="grid grid-cols-[1fr_1fr_1fr] gap-[64px] max-sm:gap-2  max-sm:grid-cols-[1fr_1fr_1fr_1fr] ">
                   <div className="flex flex-row gap-1 max-sm:col-span-4 max-sm:col-start-1">
@@ -187,11 +183,13 @@ const PageBabyEdit = () => {
                   <div className="flex flex-col max-sm:col-start-1 max-sm:col-end-3 max-sm:col-span-2">
                     <label htmlFor="weight">น้ำหนัก (กก.)</label>
                     <input
-                      type="text"
+                      type="number"
                       id="weight"
                       name="weight"
                       value={weight}
-                      onChange={(e) => setWeight(Number(e.target.value))}
+                      onChange={(e) =>
+                        setWeight(parseFloat(e.target.value) || 0)
+                      }
                       placeholder="16.0"
                       className="border border-gray-300 rounded px-2 py-1 "
                     />
@@ -199,10 +197,12 @@ const PageBabyEdit = () => {
                   <div className="flex flex-col max-sm:col-start-3 max-sm:col-end-5 max-sm:col-span-2">
                     <label htmlFor="height">ความยาว (ซม.)</label>
                     <input
-                      type="text"
+                      type="number"
                       id="height"
                       value={length}
-                      onChange={(e) => setLength(Number(e.target.value))}
+                      onChange={(e) =>
+                        setLength(parseFloat(e.target.value) || 0)
+                      }
                       name="height"
                       placeholder="60.0"
                       className="border border-gray-300 rounded px-2 py-1 "
@@ -210,27 +210,26 @@ const PageBabyEdit = () => {
                   </div>
                 </div>
               </div>
+              <div className="flex justify-end gap-4 mt-4">
+                <div className="w-[180px] max-sm:w-1/2">
+                  <ButtonComponents4
+                    title="ยกเลิก"
+                    textSize="text-[15px] font-bold"
+                    onClick={() => setShowInput(false)}
+                  />
+                </div>
+                <div className="w-[180px] max-sm:w-1/2">
+                  <ButtonComponents
+                    title="บันทึกข้อมูล"
+                    textSize="text-[15px] font-bold"
+                    onClick={() =>
+                      handleAddData(token!, babyId!, length, weight, date)
+                    }
+                  />
+                </div>
+              </div>
             </div>
           )}
-
-          <div className="flex justify-end gap-4 ">
-            <div className="w-[180px] max-sm:w-1/2">
-              <ButtonComponents4
-                title="ยกเลิก"
-                textSize="text-[15px] font-bold"
-                onClick={() => setShowInput(false)}
-              />
-            </div>
-            <div className="w-[180px] max-sm:w-1/2">
-              <ButtonComponents
-                title="บันทึกข้อมูล"
-                textSize="text-[15px] font-bold"
-                onClick={() =>
-                  handleAddData(token!, babyId!, length, weight, date)
-                }
-              />
-            </div>
-          </div>
         </div>
       </div>
     );

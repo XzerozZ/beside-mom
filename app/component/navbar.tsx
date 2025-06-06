@@ -79,6 +79,7 @@ const Navbar = () => {
         width={28}
         height={28}
         alt="profile"
+        className="rounded-full"
         ></Image>
         <div className="relative my-auto">
         <Image
@@ -90,7 +91,7 @@ const Navbar = () => {
           onClick={() => setShowDropdown(!showDropdown)}
         />
         {showDropdown && (
-          <div className="absolute right-0 top-5 mt-2 bg-[#FFF4F4] border border-gray-200 rounded-md shadow-lg h-[500px] w-[390px] z-9999">
+          <div className="absolute right-0 top-5 mt-2 bg-[#FFF4F4] border border-gray-200 rounded-md shadow-lg h-[400px] w-[390px] z-9999">
           <div className="p-[32px] flex flex-col justify-between h-full">
             <div className="flex flex-row justify-between">
             <h1 className="font-bold">โปรไฟล์</h1>
@@ -108,6 +109,7 @@ const Navbar = () => {
               width={96}
               height={96}
               alt="profilepicture"
+              className="rounded-full"
             ></Image>
             <h1 className="font-bold text-[16px]">{momData?.fname} {momData?.lname}</h1>
             </div>

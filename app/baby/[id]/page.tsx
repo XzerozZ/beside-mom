@@ -221,7 +221,7 @@ const PageBabyId = () => {
               />
             </div>
           </div>
-          <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-row max-xl:flex-col justify-between gap-8">
+          <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-row max-xl:flex-col justify-between gap-8 mb-5">
             <WeightChart gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
             <LengthChart gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
             <WeigthLengthGrowth gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
