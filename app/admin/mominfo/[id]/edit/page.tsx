@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   Container,
@@ -41,6 +41,11 @@ export default function EditMomInfo() {
   const params = useParams();
   const router = useRouter();
   const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
+  
+  // Add refs for file inputs
+  const momImageInputRef = useRef<HTMLInputElement>(null);
+  const babyImageInputRef = useRef<HTMLInputElement>(null);
+  
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
     img: "",
@@ -169,6 +174,46 @@ export default function EditMomInfo() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  // Image upload handlers
+  const handleMomImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMomInfo(prev => ({
+          ...prev,
+          img: reader.result as string
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleBabyImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && selectedBabyId) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setBabyInfo(prev =>
+          prev.map(baby =>
+            baby.id === selectedBabyId
+              ? { ...baby, img: reader.result as string }
+              : baby
+          )
+        );
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleMomImageClick = () => {
+    momImageInputRef.current?.click();
+  };
+
+  const handleBabyImageClick = () => {
+    babyImageInputRef.current?.click();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -308,6 +353,7 @@ export default function EditMomInfo() {
                   <IconButton
                     className="absolute top-32 left-36 bg-red-100 shadow-md"
                     size="small"
+                    onClick={handleMomImageClick}
                   >
                     <svg
                       width="32"
@@ -322,6 +368,9 @@ export default function EditMomInfo() {
                         strokeWidth="5"
                       />
                     </svg>
+                    
+                 
+                    
                   </IconButton>
                 </div>
              
@@ -425,6 +474,7 @@ export default function EditMomInfo() {
                           <IconButton
                             className="absolute top-32 left-36 bg-red-100 shadow-md flex items-center justify-center"
                             size="small"
+                            onClick={handleBabyImageClick}
                           >
                             <svg
                               width="32"
@@ -772,6 +822,23 @@ export default function EditMomInfo() {
           </Box>
         </Container>
       </div>
+      
+      {/* Hidden file inputs */}
+      <input
+        type="file"
+        ref={momImageInputRef}
+        onChange={handleMomImageChange}
+        accept="image/*"
+        style={{ display: 'none' }}
+      />
+      <input
+        type="file"
+        ref={babyImageInputRef}
+        onChange={handleBabyImageChange}
+        accept="image/*"
+        style={{ display: 'none' }}
+      />
+      
       <StyledAlert
         open={alertState.open}
         message={alertState.message}
