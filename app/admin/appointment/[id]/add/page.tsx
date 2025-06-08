@@ -204,6 +204,7 @@ export default function Babygraphs() {
                     size="small"
                     name="start_time"
                     type="text"
+                    placeholder="ex: 10:00"
                     value={appointmentmomInfo.start_time}
                     onChange={handleChange}
                   />
@@ -223,20 +224,16 @@ export default function Babygraphs() {
             </Box>
             <Box className="mt-5">
               <FormLabel>แพทย์</FormLabel>
-              <Select
+               <TextField
                 fullWidth
                 size="small"
                 name="doctor"
+                type="text"
+                placeholder="ex: นพ.สมชาย ใจดี"
                 value={appointmentmomInfo.doctor}
-                onChange={handleDoctorChange}
-              >
-                <MenuItem value="">-- เลือกแพทย์ --</MenuItem>
-                {doctors.map((doctor) => (
-                  <MenuItem key={doctor.id} value={doctor.name}>
-                    {doctor.name}
-                  </MenuItem>
-                ))}
-              </Select>
+                onChange={handleChange}
+              />
+            
             </Box>
             <Box className="mt-5">
               <FormLabel>การเตรียมตัว</FormLabel>

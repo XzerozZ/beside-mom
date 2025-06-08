@@ -22,7 +22,6 @@ export default function Babygraphs() {
   const { id } = useParams();
   const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
 
-
   const [appointmentmomInfo, setAppointmentmomInfo] = useState({
     id: id,
     u_id: "",
@@ -66,7 +65,6 @@ export default function Babygraphs() {
           requirement: result.requirement || "",
           status: result.status ? String(result.status) : "",
         });
-       
       } catch (err) {
         showError("เกิดข้อผิดพลาดในการโหลดข้อมูลนัดหมาย");
         console.error(err);
@@ -123,10 +121,7 @@ export default function Babygraphs() {
 
   return (
     <div className="flex bg-white">
-      <Sidebar 
-      selectedItem="5"
-  
-      />
+      <Sidebar selectedItem="5" />
       <Container maxWidth="lg" sx={{ mb: 4 }}>
         <StyledAlert
           open={alertState.open}
@@ -175,6 +170,7 @@ export default function Babygraphs() {
                   size="small"
                   name="start_time"
                   type="time"
+                  placeholder="ex: 10:00"
                   value={appointmentmomInfo.start_time}
                   onChange={handleChange}
                 />
@@ -194,25 +190,15 @@ export default function Babygraphs() {
           </Box>
           <Box className="mt-5">
             <FormLabel>แพทย์</FormLabel>
-            <Select
+            <TextField
               fullWidth
               size="small"
               name="doctor"
+              type="text"
+              placeholder="ex: นพ.สมชาย ใจดี"
               value={appointmentmomInfo.doctor}
-              onChange={(e) =>
-                setAppointmentmomInfo({
-                  ...appointmentmomInfo,
-                  doctor: e.target.value,
-                })
-              }
-            >
-              <MenuItem value="">-- เลือกแพทย์ --</MenuItem>
-              {doctors.map((doctor) => (
-                <MenuItem key={doctor.id} value={doctor.name}>
-                  {doctor.name}
-                </MenuItem>
-              ))}
-            </Select>
+              onChange={handleChange}
+            />
           </Box>
           <Box className="mt-5">
             <FormLabel>การเตรียมตัว</FormLabel>

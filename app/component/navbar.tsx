@@ -3,12 +3,18 @@ import React from "react";
 import Image from "next/image";
 import Swal from "sweetalert2";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { User } from "../interface";
 
 const Navbar = () => {
-  
+  const pathname = usePathname();
   const [showDropdown, setShowDropdown] = React.useState(false);
   const [momData, setMomData] = React.useState<User>();
+
+  // Helper function to check if nav item is active
+  const isActive = (path: string) => {
+    return pathname === path || pathname.startsWith(path + '/');
+  };
 
  const fetchMomData = async (id: string, key: string) => {
    
@@ -45,7 +51,8 @@ const Navbar = () => {
     fetchData();
   }, []);
   return (
-    <nav className="bg-[#FFEBEC] flex justify-center fixed top-0 left-0 w-full z-999">
+    
+    <nav className="bg-[#FFC6CF] flex justify-center fixed top-0 left-0 w-full z-999">
       <div className="flex flex-row justify-between h-[80px] w-[1312px] items-center max-xl:w-[770px] max-sm:w-[324px]">
       <div className="flex flex-row gap-4 items-center">
         <Image src="/logo.png" width={48} height={48} alt="Logor"></Image>
@@ -53,22 +60,22 @@ const Navbar = () => {
       </div>
       <div className="max-xl:hidden">
         <ul className="flex flex-row gap-[44px]">
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/baby') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/baby">ข้อมูลทารก</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/story') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/story">เรื่องเล่าของคุณแม่</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/care') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/care">การดูแลทารก</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/question') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/question">คำถามที่พบบ่อย</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/calendar') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/calendar">การตรวจตามนัด</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/contact') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/contact">ติดต่อพยาบาล</Link>
         </li>
         </ul>
@@ -182,25 +189,25 @@ const Navbar = () => {
       </div>
         </div>
         <ul className="flex flex-col gap-4 p-4 z-10">
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/baby') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/baby">ข้อมูลทารก</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/story') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/story">เรื่องเล่าของคุณแม่</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/care') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/care">การดูแลทารก</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/question') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/question">คำถามที่พบบ่อย</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/calendar') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/calendar">การตรวจตามนัด</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/contact') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/contact">ติดต่อพยาบาล</Link>
         </li>
-        <li className="text-[16px] hover:text-[#B36868] active:text-[#B36868] hover:text-bold active:font-bold">
+        <li className={`text-[16px] hover:text-[#B36868] hover:font-bold ${isActive('/profile') ? 'text-[#B36868] font-bold' : 'text-black'}`}>
           <Link href="/profile">โปรไฟล์</Link>
         </li>
         </ul>

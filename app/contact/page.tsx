@@ -3,8 +3,10 @@ import React from "react";
 
 import Image from "next/image";
 import { ButtonComponents } from "../component/button";
+import Chatbot from "./component/chatbot";
 
 const Page = () => {
+  const [showChat, setShowChat] = React.useState(false);
   return (
     <div className="">
       <div className="flex flex-col items-center gap-[30px]">
@@ -75,26 +77,8 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-5 right-3 p-4 max-xl:bottom-[30px]">
-        <div className="rounded-full bg-[#fff] w-[80px] h-[80px] justify-center items-center flex shadow-lg shadow-[#cccccc]">
-          <div className="rounded-full bg-[#B36868] w-[65px] h-[64px] justify-center items-center flex">
-            <Image
-              src="/token_chat.svg"
-              width={44}
-              height={44}
-              alt="token_chat"
-            ></Image>
-          </div>
-        </div>
-      </div>
-      <div className="fixed bottom-[90px] right-[82px] p-4 max-xl:bottom-[100px]">
-        <Image
-          src="/chatframe.svg"
-          width={160}
-          height={40}
-          alt="token_chat"
-        ></Image>
-      </div>
+      
+      <Chatbot showChat={showChat} setShowChat={setShowChat} />
     </div>
   );
 };
