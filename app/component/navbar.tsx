@@ -116,7 +116,7 @@ const Navbar = () => {
               width={96}
               height={96}
               alt="profilepicture"
-              className="rounded-full"
+              className="rounded-full w-24 h-24 object-cover"
             ></Image>
             <h1 className="font-bold text-[16px]">{momData?.fname} {momData?.lname}</h1>
             </div>
