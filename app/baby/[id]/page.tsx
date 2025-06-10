@@ -171,7 +171,7 @@ const PageBabyId = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-row gap-[72px] max-sm:flex-col-reverse max-sm:gap-4">
+          <div className="flex flex-row gap-[85px] max-sm:flex-col-reverse max-sm:gap-4">
           <div className="flex flex-row gap-6">
                <div className="flex flex-row gap-6 ">
               <h3>เพศ</h3>

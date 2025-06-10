@@ -278,3 +278,11 @@ export  interface QuizCategory {
     created_at: string;
     updated_at: string;
   }
+
+  export interface ChatMessage {
+    id: number;
+    response: string;
+    sender: string;  // "user" or "assistant"
+    sent_at: string;  // ISO 8601 date string
+  }
+

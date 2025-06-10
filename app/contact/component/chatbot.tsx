@@ -1,13 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-
-interface Message {
-  id: number;
-  text: string;
-  sender: "user" | "nurse";
-  time: string;
-}
+import { ChatMessage } from "@/app/interface";
 
 interface ChatbotProps {
   showChat: boolean;
@@ -19,34 +13,51 @@ const [time, setTime] = React.useState<string>(() => {
     const now = new Date();
     return `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
 });
-  const [messages, setMessages] = React.useState<Message[]>([
-    { id: 1, text: "สวัสดีค่ะ ยินดีต้อนรับสู่ระบบแชทของพยาบาล", sender: "nurse", time: time },
-    { id: 2, text: "มีอะไรให้พยาบาลช่วยเหลือไหมคะ?", sender: "nurse", time: time }
+  const [messages, setMessages] = React.useState<ChatMessage[]>([
+    { id: 1, response: "สวัสดีค่ะ ยินดีต้อนรับสู่ระบบแชทของพยาบาล", sender: "nurse", sent_at: time },
+    { id: 2, response: "มีอะไรให้พยาบาลช่วยเหลือไหมคะ?", sender: "nurse", sent_at: time }
   ]);
   const [newMessage, setNewMessage] = React.useState("");
+  const [ResponseMessage, setResponseMessage] = React.useState<ChatMessage>();
 
-  const sendMessage = () => {
-    if (newMessage.trim()) {
+  const sendMessage = async () => {
+    
       const now = new Date();
+      
       const time = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
       setMessages([...messages, { 
         id: messages.length + 1, 
-        text: newMessage, 
+        response: ResponseMessage?.response || "", 
         sender: "user", 
-        time 
+        sent_at: time
       }]);
-      setNewMessage("");
+
+      const formData = new FormData();
+      formData.append("message", newMessage);
+     
+      const response = await fetch(`${process.env.NEXT_PUBLIC_url}/user/chat`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: formData,
+      });
+      const responseData = await response.json();
+      setResponseMessage(responseData);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { 
+          id: prevMessages.length + 1, 
+          response: responseData.response, 
+          sender: "nurse", 
+          sent_at: responseData.sent_at || time 
+        }
+      ]);
+
       
-      // Auto-reply from nurse after 2 seconds
-      setTimeout(() => {
-        setMessages(prev => [...prev, {
-          id: prev.length + 1,
-          text: "ขอบคุณสำหรับข้อความค่ะ พยาบาลจะตอบกลับในไม่ช้า",
-          sender: "nurse",
-          time: `${now.getHours()}:${(now.getMinutes() + 1).toString().padStart(2, '0')}`
-        }]);
-      }, 2000);
-    }
+     
+     
+    
   };
 
   return (
@@ -112,9 +123,9 @@ const [time, setTime] = React.useState<string>(() => {
                     ? 'bg-[#B36868] text-white rounded-br-none' 
                     : 'bg-gray-100 text-gray-800 rounded-bl-none'
                 }`}>
-                  <p className="text-sm">{message.text}</p>
+                  <p className="text-sm">{message.response}</p>
                   <p className={`text-xs mt-1 ${message.sender === 'user' ? 'text-pink-100' : 'text-gray-500'}`}>
-                    {message.time}
+                    {message.response}
                   </p>
                 </div>
               </div>
