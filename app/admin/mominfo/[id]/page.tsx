@@ -20,11 +20,18 @@ import {
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import StyledAlert from "@/app/admin/components/StyledAlert";
 import { useAlert } from "@/app/admin/hooks/useAlert";
-import { MomInfo, BabyInfo} from "@/app/admin/types";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import {MomApiResponse, KidApiData, GrowthApiData} from "@/app/admin/types";
-
-
+import { MomInfo, BabyInfoUpdate } from "@/app/admin/types";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { MomApiResponse, KidApiData, GrowthApiData } from "@/app/admin/types";
 
 export default function MomInfoId() {
   const params = useParams();
@@ -32,13 +39,14 @@ export default function MomInfoId() {
   const { alert: alertState, showError, hideAlert } = useAlert();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
+    u_pid: "",
     img: "",
     firstName: "",
     lastName: "",
     email: "",
   });
 
-  const [babyInfo, setBabyInfo] = useState<BabyInfo[]>([]);
+  const [babyInfo, setBabyInfo] = useState<BabyInfoUpdate[]>([]);
   const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -58,6 +66,7 @@ export default function MomInfoId() {
         const mom: MomApiResponse = data.result;
         setMomInfo({
           id: mom.u_id,
+          u_pid: mom.u_pid,
           img: mom.image_link,
           firstName: mom.fname,
           lastName: mom.lname,
@@ -70,9 +79,15 @@ export default function MomInfoId() {
           firstName: kid.fname,
           lastName: kid.lname,
           nickname: kid.uname,
-          gender: kid.sex === "ชาย" ? "male" : kid.sex === "หญิง" ? "female" : kid.sex,
+          gender:
+            kid.sex === "ชาย"
+              ? "male"
+              : kid.sex === "หญิง"
+              ? "female"
+              : kid.sex,
           birthDate: kid.birth_date?.slice(0, 10) || "",
           bloodType: kid.blood_type,
+          rh_type: kid.rh_type,
           birthWeight: kid.weight?.toString() || "",
           birthHeight: kid.length?.toString() || "",
           note: kid.note,
@@ -83,6 +98,13 @@ export default function MomInfoId() {
             weight: g.weight,
             length: g.length,
           })),
+          beforebirth: kid.beforebirth || 0,
+          adjusted_days: kid.adjusted_days || 0,
+          adjusted_months: kid.adjusted_months || 0,
+          adjusted_years: kid.adjusted_years || 0,
+          real_days: kid.real_days || 0,
+          real_months: kid.real_months || 0,
+          real_years: kid.real_years || 0,
         }));
         setBabyInfo(babydata);
         if (babydata.length > 0) setSelectedBabyId(babydata[0].id);
@@ -101,11 +123,10 @@ export default function MomInfoId() {
 
   // Get selected baby's growth data for chart
   const selectedBaby = babyInfo.find((b) => b.id === selectedBabyId);
-  const growthData = selectedBaby?.growthData || [];  return (
+  const growthData = selectedBaby?.growthData || [];
+  return (
     <div className="flex bg-white min-h-screen">
-      <Sidebar 
-       selectedItem="1"
-      />
+      <Sidebar selectedItem="1" />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
           <Box component="form" sx={{ mt: 3 }}>
@@ -116,44 +137,40 @@ export default function MomInfoId() {
               ข้อมูลคุณแม่
             </Typography>
             <div className="grid grid-cols-3 gap-4">
-                <div className="relative w-44 h-44">
-                  <Image
-                    src={
-                      momInfo.img ||
-                      "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
-                    }
-                    width={176}
-                    height={176}
-                    alt="Profile"
-                    className="w-44 h-44 rounded-full overflow-hidden object-cover"
-                  />
-                </div>
-              
-              
-                <div className="flex flex-col gap-2">
+              <div className="relative w-44 h-44">
+                <Image
+                  src={
+                    momInfo.img ||
+                    "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
+                  }
+                  width={176}
+                  height={176}
+                  alt="Profile"
+                  className="w-44 h-44 rounded-full overflow-hidden object-cover"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
                 <FormLabel>ID</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
                   name="id"
-                  value={momInfo.id}
-                  disabled 
+                  value={momInfo?.u_pid || momInfo.id}
+                  disabled
                 />
 
-                
-                
                 <FormLabel>ชื่อ</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
                   name="firstName"
-                  value={momInfo.firstName || ""} 
+                  value={momInfo.firstName || ""}
                   disabled
                 />
-                </div>
-             
-                <div className="flex flex-col gap-2">
+              </div>
 
+              <div className="flex flex-col gap-2">
                 <FormLabel>อีเมล</FormLabel>
                 <TextField
                   fullWidth
@@ -163,17 +180,16 @@ export default function MomInfoId() {
                   value={momInfo.email}
                   disabled
                 />
-              
 
                 <FormLabel>นามสกุล</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
                   name="lastName"
-                  value={momInfo.lastName} 
+                  value={momInfo.lastName}
                   disabled
                 />
-             </div>
+              </div>
             </div>
           </Box>
           <div className=" mt-8">
@@ -200,10 +216,8 @@ export default function MomInfoId() {
                       ทารกคนที่ {index + 1}
                     </button>
                   ))}
-                  
                 </div>
               )}
-              
             </div>
             {selectedBabyId &&
               babyInfo
@@ -223,46 +237,70 @@ export default function MomInfoId() {
                           className="w-44 h-44 rounded-full overflow-hidden object-cover"
                         />
                       </div>
-                  
-                      <div className="flex flex-col gap-2">
-                      <FormLabel>ชื่อ</FormLabel>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        name="firstName"
-                        value={baby.firstName}
-                        disabled
-                      />
-                      <FormLabel>ชื่อเล่น</FormLabel>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        name="nickname"
-                        value={baby.nickname}
-                        disabled
-                      />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                      <FormLabel>นามสกุล</FormLabel>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        name="lastName"
-                        value={baby.lastName}
-                        disabled
-                      />
-                      <FormLabel>วันเกิด</FormLabel>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        name="birthDate"
-                        value={baby.birthDate}
-                        disabled
-                        type="date"
-                      />
+
+                      <div className="grid grid-cols-2  col-span-2">
+                        <div className="flex flex-row gap-4 col-span-2 ">
+                          <div className="flex flex-col w-1/2">
+                            <FormLabel>ชื่อ</FormLabel>
+                            <TextField
+                              fullWidth
+                              size="small"
+                              name="firstName"
+                              value={baby.firstName ?? ""}
+                            />
+                          </div>
+                          <div className="flex flex-col w-1/2">
+                            <FormLabel>นามสกุล</FormLabel>
+                            <TextField
+                              fullWidth
+                              size="small"
+                              name="lastName"
+                              value={baby.lastName ?? ""}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-2">
+                          <FormLabel>ชื่อเล่น</FormLabel>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            name="nickname"
+                            value={baby.nickname ?? ""}
+                          />
+                        </div>
                       </div>
                     </div>
-                    
+                    <Box>
+                      <Grid container spacing={3} sx={{ mb: 3 }}>
+                        <Grid item xs={12} sm={6}>
+                          <FormLabel>วันเกิดจริง</FormLabel>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            name="realBirthDate"
+                            value={
+                              `${baby.real_years} ปี ${baby.real_months} เดือน ${baby.real_days} วัน` ||
+                              ""
+                            }
+                            type="text"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <FormLabel>วันเกิดปรับ</FormLabel>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            name="actualBirthDate"
+                            value={
+                              `${baby.adjusted_years} ปี ${baby.adjusted_months} เดือน ${baby.adjusted_days} วัน` ||
+                              ""
+                            }
+                            type="text"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+
                     <div className="grid grid-cols-12 gap-4">
                       <div className="col-span-1">
                         <FormLabel>เพศ</FormLabel>
@@ -299,20 +337,36 @@ export default function MomInfoId() {
                           />
                         </RadioGroup>
                       </div>
-                      <div className="col-span-9">
-                        <FormLabel>กรุ๊ปเลือด</FormLabel>
-                        <Select
-                          fullWidth
-                          size="small"
-                          name="bloodType"
-                          value={baby.bloodType}
-                          disabled
-                        >
-                          <MenuItem value="A">A</MenuItem>
-                          <MenuItem value="B">B</MenuItem>
-                          <MenuItem value="AB">AB</MenuItem>
-                          <MenuItem value="O">O</MenuItem>
-                        </Select>
+                      <div className="col-span-9 flex gap-4">
+                        <div className="w-full">
+                          <FormLabel>กรุ๊ปเลือด</FormLabel>
+                          <Select
+                            fullWidth
+                            size="small"
+                            name="bloodType"
+                            value={baby.bloodType}
+                            disabled
+                          >
+                            <MenuItem value="A">A</MenuItem>
+                            <MenuItem value="B">B</MenuItem>
+                            <MenuItem value="AB">AB</MenuItem>
+                            <MenuItem value="O">O</MenuItem>
+                          </Select>
+                        </div>
+                        <div className="w-full">
+                          <FormLabel>Rh</FormLabel>
+                          <Select
+                            fullWidth
+                            size="small"
+                            name="rh_type"
+                            value={baby.rh_type}
+                            disabled
+                          >
+                            <MenuItem value="Positive">Positive</MenuItem>
+                            <MenuItem value="Negative">Negative</MenuItem>
+                            <MenuItem value="">-</MenuItem>
+                          </Select>
+                        </div>
                       </div>
                     </div>
 
@@ -338,7 +392,7 @@ export default function MomInfoId() {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="w-full">
                       <FormLabel>โน้ต</FormLabel>
                       <TextField
@@ -351,12 +405,19 @@ export default function MomInfoId() {
                         rows={3}
                       />
                     </div>
-                   
+
                     <div className="flex justify-center w-full mt-4">
                       <Button
                         variant="contained"
-                        onClick={() => router.push(`/admin/mominfo/${momInfo.id}/evaluate/${baby.id}`)}
-                        sx={{ backgroundColor: "#B36868", "&:hover": { backgroundColor: "#a05555" } }}
+                        onClick={() =>
+                          router.push(
+                            `/admin/mominfo/${momInfo.id}/evaluate/${baby.id}`
+                          )
+                        }
+                        sx={{
+                          backgroundColor: "#B36868",
+                          "&:hover": { backgroundColor: "#a05555" },
+                        }}
                       >
                         แบบประเมินพัฒนาการ
                       </Button>
@@ -374,19 +435,44 @@ export default function MomInfoId() {
                 >
                   กราฟการเจริญเติบโตด้านน้ำหนัก
                 </Typography>
-                <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
-                      <ResponsiveContainer width="100%" height={200}>
-                        <LineChart data={growthData}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="date" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
-                          <YAxis label={{ value: "กก.", angle: -90, position: "insideLeft" }} />
-                          <Tooltip />
-                          <Legend />
-                          <Line type="monotone" dataKey="weight" name="น้ำหนัก (กก.)" stroke="#B36868" activeDot={{ r: 8 }} />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </Box>
-                
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: 250,
+                    backgroundColor: "#f0f0f0",
+                    p: 2,
+                  }}
+                >
+                  <ResponsiveContainer width="100%" height={200}>
+                    <LineChart data={growthData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis
+                        dataKey="date"
+                        label={{
+                          value: "เดือน",
+                          position: "insideBottomRight",
+                          offset: -5,
+                        }}
+                      />
+                      <YAxis
+                        label={{
+                          value: "กก.",
+                          angle: -90,
+                          position: "insideLeft",
+                        }}
+                      />
+                      <Tooltip />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="weight"
+                        name="น้ำหนัก (กก.)"
+                        stroke="#B36868"
+                        activeDot={{ r: 8 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </Box>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography
@@ -396,19 +482,44 @@ export default function MomInfoId() {
                 >
                   กราฟการเจริญเติบโตด้านส่วนสูง
                 </Typography>
-                <Box sx={{ width: "100%", height: 250, backgroundColor: "#f0f0f0", p: 2 }}>
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: 250,
+                    backgroundColor: "#f0f0f0",
+                    p: 2,
+                  }}
+                >
                   <ResponsiveContainer width="100%" height={200}>
                     <LineChart data={growthData}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" label={{ value: "เดือน", position: "insideBottomRight", offset: -5 }} />
-                      <YAxis label={{ value: "ซม.", angle: -90, position: "insideLeft" }} />
+                      <XAxis
+                        dataKey="date"
+                        label={{
+                          value: "เดือน",
+                          position: "insideBottomRight",
+                          offset: -5,
+                        }}
+                      />
+                      <YAxis
+                        label={{
+                          value: "ซม.",
+                          angle: -90,
+                          position: "insideLeft",
+                        }}
+                      />
                       <Tooltip />
                       <Legend />
-                      <Line type="monotone" dataKey="length" name="ส่วนสูง (ซม.)" stroke="#68A3B3" activeDot={{ r: 8 }} />
+                      <Line
+                        type="monotone"
+                        dataKey="length"
+                        name="ส่วนสูง (ซม.)"
+                        stroke="#68A3B3"
+                        activeDot={{ r: 8 }}
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </Box>
-                
               </Grid>
             </Grid>
           </Box>

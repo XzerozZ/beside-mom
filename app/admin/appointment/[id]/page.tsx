@@ -233,7 +233,7 @@ const AppointmentsPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 p-3">
                     <span
                       className={`w-3 h-3 rounded-full ${
                         statusDots[appointment.status]

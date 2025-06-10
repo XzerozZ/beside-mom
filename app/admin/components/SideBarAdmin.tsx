@@ -18,7 +18,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
     { id: 3, label: "ข้อมูลการดูแลทารก" },
     { id: 4, label: "ข้อมูลคำถามที่พบบ่อย" },
     { id: 5, label: "ข้อมูลการตรวจตามนัด" },
-    { id: 6, label: "ข้อมูลติดต่อกับพยาบาล" },
+    // { id: 6, label: "ข้อมูลติดต่อกับพยาบาล" },
     { id: 7, label: "แบบประเมินพัฒนาการ" },
   ];
   const [adminname, setAdminname] = useState("Admin");
@@ -204,7 +204,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
                     </svg>
                   </div>
                 )}
-                {item.id === 6 && (
+                {/* {item.id === 6 && (
                   <div className="ml-3">
                     <svg
                       className={`w-6 h-6 transition-all ${
@@ -229,7 +229,7 @@ const Sidebar = ({ selectedItem }: SidebarProps) => {
                       </defs>
                     </svg>
                   </div>
-                )}
+                )} */}
                 {item.id === 7 && (
                   <div className="ml-3">
                     <svg

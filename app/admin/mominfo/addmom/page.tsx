@@ -1,8 +1,7 @@
-
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState} from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useAlert } from "../../hooks/useAlert";
 import {
@@ -25,6 +24,7 @@ import {
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 
 import { MomInfo, BabyInfo } from "@/app/admin/types";
+import { before } from "node:test";
 
 const defaultBaby = {
   id: "",
@@ -35,10 +35,12 @@ const defaultBaby = {
   gender: "",
   birthDate: "",
   bloodType: "",
+  rh_type: "",
   birthWeight: "",
   birthHeight: "",
   note: "",
   growthData: [],
+  beforebirth: 0,
 };
 
 export default function EditMomInfo() {
@@ -46,6 +48,7 @@ export default function EditMomInfo() {
   const { showSuccess, showError } = useAlert();
   const [momInfo, setMomInfo] = useState<MomInfo>({
     id: "",
+    u_pid: "",
     img: "",
     firstName: "",
     lastName: "",
@@ -108,11 +111,11 @@ export default function EditMomInfo() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    
+
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
-    
+
     const token = localStorage.getItem("token");
     if (!token) {
       showError("กรุณาเข้าสู่ระบบใหม่");
@@ -127,21 +130,24 @@ export default function EditMomInfo() {
       formData.append("firstname", momInfo.firstName || "");
       formData.append("lastname", momInfo.lastName || "");
       formData.append("email", momInfo.email);
+      formData.append("pid", momInfo.u_pid || "");
       // Baby info (first baby only)
       if (babyInfo[0]) {
         formData.append("firstname", babyInfo[0].firstName || "");
         formData.append("lastname", babyInfo[0].lastName || "");
         formData.append("username", babyInfo[0].nickname || "");
         formData.append("sex", babyInfo[0].gender || "");
-        
-        const formattedDate = babyInfo[0].birthDate 
-      ? babyInfo[0].birthDate.replace(/\//g, "-")
-      : "";
+
+        const formattedDate = babyInfo[0].birthDate
+          ? babyInfo[0].birthDate.replace(/\//g, "-")
+          : "";
         formData.append("birthdate", formattedDate);
         formData.append("bloodtype", babyInfo[0].bloodType || "");
+        formData.append("rh", babyInfo[0].rh_type || "");
         formData.append("birthweight", babyInfo[0].birthWeight || "");
         formData.append("birthlength", babyInfo[0].birthHeight || "");
         formData.append("note", babyInfo[0].note || "");
+        formData.append("beforebirth", String(babyInfo[0].beforebirth || "0"));
       }
       // Images: [0] mom, [1] kid
       if (momInfo.img) {
@@ -159,7 +165,7 @@ export default function EditMomInfo() {
           formData.append("images", blob, "baby.jpg");
         }
       }
-      
+
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -176,11 +182,10 @@ export default function EditMomInfo() {
     } finally {
       setIsSubmitting(false);
     }
-  };  return (
+  };
+  return (
     <div className="flex bg-white min-h-screen">
-      <Sidebar 
-      selectedItem="1"
-      />
+      <Sidebar selectedItem="1" />
       <div className="flex-1 p-6">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
           <Typography
@@ -197,73 +202,83 @@ export default function EditMomInfo() {
               ข้อมูลคุณแม่
             </Typography>
             <div className="grid grid-cols-3 gap-4">
-              
-                <div className="relative w-44 h-44">
-                  <Image
-                    src={
-                      momInfo.img ||
-                      "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
-                    }
-                    alt="Profile"
-                    fill
-                    className="rounded-full object-cover"
-                  />
-                  {/* Floating Button */}
-                  <IconButton
-                    className="absolute top-32 left-36 bg-red-100 shadow-md flex items-center justify-center"
-                    size="small"
+              <div className="relative w-44 h-44">
+                <Image
+                  src={
+                    momInfo.img ||
+                    "https://th.bing.com/th/id/R.774b6856b01ad224faa4a8a6857a279b?rik=NCB%2fGwQX5PyfKQ&riu=http%3a%2f%2fcdn.images.express.co.uk%2fimg%2fdynamic%2f11%2f590x%2fsecondary%2fmother-377773.jpg&ehk=owgczsi5xhC8LXhNjdGeGvXe6EAm%2bmwgXiLQ0WxjcJM%3d&risl=&pid=ImgRaw&r=0"
+                  }
+                  alt="Profile"
+                  fill
+                  className="rounded-full object-cover"
+                />
+                {/* Floating Button */}
+                <IconButton
+                  className="absolute top-32 left-36 bg-red-100 shadow-md flex items-center justify-center"
+                  size="small"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 32 32"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.82666 23.7039L18.125 13.41L18.5898 13.8748L8.29779 24.1668H7.82666V23.7039ZM23.4915 8.04416C23.4914 8.04427 23.4913 8.04438 23.4912 8.0445L23.4915 8.04416Z"
-                        stroke="#B36868"
-                        strokeWidth="5"
-                      />
-                    </svg>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      id="mom-img-upload"
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                          setMomInfo((prev) => ({
-                            ...prev,
-                            img: ev.target?.result as string,
-                          }));
-                        };
-                        reader.readAsDataURL(file);
+                    <path
+                      d="M7.82666 23.7039L18.125 13.41L18.5898 13.8748L8.29779 24.1668H7.82666V23.7039ZM23.4915 8.04416C23.4914 8.04427 23.4913 8.04438 23.4912 8.0445L23.4915 8.04416Z"
+                      stroke="#B36868"
+                      strokeWidth="5"
+                    />
+                  </svg>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    id="mom-img-upload"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (ev) => {
+                        setMomInfo((prev) => ({
+                          ...prev,
+                          img: ev.target?.result as string,
+                        }));
+                      };
+                      reader.readAsDataURL(file);
+                    }}
+                  />
+                  <label
+                    htmlFor="mom-img-upload"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        height: "100%",
                       }}
                     />
-                    <label htmlFor="mom-img-upload" style={{ position: "absolute", inset: 0, cursor: "pointer" }}>
-                      <span style={{ display: "block", width: "100%", height: "100%" }} />
-                    </label>
-                  </IconButton>
-                </div>
-             
-              
-                <div className="flex flex-col gap-2">
-               
+                  </label>
+                </IconButton>
+              </div>
+
+              <div className="flex flex-col gap-2">
                 <FormLabel>ชื่อ</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
                   // label="ชื่อ"
                   name="firstName"
-                  value={momInfo.firstName || ""} 
+                  value={momInfo.firstName || ""}
                   onChange={handleChangemMom}
                 />
-                 
-                 <FormLabel>อีเมล</FormLabel>
+
+                <FormLabel>อีเมล</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
@@ -275,14 +290,23 @@ export default function EditMomInfo() {
                 />
               </div>
               <div className="flex flex-col gap-2">
-               
-              <FormLabel>นามสกุล</FormLabel>
+                <FormLabel>นามสกุล</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
                   // label="นามสกุล"
                   name="lastName"
-                  value={momInfo.lastName} 
+                  value={momInfo.lastName}
+                  onChange={handleChangemMom}
+                />
+                <FormLabel>PID</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  // label="อีเมล"
+                  name="u_pid"
+                  type="text"
+                  value={momInfo.u_pid || ""}
                   onChange={handleChangemMom}
                 />
               </div>
@@ -297,47 +321,48 @@ export default function EditMomInfo() {
             </Typography>
 
             <div className="grid grid-cols-3 gap-4">
-            
-                <div className="relative w-44 h-44">
-                  <Image
-                    src={
-                      babyInfo[0]?.img ||
-                      "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
-                    }
-                    alt="Profile"
-                    fill
-                    className="rounded-full object-cover"
-                  />
-                  {/* Floating Button */}
-                  <IconButton
-                    className="absolute top-32 left-36 bg-white shadow-md"
-                    size="small"
-                    component="label"
+              <div className="relative w-44 h-44">
+                <Image
+                  src={
+                    babyInfo[0]?.img ||
+                    "https://parade.com/.image/t_share/MTkwNTc1OTI2MjAxOTUyMTI0/unique-baby-names-2019-jpg.jpg"
+                  }
+                  alt="Profile"
+                  fill
+                  className="rounded-full object-cover"
+                />
+                {/* Floating Button */}
+                <IconButton
+                  className="absolute top-32 left-36 bg-white shadow-md"
+                  size="small"
+                  component="label"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 32 32"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.82666 23.7039L18.125 13.41L18.5898 13.8748L8.29779 24.1668H7.82666V23.7039ZM23.4915 8.04416C23.4914 8.04427 23.4913 8.04438 23.4912 8.0445L23.4915 8.04416Z"
-                        stroke="#B36868"
-                        strokeWidth="5"
-                      />
-                    </svg>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      onChange={handleBabyImgUpload}
+                    <path
+                      d="M7.82666 23.7039L18.125 13.41L18.5898 13.8748L8.29779 24.1668H7.82666V23.7039ZM23.4915 8.04416C23.4914 8.04427 23.4913 8.04438 23.4912 8.0445L23.4915 8.04416Z"
+                      stroke="#B36868"
+                      strokeWidth="5"
                     />
-                  </IconButton>
-                </div>
-              
-                <div className="flex flex-col gap-2">
-                <FormLabel>ชื่อ</FormLabel>
+                  </svg>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleBabyImgUpload}
+                  />
+                </IconButton>
+              </div>
+
+             <div className="grid grid-cols-2  col-span-2">
+               <div className="flex flex-row gap-4 col-span-2 ">
+               <div className="flex flex-col w-1/2">
+                  <FormLabel>ชื่อ</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
@@ -345,7 +370,21 @@ export default function EditMomInfo() {
                   value={babyInfo[0]?.firstName ?? ""}
                   onChange={handleChangeBaby}
                 />
-                <FormLabel>ชื่อเล่น</FormLabel>
+               </div>
+                <div className="flex flex-col w-1/2">
+                 <FormLabel>นามสกุล</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  name="lastName"
+                  value={babyInfo[0]?.lastName ?? ""}
+                  onChange={handleChangeBaby}
+                />
+               </div>
+              </div>
+              <div className="flex flex-col gap-2 col-span-2">
+             
+                 <FormLabel>ชื่อเล่น</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
@@ -354,16 +393,13 @@ export default function EditMomInfo() {
                   onChange={handleChangeBaby}
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <FormLabel>นามสกุล</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="lastName"
-                  value={babyInfo[0]?.lastName ?? ""}
-                  onChange={handleChangeBaby}
-                />
-                <FormLabel>วันเกิด</FormLabel>
+             </div>
+            </div>
+          </Box>
+          <Box>
+            <Grid container spacing={3} sx={{ mb: 3 }}>
+              <Grid item xs={12} sm={6}>
+                  <FormLabel>วันเกิด</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
@@ -372,8 +408,19 @@ export default function EditMomInfo() {
                   onChange={handleChangeBaby}
                   type="date"
                 />
-              </div>
-            </div>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                  <FormLabel>อายุครรภ์ตอนคลอด</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  name="beforebirth"
+                  value={babyInfo[0]?.beforebirth ?? ""}
+                  onChange={handleChangeBaby}
+                  type="number"
+                />
+              </Grid>
+            </Grid>
           </Box>
           <Box>
             <Grid container spacing={3}>
@@ -414,7 +461,7 @@ export default function EditMomInfo() {
                   />
                 </RadioGroup>
               </Grid>
-              <Grid item xs={12} sm={9.5}>
+              <Grid item xs={12} sm={4.775}>
                 <FormLabel>กรุ๊ปเลือด</FormLabel>
                 <Select
                   fullWidth
@@ -428,6 +475,21 @@ export default function EditMomInfo() {
                   <MenuItem value="B">B</MenuItem>
                   <MenuItem value="AB">AB</MenuItem>
                   <MenuItem value="O">O</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item xs={12} sm={4.775}>
+                <FormLabel>Rh</FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name="rh_type"
+                  value={babyInfo[0]?.rh_type ?? ""}
+                  onChange={handleChangeBaby}
+                >
+                  <MenuItem value="">เลือก Rh</MenuItem>
+                  <MenuItem value="Positive">Positive</MenuItem>
+                  <MenuItem value="Negative">Negative</MenuItem>
+                  <MenuItem value="-">-</MenuItem>
                 </Select>
               </Grid>
             </Grid>
@@ -495,7 +557,11 @@ export default function EditMomInfo() {
               }}
               className="w-40"
               onClick={handleSubmit}
-              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
+              startIcon={
+                isSubmitting ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : null
+              }
             >
               {isSubmitting ? "กำลังบันทึก..." : "บันทึก"}
             </Button>

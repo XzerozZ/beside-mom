@@ -71,7 +71,7 @@ const PageBabyId = () => {
       console.error("An error occurred while fetching graph data:", error);
     }
   };
-  
+
   const formatDate = (dateString?: string): string => {
     if (!dateString) return "-";
     const date = new Date(dateString);
@@ -98,7 +98,7 @@ const PageBabyId = () => {
         return;
       }
     };
-     fetchData();
+    fetchData();
     if (token) {
       if (typeof param.id === "string") {
         fetchKidData(param.id, token!);
@@ -110,9 +110,7 @@ const PageBabyId = () => {
       console.error("Invalid or missing parameter: id");
     }
     setLoading(false);
-
-   
-  }, [token,param.id]);
+  }, [token, param.id]);
 
   if (loading) {
     return (
@@ -138,8 +136,8 @@ const PageBabyId = () => {
                 className="object-cover w-full h-full"
               />
             </div>
-            <div className="flex-1 flex flex-col justify-between pb-4 max-md:gap-6">
-              <div className="grid grid-cols-4 justify-between max-md:flex-col max-md:gap-6 max-sm:grid-cols-1">
+            <div className="flex-1 flex flex-col justify-between  max-md:gap-6">
+              <div className="grid grid-cols-4 justify-between max-md:flex-col max-md:gap-6 max-sm:grid-cols-2">
                 <div className="w-1/4">
                   <h3 className="font-bold text-[18px]">ชื่อ</h3>
                   <h4>{kidData?.firstname}</h4>
@@ -153,7 +151,7 @@ const PageBabyId = () => {
                   <h4>{kidData?.username}</h4>
                 </div>
               </div>
-              <div className="flex flex-row justify-between max-sm:flex-col max-sm:gap-5">
+              <div className="flex flex-row justify-between max-sm:grid max-sm:grid-cols-2 max-sm:gap-5">
                 <div className="w-1/4">
                   <h3 className="font-bold text-[18px]">วันเกิด</h3>
                   <h4>{formatDate(kidData?.birthdate)}</h4>
@@ -173,8 +171,9 @@ const PageBabyId = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-row gap-[72px]">
-            <div className="flex flex-row gap-6">
+          <div className="flex flex-row gap-[72px] max-sm:flex-col-reverse max-sm:gap-4">
+          <div className="flex flex-row gap-6">
+               <div className="flex flex-row gap-6 ">
               <h3>เพศ</h3>
               <div className="flex gap-4 flex-col">
                 <label className="flex items-center gap-2">
@@ -206,6 +205,23 @@ const PageBabyId = () => {
               <h4 className="text-[20px]">{kidData?.note}</h4>
             </div>
           </div>
+          <div className="flex flex-row gap-10">
+              <div className="flex flex-col">
+              <h3 className="font-bold text-[18px]">อายุวันเกิดจริง</h3>
+              <h4>
+                {kidData?.real_years} ปี {kidData?.real_months} เดือน{" "}
+                {kidData?.real_days} วัน
+              </h4>
+            </div>
+            <div>
+              <h3 className="font-bold text-[18px]">อายุวันเกิดปรับ</h3>
+              <h4>
+                {kidData?.adjusted_years} ปี {kidData?.adjusted_months} เดือน{" "}
+                {kidData?.adjusted_days} วัน
+              </h4>
+            </div>
+          </div>
+          </div>
           <hr className="" />
           <div className="w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px] flex justify-between">
             <h1 className="font-bold  text-[20px] text-left w-10/12 my-auto">
@@ -222,9 +238,18 @@ const PageBabyId = () => {
             </div>
           </div>
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px] flex flex-row max-xl:flex-col justify-between gap-8 mb-5">
-            <WeightChart gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
-            <LengthChart gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
-            <WeigthLengthGrowth gender={kidData?.sex ?? ""} GrowthRecord={graphData || []} />
+            <WeightChart
+              gender={kidData?.sex ?? ""}
+              GrowthRecord={graphData || []}
+            />
+            <LengthChart
+              gender={kidData?.sex ?? ""}
+              GrowthRecord={graphData || []}
+            />
+            <WeigthLengthGrowth
+              gender={kidData?.sex ?? ""}
+              GrowthRecord={graphData || []}
+            />
           </div>
         </div>
       </div>

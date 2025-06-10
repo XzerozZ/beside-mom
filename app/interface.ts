@@ -84,6 +84,12 @@ export interface KidProfile {
     username: string;
     blood: string;
     image_link: string;
+    real_days: string;
+    real_months: string;
+    real_years: string;
+    adjusted_days: string;
+    adjusted_months: string;
+    adjusted_years: string;
   }
   
 
