@@ -114,6 +114,12 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
         sender: "nurse",
         sent_at: responseData.sent_at || getCurrentTime()
       };
+      // Update messages with nurse response
+      console.log("Nurse response:", responseData.data);
+      console.log("Nurse response:", responseData.data.message);
+      console.log("Nurse response:", responseData.data.message.response);
+
+
      
       setMessages(prev => [...prev, nurseMessage]);
       
