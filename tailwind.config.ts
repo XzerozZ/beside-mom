@@ -15,6 +15,10 @@ export default {
         neutral05: "#4D4D4D",
         neutral04: "#999999",
       },
+      fontFamily: {
+        sans: ["var(--font-noto-sans-thai)", "system-ui", "sans-serif"],
+        "noto-sans-thai": ["var(--font-noto-sans-thai)", "sans-serif"],
+      },
     },
   },
   plugins: [],

@@ -84,6 +84,12 @@ export interface KidProfile {
     username: string;
     blood: string;
     image_link: string;
+    real_days: string;
+    real_months: string;
+    real_years: string;
+    adjusted_days: string;
+    adjusted_months: string;
+    adjusted_years: string;
   }
   
 
@@ -272,3 +278,11 @@ export  interface QuizCategory {
     created_at: string;
     updated_at: string;
   }
+
+  export interface ChatMessage {
+    id: number;
+    response: string;
+    sender: string;  // "user" or "assistant"
+    sent_at: string;  // ISO 8601 date string
+  }
+

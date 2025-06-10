@@ -61,6 +61,7 @@ const AllMomInfoPage: React.FC = () => {
             id: item.u_id,
             email: item.email,
             name: `${item.fname} ${item.lname}`,
+            u_pid: item.u_pid,
           }));
           setMomData(mapped);
         }
@@ -88,7 +89,7 @@ const AllMomInfoPage: React.FC = () => {
   type SortDirection = "asc" | "desc" | null;
 
   interface SortState {
-    field: "id" | "email" | "name";
+    field: "id" | "email" | "name" | "u_pid";
     direction: SortDirection;
   }
 
@@ -188,6 +189,31 @@ const AllMomInfoPage: React.FC = () => {
                       </span>
                     </div>
                   </TableCell>
+                    <TableCell
+                    className="font-bold text-center cursor-pointer"
+                    onClick={() => handleSort("u_pid")}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      PID
+                      <span className="w-4 h-4 inline-flex">
+                        <svg
+                          width="21"
+                          height="20"
+                          viewBox="0 0 21 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                            stroke="#4D4D4D"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </TableCell>
                   <TableCell
                     className="font-bold text-center cursor-pointer"
                     onClick={() => handleSort("email")}
@@ -255,6 +281,13 @@ const AllMomInfoPage: React.FC = () => {
                       style={{ cursor: "pointer" }}
                     >
                       {mom.id}
+                    </TableCell>
+                     <TableCell
+                      className="text-center"
+                      onClick={() => handleClickMominfo(mom.id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {mom.u_pid ? mom.u_pid : "ไม่มีข้อมูล"} 
                     </TableCell>
                     <TableCell
                       className="text-center"

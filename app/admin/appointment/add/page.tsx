@@ -12,15 +12,13 @@ import {
   Paper,
 
   FormLabel,
-  Select,
-  SelectChangeEvent,
-  MenuItem,
+
 
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import StyledAlert from "@/app/admin/components/StyledAlert";
 import { useAlert } from "@/app/admin/hooks/useAlert";
-import { doctors } from "@/app/admin/types";
+
 import { MomApiData } from "@/app/admin/types";
 
 export default function AppointmentAdd() {
@@ -288,6 +286,7 @@ export default function AppointmentAdd() {
                   size="small"
                   name="time"
                   type="text"
+                  placeholder="ex. 10:00 "
                   value={appointmentmomInfo.time}
                   onChange={(e) =>
                     setAppointmentmomInfo({
@@ -317,25 +316,21 @@ export default function AppointmentAdd() {
           </Box>
           <Box className="mt-5">
             <FormLabel>แพทย์</FormLabel>
-            <Select
-              fullWidth
-              size="small"
-              name="doctor"
-              value={appointmentmomInfo.doctor}
-              onChange={(e: SelectChangeEvent) =>
+           <TextField
+                fullWidth
+                size="small"
+                name="doctor"
+                type="text"
+                placeholder="ex. นพ.สมชาย ใจดี"
+                value={appointmentmomInfo.doctor}
+                 onChange={(e) =>
                 setAppointmentmomInfo({
                   ...appointmentmomInfo,
-                  doctor: e.target.value,
+                  location: e.target.value,
                 })
               }
-            >
-              <MenuItem value="">-- เลือกแพทย์ --</MenuItem>
-              {doctors.map((doctor) => (
-                <MenuItem key={doctor.id} value={doctor.name}>
-                  {doctor.name}
-                </MenuItem>
-              ))}
-            </Select>
+              />
+            
           </Box>
 
           <Box className="mt-5">

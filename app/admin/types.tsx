@@ -1,5 +1,6 @@
 export interface MomInfo {
   id: string;
+  u_pid: string;
   img: string;
   email: string;
   firstName?: string;
@@ -7,6 +8,7 @@ export interface MomInfo {
 }
 export interface MomRawItem {
   u_id: string;
+  u_pid: string;
   email: string;
   fname: string;
   lname: string;
@@ -15,6 +17,7 @@ export interface MomMappedItem {
   id: string;
   email: string;
   name: string;
+  u_pid: string;
 }
 export interface ContentBabycareItem {
   c_id: string;
@@ -41,10 +44,13 @@ export interface BabyInfo {
   gender: string;
   birthDate: string;
   bloodType: string;
+  rh_type:string;
   birthWeight: string;
   birthHeight: string;
   note: string;
   growthData: GrowthData[];
+  beforebirth: number;
+  
 }
 
 export interface GrowthData {
@@ -138,10 +144,19 @@ export interface KidApiData {
   sex: string;
   birth_date: string;
   blood_type: string;
+  rh_type:string;
   weight: number;
   length: number;
   note: string;
   growth: GrowthApiData[];
+  beforebirth: number;
+  adjusted_days: number;
+  adjusted_months: number;
+  adjusted_years: number;
+  real_days: number;
+  real_months: number;
+  real_years: number;
+ 
 }
 
 export interface GrowthApiData {
@@ -154,6 +169,7 @@ export interface GrowthApiData {
 
 export interface MomApiResponse {
   u_id: string;
+  u_pid: string;
   image_link: string;
   fname: string;
   lname: string;
@@ -254,6 +270,7 @@ export interface MomData {
   id: string;
   email: string;
   name: string;
+  u_pid: string;
 }
 
 export interface KidApiDataEdit {
@@ -265,6 +282,7 @@ export interface KidApiDataEdit {
   sex: string;
   birth_date: string;
   blood_type: string;
+  rh_type:string;
   weight: number;
   length: number;
   note: string;
@@ -281,9 +299,34 @@ export interface GrowthApiDataEdit {
 
 export interface MomApiDataEdit {
   u_id: string;
+  u_pid: string;
   image_link: string;
   fname: string;
   lname: string;
   email: string;
   kids?: KidApiData[];
+}
+
+export interface BabyInfoUpdate {
+  id: string;
+  img: string;
+  firstName: string;
+  lastName: string;
+  nickname: string;
+  gender: string;
+  birthDate: string;
+  bloodType: string;
+  rh_type:string;
+  birthWeight: string;
+  birthHeight: string;
+  note: string;
+  growthData: GrowthData[];
+  beforebirth: number;
+  adjusted_days: number;
+  adjusted_months: number;
+  adjusted_years: number;
+  real_days: number;
+  real_months: number;
+  real_years: number;
+  
 }
