@@ -110,11 +110,11 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
       // Add nurse response
       const nurseMessage: ChatMessage = {
         id: Date.now() + 1,
-        response: responseData.response || "ขอบคุณสำหรับข้อความค่ะ พยาบาลจะตอบกลับในไม่ช้า",
+        response: responseData.data.message.response || "ขอบคุณสำหรับข้อความค่ะ พยาบาลจะตอบกลับในไม่ช้า",
         sender: "nurse",
         sent_at: responseData.sent_at || getCurrentTime()
       };
-      console.log("Nurse response:", responseData);
+     
       setMessages(prev => [...prev, nurseMessage]);
       
     } catch (error) {
