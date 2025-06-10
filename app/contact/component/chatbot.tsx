@@ -104,10 +104,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+  
       const responseData = await response.json();
       
       // Add nurse response
@@ -117,7 +114,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
         sender: "nurse",
         sent_at: responseData.sent_at || getCurrentTime()
       };
-      
+      console.log("Nurse response:", responseData);
       setMessages(prev => [...prev, nurseMessage]);
       
     } catch (error) {
