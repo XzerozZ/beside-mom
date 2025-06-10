@@ -221,12 +221,12 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
               <button
                 onClick={sendMessage}
                 disabled={isLoading || !newMessage.trim()}
-                className="bg-[#B36868] hover:bg-[#A05858] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
+                className="bg-[#B36868] hover:bg-[#A05858]   text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
               >
                 {isLoading ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <Image src="/send.svg" width={16} height={16} alt="send" />
+                  <Image src="/send.svg" width={16} height={16} alt="send" className="filter brightness-0 invert" />
                 )}
               </button>
             </div>
