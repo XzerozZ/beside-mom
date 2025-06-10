@@ -10,15 +10,11 @@ import {
   Typography,
   Grid,
   FormLabel,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
   CircularProgress,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import StyledAlert from "@/app/admin/components/StyledAlert";
 import { useAlert } from "@/app/admin/hooks/useAlert";
-import { doctors } from "@/app/admin/types";
 export default function Babygraphs() {
   const router = useRouter();
   const { id } = useParams();
@@ -74,12 +70,6 @@ export default function Babygraphs() {
     });
   };
 
-  const handleDoctorChange = (e: SelectChangeEvent<string>) => {
-    setAppointmentmomInfo({
-      ...appointmentmomInfo,
-      doctor: e.target.value,
-    });
-  };
 
   // Submit appointment
   const handleSubmit = async (e: React.FormEvent) => {

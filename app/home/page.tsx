@@ -16,7 +16,7 @@ const home = () => {
             <div className="flex gap-[24px]">
               <h1 className="text-[#4D4D4D] text-[36px] font-bold max-xl:text-[24px] ">
                 <div className="text-[#B36868] flex flex-col text-[36px] max-xl:text-[24px]">
-                  <h3>"Beside Mom" อยู่เคียงข้างคุณแม่</h3>
+                  <h3>&apos;Beside Mom&apos; อยู่เคียงข้างคุณแม่</h3>
                   <h3>ตั้งแต่ลมหายใจแรกของลูกน้อย</h3>
                 </div>
               </h1>
