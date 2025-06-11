@@ -83,9 +83,11 @@ const Navbar = () => {
       <div className="flex flex-row gap-2 max-xl:hidden">
         <Image
         src={momData?.image_link || "/profileicon.svg"}
-        fill
+        width={28}
+        height={28}
         alt="profile"
-        className="rounded-full  w-24 h-24"
+               className="rounded-full w-7 h-7 object-cover"
+
         ></Image>
         <div className="relative my-auto">
         <Image
@@ -112,9 +114,11 @@ const Navbar = () => {
             <div className="flex flex-col gap-[24px] mx-auto">
             <Image
               src={momData?.image_link || "/baby.png"}
-              fill
+              width={96}
+              height={96}
               alt="profilepicture"
-              className="rounded-full w-24 h-24 object-cover"
+                     className="rounded-full w-[96px] h-[96px] object-cover"
+
             ></Image>
             <h1 className="font-bold text-[16px]">{momData?.fname} {momData?.lname}</h1>
             </div>
