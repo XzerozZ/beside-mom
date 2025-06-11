@@ -32,7 +32,7 @@ const periodOptions = [
   { value: "4", label: "3 - 4 เดือน" },
   { value: "5", label: "5 - 6 เดือน" },
   { value: "6", label: "7 - 8 เดือน" },
-  { value: "7", label: "8 - 9 เดือน" },
+  { value: "7", label: "9 เดือน" },
   { value: "8", label: "10 - 12 เดือน" },
 ];
 
