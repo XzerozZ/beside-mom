@@ -247,6 +247,7 @@ export default function MomInfoId() {
                               size="small"
                               name="firstName"
                               value={baby.firstName ?? ""}
+                              disabled
                             />
                           </div>
                           <div className="flex flex-col w-1/2">
@@ -256,6 +257,7 @@ export default function MomInfoId() {
                               size="small"
                               name="lastName"
                               value={baby.lastName ?? ""}
+                              disabled
                             />
                           </div>
                         </div>
@@ -266,6 +268,7 @@ export default function MomInfoId() {
                             size="small"
                             name="nickname"
                             value={baby.nickname ?? ""}
+                            disabled
                           />
                         </div>
                       </div>
@@ -283,6 +286,7 @@ export default function MomInfoId() {
                               ""
                             }
                             type="text"
+                            disabled
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -296,6 +300,7 @@ export default function MomInfoId() {
                               ""
                             }
                             type="text"
+                            disabled
                           />
                         </Grid>
                       </Grid>
