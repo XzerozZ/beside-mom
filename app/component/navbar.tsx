@@ -86,7 +86,8 @@ const Navbar = () => {
         width={28}
         height={28}
         alt="profile"
-        className="rounded-full"
+               className="rounded-full w-7 h-7 object-cover"
+
         ></Image>
         <div className="relative my-auto">
         <Image
@@ -116,7 +117,8 @@ const Navbar = () => {
               width={96}
               height={96}
               alt="profilepicture"
-              className="rounded-full w-24 h-24 object-cover"
+                     className="rounded-full w-[96px] h-[96px] object-cover"
+
             ></Image>
             <h1 className="font-bold text-[16px]">{momData?.fname} {momData?.lname}</h1>
             </div>
