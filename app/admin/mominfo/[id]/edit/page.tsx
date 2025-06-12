@@ -360,6 +360,7 @@ export default function EditMomInfo() {
         kidFormData.append("rh", baby.rh_type || "");
         kidFormData.append("birthweight", baby.birthWeight || "");
         kidFormData.append("birthlength", baby.birthHeight || "");
+        kidFormData.append("beforebirth", baby.beforebirth?.toString() || "0");
         kidFormData.append("note", baby.note || "");
         if (baby.img && baby.img.startsWith("data:image")) {
           kidFormData.append("images", dataURLtoBlob(baby.img), `baby.jpg`);
