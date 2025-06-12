@@ -42,8 +42,10 @@ const ContactNurseInfo: React.FC = () => {
         Authorization: `Bearer ${token}`,
         },
       });
+
       if (!res.ok) throw new Error("ไม่สามารถดึงข้อมูลได้");
       const data = await res.json();
+      console.log(data.result);
       setEvaluateData(data.result);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -71,25 +73,32 @@ const ContactNurseInfo: React.FC = () => {
         ) : evaluateData ? (
           <div className="space-y-4">
             {Object.entries(evaluateData).map(([category, periods]: [string, EvaluatePeriods]) => {
-            
               const periodKeys = Object.keys(periods).sort((a, b) => Number(a) - Number(b));
-              const lastPeriodKey = periodKeys.length > 0 ? periodKeys[periodKeys.length - 1] : undefined;
-              if (!lastPeriodKey) return null;
-              const detail = periods[lastPeriodKey];
-              const lastHistory = detail.Histories[detail.Histories.length - 1];
+              if (periodKeys.length === 0) return null;
+              
               return (
-                <div key={category} className="border rounded-xl p-6 flex items-center justify-between bg-white">
-                  <div>
-                    <div className="font-bold text-lg mb-2 text-neutral05">{category}</div>
-                    <div className="text-base font-medium mb-1 text-neutral05">1. {lastHistory.quiz.question}</div>
-                  </div>
-                  <div className="flex items-center gap-2 min-w-[80px] justify-end">
-                    {detail.solution_status === "ผ่าน" ? (
-                      <CheckCircleIcon className="text-green-500" />
-                    ) : (
-                      <CancelIcon className="text-red-500" />
-                    )}
-                    <span className={detail.solution_status === "ผ่าน" ? "text-green-600 font-medium" : "text-red-600 font-medium"}>{detail.solution_status}</span>
+                <div key={category} className="border rounded-xl p-6 bg-white">
+                  <div className="font-bold text-lg mb-4 text-neutral05">{category}</div>
+                  <div className="space-y-3">
+                    {periodKeys.map((periodKey, index) => {
+                      const detail = periods[periodKey];
+                      const lastHistory = detail.Histories[detail.Histories.length - 1];
+                      return (
+                        <div key={`${category}-${periodKey}`} className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="text-base font-medium text-neutral05">{index + 1}. {lastHistory.quiz.question}</div>
+                          </div>
+                          <div className="flex items-center gap-2 min-w-[80px] justify-end">
+                            {detail.solution_status === "ผ่าน" ? (
+                              <CheckCircleIcon className="text-green-500" />
+                            ) : (
+                              <CancelIcon className="text-red-500" />
+                            )}
+                            <span className={detail.solution_status === "ผ่าน" ? "text-green-600 font-medium" : "text-red-600 font-medium"}>{detail.solution_status}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );
