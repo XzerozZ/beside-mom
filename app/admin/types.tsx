@@ -159,6 +159,30 @@ export interface KidApiData {
  
 }
 
+export interface KidApiWithDateData {
+        adjusted_days: number,
+        adjusted_months: number,
+        adjusted_years: number,
+        birthdate: string,
+        beforebirth: number,
+        birthlength: number,
+        birthweight: number,
+        blood: string,
+        firstname: string,
+        growth: GrowthApiData[],
+        id: string,
+        imagelink: string,
+        lastname: string,
+        note: string,
+        real_days: number,
+        real_months: number,
+        real_years: number,
+        rh: string,
+        sex: string,
+        username: string
+ 
+}
+
 export interface GrowthApiData {
   G_id: string;
   created_at: string;
