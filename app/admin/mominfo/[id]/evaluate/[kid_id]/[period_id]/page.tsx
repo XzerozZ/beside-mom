@@ -112,10 +112,15 @@ const ContactNurseInfo: React.FC = () => {
                           ประเมิน: {history.done_times} ครั้ง
                           {history.answer == true && (
                             <span className="ml-2 text-green-600">✓ เสร็จสิ้น</span>
+                            
                           )  }
+
                           {history.answer == false && (
                             <span className="ml-2 text-red-600">✗ ไม่เสร็จสิ้น</span>
                           )}
+                           <span className="ml-2 text-green-600">
+                            {history.updated_at ? `(${new Date(history.updated_at).toLocaleDateString('th-TH')})` : ""}
+                           </span>
                         </div>
                       </div>
                     ))}
