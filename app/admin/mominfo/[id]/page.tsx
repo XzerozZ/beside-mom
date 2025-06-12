@@ -31,7 +31,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { MomApiResponse, KidApiData, GrowthApiData } from "@/app/admin/types";
+import { MomApiResponse, KidApiData, GrowthApiData, KidApiWithDateData} from "@/app/admin/types";
 
 export default function MomInfoId() {
   const params = useParams();
@@ -47,6 +47,7 @@ export default function MomInfoId() {
   });
 
   const [babyInfo, setBabyInfo] = useState<BabyInfoUpdate[]>([]);
+  const [babyalluid, setBabyalluid] = useState<string[]>([]);
   const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -72,42 +73,8 @@ export default function MomInfoId() {
           lastName: mom.lname,
           email: mom.email,
         });
-
-        const babydata = (mom.kids || []).map((kid: KidApiData) => ({
-          id: kid.u_id,
-          img: kid.image_link,
-          firstName: kid.fname,
-          lastName: kid.lname,
-          nickname: kid.uname,
-          gender:
-            kid.sex === "ชาย"
-              ? "male"
-              : kid.sex === "หญิง"
-              ? "female"
-              : kid.sex,
-          birthDate: kid.birth_date?.slice(0, 10) || "",
-          bloodType: kid.blood_type,
-          rh_type: kid.rh_type,
-          birthWeight: kid.weight?.toString() || "",
-          birthHeight: kid.length?.toString() || "",
-          note: kid.note,
-          growthData: (kid.growth || []).map((g: GrowthApiData) => ({
-            id: g.G_id,
-            date: g.created_at.slice(0, 10),
-            months: g.months,
-            weight: g.weight,
-            length: g.length,
-          })),
-          beforebirth: kid.beforebirth || 0,
-          adjusted_days: kid.adjusted_days || 0,
-          adjusted_months: kid.adjusted_months || 0,
-          adjusted_years: kid.adjusted_years || 0,
-          real_days: kid.real_days || 0,
-          real_months: kid.real_months || 0,
-          real_years: kid.real_years || 0,
-        }));
-        setBabyInfo(babydata);
-        if (babydata.length > 0) setSelectedBabyId(babydata[0].id);
+        setBabyalluid(mom.kids?.map((kid: KidApiData) => kid.u_id) || []);
+        setSelectedBabyId(mom.kids?.[0]?.u_id || null);
       } catch (error) {
         showError("เกิดข้อผิดพลาดในการโหลดข้อมูลคุณแม่");
         console.error("Error fetching mom info:", error);
@@ -116,6 +83,80 @@ export default function MomInfoId() {
 
     fetchData();
   }, [params.id, showError]);
+
+  useEffect(() => {
+    const fetchBabyData = async () => {
+      if (babyalluid.length === 0) return;
+
+      try {
+        // Fetch all babies if there are multiple
+        const fetchPromises = babyalluid.map(async (babyId) => {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_url}/kid/${babyId}`,
+            {
+              cache: "no-store",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+              },
+            }
+          );
+          if (!res.ok) throw new Error(`Failed to fetch baby info for ${babyId}`);
+          const data = await res.json();
+          return data.result;
+        });
+
+        const allBabyResults = await Promise.all(fetchPromises);
+        console.log("All Baby Data:", allBabyResults);
+
+        const babydata = allBabyResults.map((kid: KidApiWithDateData) => ({
+          id: kid.id,
+          img: kid.imagelink,
+          firstName: kid.firstname,
+          lastName: kid.lastname,
+          nickname: kid.username,
+          gender:
+            kid.sex === "ชาย"
+              ? "male"
+              : kid.sex === "หญิง"
+              ? "female"
+              : kid.sex,
+          birthDate: kid.birthdate?.slice(0, 10) || "",
+          bloodType: kid.blood,
+          rh_type: kid.rh,
+          birthWeight: kid.birthweight?.toString() || "",
+          birthHeight: kid.birthlength?.toString() || "",
+          note: kid.note,
+          growthData: (kid.growth || []).map((g: GrowthApiData) => ({
+            id: g.G_id,
+            date: g.created_at.slice(0, 10),
+            months: g.months,
+            weight: g.weight,
+            length: g.length,
+          })),
+          beforebirth: kid.beforebirth || 0,  
+          adjusted_days: kid.adjusted_days || 0,
+          adjusted_months: kid.adjusted_months || 0,
+          adjusted_years: kid.adjusted_years || 0,
+          real_days: kid.real_days || 0,
+          real_months: kid.real_months || 0,
+          real_years: kid.real_years || 0,
+        }));
+
+        setBabyInfo(babydata);
+
+        // Set the first baby as selected if no baby is currently selected
+        if (selectedBabyId === null && babydata.length > 0) {
+          setSelectedBabyId(babydata[0].id);
+        }
+      } catch (error) {
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูลทารก");
+        console.error("Error fetching baby info:", error);
+      }
+    };
+
+    fetchBabyData();
+  }, [babyalluid, selectedBabyId, showError]);
+
 
   const handleBabySelect = (id: string) => {
     setSelectedBabyId(id);
@@ -200,18 +241,18 @@ export default function MomInfoId() {
               <Typography className="font-bold text-2x text-neutral05">
                 ข้อมูลทารก
               </Typography>
-              {babyInfo.length > 1 && (
-                <div className="flex gap-4 ">
-                  {babyInfo.map((baby, index) => (
+              {babyalluid.length > 1 && (
+                <div className="flex gap-4">
+                  {babyalluid.map((babyId, index) => (
                     <button
-                      key={baby.id}
+                      key={babyId}
                       type="button"
                       className={`border border-primary5 text-primary5 rounded-lg px-4 py-2 mb-2 ${
-                        selectedBabyId === baby.id
+                        selectedBabyId === babyId
                           ? "bg-primary5 text-white"
                           : ""
                       }`}
-                      onClick={() => handleBabySelect(baby.id)}
+                      onClick={() => handleBabySelect(babyId)}
                     >
                       ทารกคนที่ {index + 1}
                     </button>

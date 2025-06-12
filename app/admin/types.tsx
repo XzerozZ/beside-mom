@@ -159,6 +159,30 @@ export interface KidApiData {
  
 }
 
+export interface KidApiWithDateData {
+        adjusted_days: number,
+        adjusted_months: number,
+        adjusted_years: number,
+        birthdate: string,
+        beforebirth: number,
+        birthlength: number,
+        birthweight: number,
+        blood: string,
+        firstname: string,
+        growth: GrowthApiData[],
+        id: string,
+        imagelink: string,
+        lastname: string,
+        note: string,
+        real_days: number,
+        real_months: number,
+        real_years: number,
+        rh: string,
+        sex: string,
+        username: string
+ 
+}
+
 export interface GrowthApiData {
   G_id: string;
   created_at: string;
@@ -186,7 +210,18 @@ export interface EvaluateData {
 }
 
 export interface Quiz {
+  quiz_id: number;
   question: string;
+  desc: string;
+  solution: string;
+  suggestion: string;
+  banner: string;
+  category_id: number;
+  period_id: number;
+  category: { ID: number; category: string };
+  period: { ID: number; period: string };
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Quizdevelopment {
@@ -201,7 +236,15 @@ export interface Quizdevelopment {
 }
 
 export interface History {
+  H_id: string;
+  quiz_id: number;
+  answer: boolean;
+  status: boolean;
+  evaluate_times: number;
+  done_times: number;
   quiz: Quiz;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface EvaluateDetail {

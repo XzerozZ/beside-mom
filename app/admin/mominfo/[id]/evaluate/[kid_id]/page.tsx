@@ -18,6 +18,7 @@ import { useAlert } from "../../../../hooks/useAlert";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { EvaluateData } from "@/app/admin/types";
 
 const periodMap: Record<number, string> = {
@@ -35,7 +36,18 @@ const statusChip = (status: boolean) =>
   status ? (
     <Chip label="ประเมินแล้ว" color="success" size="small" icon={<CheckCircleIcon />} />
   ) : (
-    <Chip label="รอการประเมิน" color="default" size="small" icon={<InfoOutlinedIcon />} />
+    <Chip 
+      label="รอการประเมิน" 
+      size="small" 
+      icon={<InfoOutlinedIcon />} 
+      sx={{ 
+        backgroundColor: "#F88000",
+        color: "white",
+        "& .MuiChip-icon": {
+          color: "white"
+        }
+      }}
+    />
   );
 
 const solutionChip = (solution_status: string) => {
@@ -61,13 +73,36 @@ const solutionChip = (solution_status: string) => {
       />
     );
   }
+  if (solution_status === "กำลังประเมิน") {
+    return (
+      <Chip
+        label="กำลังประเมิน"
+        size="small"
+        icon={<AutorenewIcon />}
+        sx={{ 
+          ml: 1,
+          backgroundColor: "#2196F3",
+          color: "white",
+          "& .MuiChip-icon": {
+            color: "white"
+          }
+        }}
+      />
+    );
+  }
   return (
     <Chip
       label="รอการประเมิน"
-      color="default"
       size="small"
       icon={<InfoOutlinedIcon />}
-      sx={{ ml: 1 }}
+      sx={{ 
+        ml: 1,
+        backgroundColor: "#F88000",
+        color: "white",
+        "& .MuiChip-icon": {
+          color: "white"
+        }
+      }}
     />
   );
 };
