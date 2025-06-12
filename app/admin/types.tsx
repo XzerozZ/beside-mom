@@ -186,7 +186,18 @@ export interface EvaluateData {
 }
 
 export interface Quiz {
+  quiz_id: number;
   question: string;
+  desc: string;
+  solution: string;
+  suggestion: string;
+  banner: string;
+  category_id: number;
+  period_id: number;
+  category: { ID: number; category: string };
+  period: { ID: number; period: string };
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Quizdevelopment {
@@ -201,7 +212,15 @@ export interface Quizdevelopment {
 }
 
 export interface History {
+  H_id: string;
+  quiz_id: number;
+  answer: boolean;
+  status: boolean;
+  evaluate_times: number;
+  done_times: number;
   quiz: Quiz;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface EvaluateDetail {
