@@ -36,8 +36,9 @@ import {
   MomInfo,
   BabyInfo,
   GrowthData,
-  KidApiDataEdit,
-  GrowthApiDataEdit,
+  KidApiData,
+  GrowthApiData,
+  KidApiWithDateData,
   MomApiDataEdit,
 } from "@/app/admin/types";
 
@@ -60,6 +61,7 @@ export default function EditMomInfo() {
   });
 
   const [babyInfo, setBabyInfo] = useState<BabyInfo[]>([]);
+  const [babyalluid, setBabyalluid] = useState<string[]>([]);
   const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -82,36 +84,38 @@ export default function EditMomInfo() {
             lastName: result.lname,
             email: result.email,
           });
-          setBabyInfo(
-            (result.kids || []).map((kid: KidApiDataEdit) => ({
-              id: kid.u_id,
-              img: kid.image_link,
-              firstName: kid.fname,
-              lastName: kid.lname,
-              nickname: kid.uname,
-              gender:
-                kid.sex === "ชาย"
-                  ? "male"
-                  : kid.sex === "หญิง"
-                  ? "female"
-                  : kid.sex,
-              birthDate: kid.birth_date ? kid.birth_date.split("T")[0] : "",
-              bloodType: kid.blood_type || "",
-              rh_type: kid.rh_type || "",
-              birthWeight: kid.weight?.toString() || "",
-              birthHeight: kid.length?.toString() || "",
-              note: kid.note || "",
-              growthData: (kid.growth || []).map((g: GrowthApiDataEdit) => ({
-                id: g.G_id,
-                date: g.created_at.slice(0, 10),
-                months: g.months,
-                weight: g.weight,
-                length: g.length,
-              })),
-              beforebirth: 0,
-            }))
-          );
-          if (result.kids?.[0]?.u_id) setSelectedBabyId(result.kids[0].u_id);
+          setBabyalluid(result.kids?.map((kid: KidApiData) => kid.u_id) || []);
+          setSelectedBabyId(result.kids?.[0]?.u_id || null);
+          // setBabyInfo(
+          //   (result.kids || []).map((kid: KidApiDataEdit) => ({
+          //     id: kid.u_id,
+          //     img: kid.image_link,
+          //     firstName: kid.fname,
+          //     lastName: kid.lname,
+          //     nickname: kid.uname,
+          //     gender:
+          //       kid.sex === "ชาย"
+          //         ? "male"
+          //         : kid.sex === "หญิง"
+          //         ? "female"
+          //         : kid.sex,
+          //     birthDate: kid.birth_date ? kid.birth_date.split("T")[0] : "",
+          //     bloodType: kid.blood_type || "",
+          //     rh_type: kid.rh_type || "",
+          //     birthWeight: kid.weight?.toString() || "",
+          //     birthHeight: kid.length?.toString() || "",
+          //     note: kid.note || "",
+          //     growthData: (kid.growth || []).map((g: GrowthApiDataEdit) => ({
+          //       id: g.G_id,
+          //       date: g.created_at.slice(0, 10),
+          //       months: g.months,
+          //       weight: g.weight,
+          //       length: g.length,
+          //     })),
+          //     beforebirth: 0,
+          //   }))
+          // );
+          // if (result.kids?.[0]?.u_id) setSelectedBabyId(result.kids[0].u_id);
         }
       } catch (e) {
         showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
@@ -120,6 +124,79 @@ export default function EditMomInfo() {
     };
     fetchData();
   }, [params.id, showError]);
+   useEffect(() => {
+      const fetchBabyData = async () => {
+        if (babyalluid.length === 0) return;
+  
+        try {
+          // Fetch all babies if there are multiple
+          const fetchPromises = babyalluid.map(async (babyId) => {
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_url}/kid/${babyId}`,
+              {
+                cache: "no-store",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+                },
+              }
+            );
+            if (!res.ok) throw new Error(`Failed to fetch baby info for ${babyId}`);
+            const data = await res.json();
+            return data.result;
+          });
+  
+          const allBabyResults = await Promise.all(fetchPromises);
+          console.log("All Baby Data:", allBabyResults);
+  
+          const babydata = allBabyResults.map((kid: KidApiWithDateData) => ({
+            id: kid.id,
+            img: kid.imagelink,
+            firstName: kid.firstname,
+            lastName: kid.lastname,
+            nickname: kid.username,
+            gender:
+              kid.sex === "ชาย"
+                ? "male"
+                : kid.sex === "หญิง"
+                ? "female"
+                : kid.sex,
+            birthDate: kid.birthdate?.slice(0, 10) || "",
+            bloodType: kid.blood,
+            rh_type: kid.rh,
+            birthWeight: kid.birthweight?.toString() || "",
+            birthHeight: kid.birthlength?.toString() || "",
+            note: kid.note,
+            growthData: (kid.growth || []).map((g: GrowthApiData) => ({
+              id: g.G_id,
+              date: g.created_at.slice(0, 10),
+              months: g.months,
+              weight: g.weight,
+              length: g.length,
+            })),
+            beforebirth: kid.beforebirth || 0,  
+            adjusted_days: kid.adjusted_days || 0,
+            adjusted_months: kid.adjusted_months || 0,
+            adjusted_years: kid.adjusted_years || 0,
+            real_days: kid.real_days || 0,
+            real_months: kid.real_months || 0,
+            real_years: kid.real_years || 0,
+          }));
+  
+          setBabyInfo(babydata);
+  
+          // Set the first baby as selected if no baby is currently selected
+          if (selectedBabyId === null && babydata.length > 0) {
+            setSelectedBabyId(babydata[0].id);
+          }
+        } catch (error) {
+          showError("เกิดข้อผิดพลาดในการโหลดข้อมูลทารก");
+          console.error("Error fetching baby info:", error);
+        }
+      };
+  
+      fetchBabyData();
+    }, [babyalluid, selectedBabyId, showError]);
+  
 
   const handleBabySelect = (id: string) => {
     setSelectedBabyId(id);
@@ -444,18 +521,18 @@ export default function EditMomInfo() {
                 ข้อมูลทารก
               </Typography>
 
-              {babyInfo.length > 1 && (
+               {babyalluid.length > 1 && (
                 <div className="flex gap-4">
-                  {babyInfo.map((baby, index) => (
+                  {babyalluid.map((babyId, index) => (
                     <button
-                      key={baby.id}
+                      key={babyId}
                       type="button"
                       className={`border border-primary5 text-primary5 rounded-lg px-4 py-2 mb-2 ${
-                        selectedBabyId === baby.id
+                        selectedBabyId === babyId
                           ? "bg-primary5 text-white"
                           : ""
                       }`}
-                      onClick={() => handleBabySelect(baby.id)}
+                      onClick={() => handleBabySelect(babyId)}
                     >
                       ทารกคนที่ {index + 1}
                     </button>
@@ -518,7 +595,7 @@ export default function EditMomInfo() {
                               fullWidth
                               size="small"
                               name="firstName"
-                              value={babyInfo[0]?.firstName ?? ""}
+                              value={baby.firstName ?? ""}
                               onChange={handleChangeBaby}
                             />
                           </div>
@@ -528,7 +605,7 @@ export default function EditMomInfo() {
                               fullWidth
                               size="small"
                               name="lastName"
-                              value={babyInfo[0]?.lastName ?? ""}
+                              value={baby.lastName ?? ""}
                               onChange={handleChangeBaby}
                             />
                           </div>
@@ -539,7 +616,7 @@ export default function EditMomInfo() {
                             fullWidth
                             size="small"
                             name="nickname"
-                            value={babyInfo[0]?.nickname ?? ""}
+                            value={baby.nickname ?? ""}
                             onChange={handleChangeBaby}
                           />
                         </div>
@@ -553,7 +630,7 @@ export default function EditMomInfo() {
                             fullWidth
                             size="small"
                             name="birthDate"
-                            value={babyInfo[0]?.birthDate ?? ""}
+                            value={baby.birthDate ?? ""}
                             onChange={handleChangeBaby}
                             type="date"
                           />
@@ -564,7 +641,7 @@ export default function EditMomInfo() {
                             fullWidth
                             size="small"
                             name="beforebirth"
-                            value={babyInfo[0]?.beforebirth ?? ""}
+                            value={baby.beforebirth ?? ""}
                             onChange={handleChangeBaby}
                             type="number"
                           />
@@ -631,7 +708,7 @@ export default function EditMomInfo() {
                             fullWidth
                             size="small"
                             name="rh_type"
-                            value={babyInfo[0]?.rh_type ?? ""}
+                            value={baby.rh_type ?? ""}
                             onChange={handleChangeBaby}
                           >
                             <MenuItem value="">เลือก Rh</MenuItem>
