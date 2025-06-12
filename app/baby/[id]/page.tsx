@@ -11,11 +11,13 @@ import { useParams } from "next/navigation";
 import { GrowthRecord } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
+import Chatbot from "../../component/chatbot";
 const PageBabyId = () => {
   const param = useParams();
   const token = localStorage.getItem("token");
   const [kidData, setKidData] = React.useState<KidProfile>();
   const [graphData, setGraphData] = React.useState<GrowthRecord[]>();
+  const [showChat, setShowChat] = React.useState<boolean>(false);
   const fetchKidData = async (id: string, token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/kid/${id}`, {
@@ -161,7 +163,7 @@ const PageBabyId = () => {
                   <h4>{kidData?.blood}</h4>
                 </div>
                 <div className="w-1/4">
-                  <h3 className="font-bold text-[18px]">น้ำหนัก (กก.)</h3>
+                  <h3 className="font-bold text-[18px]">น้ำหนัก (กรัม)</h3>
                   <h4>{kidData?.birthweight}</h4>
                 </div>
                 <div className="w-1/4">
@@ -252,6 +254,8 @@ const PageBabyId = () => {
             />
           </div>
         </div>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

@@ -5,11 +5,13 @@ import { ButtonComponents, ButtonComponents4 } from "@/app/component/button";
 import { GrowthEdit } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
+import Chatbot from "@/app/component/chatbot";
 
 const PageBabyEdit = () => {
   const token = localStorage.getItem("token");
   const searchParams = new URLSearchParams(window.location.search);
   const babyId = searchParams.get("babyid");
+  const [showChat, setShowChat] = React.useState<boolean>(false);
   const currentDate = new Date(
     new Date().getTime() + 7 * 60 * 60 * 1000
   ).toISOString();
@@ -152,7 +154,7 @@ const PageBabyEdit = () => {
                     <h4>{data.length}</h4>
                   </div>
                   <div className="max-sm:col-start-3 max-sm:col-end-5 max-sm:col-span-2 ">
-                    <h3>น้ำหนัก (กก.)</h3>
+                    <h3>น้ำหนัก (กรัม)</h3>
                     <h4>{data.weight}</h4>
                   </div>
                 </div>
@@ -181,7 +183,7 @@ const PageBabyEdit = () => {
                     </div>
                   </div>
                   <div className="flex flex-col max-sm:col-start-1 max-sm:col-end-3 max-sm:col-span-2">
-                    <label htmlFor="weight">น้ำหนัก (กก.)</label>
+                    <label htmlFor="weight">น้ำหนัก (กรัม)</label>
                     <input
                       type="number"
                       id="weight"
@@ -231,6 +233,8 @@ const PageBabyEdit = () => {
             </div>
           )}
         </div>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

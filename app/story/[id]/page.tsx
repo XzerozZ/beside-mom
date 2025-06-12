@@ -7,6 +7,7 @@ import { VideoClip } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../../component/navbar";
+import Chatbot from "../../component/chatbot";
 
 const PageStoryId = () => {
   const param = useParams();
@@ -15,6 +16,7 @@ const PageStoryId = () => {
   const [video, setVideo] = React.useState<VideoClip>();
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
   const token = localStorage.getItem("token");
+  const [showChat, setShowChat] = React.useState<boolean>(false);
  
   const fetchVideos = async (token: string) => {
     try {
@@ -293,6 +295,8 @@ const PageStoryId = () => {
             `}</style>
           </div>
         </main>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

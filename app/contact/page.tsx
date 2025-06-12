@@ -3,7 +3,7 @@ import React from "react";
 
 import Image from "next/image";
 import { ButtonComponents } from "../component/button";
-import Chatbot from "./component/chatbot";
+import Chatbot from "../component/chatbot";
 
 const Page = () => {
   const [showChat, setShowChat] = React.useState(false);
@@ -35,7 +35,7 @@ const Page = () => {
                   <div>
                     <h1 className="font-bold text-[16px]">ที่อยู่</h1>
                     <h2>
-                     1873 Rama IV Rd, Chang Wat Bangkok, Pathum Wan, จังหวัด กรุงเทพมหานคร 10330
+                    1873 ถนนพระรามที่ 4 แขวงปทุมวัน เขตปทุมวัน กรุงเทพมหานคร 10330
                     </h2>
                   </div>
                 </div>

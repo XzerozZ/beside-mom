@@ -5,11 +5,13 @@ import { useParams } from "next/navigation";
 import { CareItem } from "@/app/interface";
 import "@/app/component/css/loader.css";
 import Swal from "sweetalert2";
+import Chatbot from "@/app/component/chatbot";
 
 const Page = () => {
   const param = useParams();
   const token = localStorage.getItem("token");
   const [care, setCare] = React.useState<CareItem>();
+  const [showChat, setShowChat] = React.useState<boolean>(false);
 
   const fetchCare = async (id: string, token: string) => {
     try {
@@ -117,6 +119,8 @@ const Page = () => {
             <div>{care?.desc}</div>
           </div>
         </div>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

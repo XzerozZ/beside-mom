@@ -4,11 +4,13 @@ import Qabox from "../component/qabox";
 import { QuestionAnswer } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
+import Chatbot from "../component/chatbot";
 
 const PageQuestion = () => {
   const [question, setQuestion] = React.useState<QuestionAnswer[]>();
   const [token, setToken] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [showChat, setShowChat] = React.useState<boolean>(false);
 
   // Fetch token from localStorage on client only
   React.useEffect(() => {
@@ -83,6 +85,8 @@ const PageQuestion = () => {
             ))}
           </div>
         </div>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

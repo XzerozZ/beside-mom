@@ -7,13 +7,14 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "@/app/component/navbar";
 import ProgressBar from "@/app/component/progressbar"; // Adjust the path as necessary
+import Chatbot from "@/app/component/chatbot";
 const PageFormPhase = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const babyId = searchParams.get("babyid");
   const token = localStorage.getItem("token");
   const { name } = useParams();
   const { phase } = useParams();
-
+  const [showChat, setShowChat] = React.useState<boolean>(false);
   // Decode the name parameter
   const getDecodedName = (name: string | undefined) => {
     const safeDecode = (text: string) => {
@@ -209,6 +210,8 @@ const PageFormPhase = () => {
             </div>
           </div>
         </main>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

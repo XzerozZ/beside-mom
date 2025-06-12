@@ -7,6 +7,7 @@ import { Quiz } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "@/app/component/navbar";
+import Chatbot from "@/app/component/chatbot";
 
 const PageFormCategory = () => {
   const { name } = useParams();
@@ -16,7 +17,7 @@ const PageFormCategory = () => {
   const babyId = searchParams.get("babyid");
   const param = useParams();
   const token = localStorage.getItem("token");
-
+  const [showChat, setShowChat] = React.useState<boolean>(false);
   // Decode the name parameter
   const getDecodedName = (name: string | undefined) => {
     const safeDecode = (text: string) => {

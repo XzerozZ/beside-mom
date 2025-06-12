@@ -5,11 +5,13 @@ import { Appointment } from "@/app/interface";
 import { useParams } from "next/navigation";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
+import Chatbot from "../../../component/chatbot";
 
 const PageCalendarHistoryId = () => {
   const param = useParams();
   const token = localStorage.getItem("token");
   const [calendar, setCalendar] = React.useState<Appointment>();
+  const [showChat, setShowChat] = React.useState<boolean>(false);
   const fetchCalendar = async (id: string, token: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_url}/appoint/${id}`, {
@@ -83,6 +85,8 @@ const PageCalendarHistoryId = () => {
             {calendar && <CalendarCard {...calendar} />}
           </div>
         </div>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

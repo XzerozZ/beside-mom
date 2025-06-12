@@ -301,7 +301,7 @@ export default function AddKid() {
             <Box>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
-                  <FormLabel>น้ำหนักแรกเกิด (กก.)</FormLabel>
+                  <FormLabel>น้ำหนักแรกเกิด (กรัม)</FormLabel>
                   <TextField
                     fullWidth
                     size="small"
