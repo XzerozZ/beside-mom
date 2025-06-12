@@ -8,6 +8,7 @@ import {
 import Sidebar from "../../../../../components/SideBarAdmin";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { EvaluateDataAPI, EvaluatePeriods } from "@/app/admin/types";
 
 const periodMap: Record<number, string> = {
@@ -86,10 +87,18 @@ const ContactNurseInfo: React.FC = () => {
                     <div className="flex items-center gap-2 min-w-[80px] justify-end">
                       {detail.solution_status === "ผ่าน" ? (
                         <CheckCircleIcon className="text-green-500" />
+                      ) : detail.solution_status === "รอประเมิน" ? (
+                        <InfoOutlinedIcon style={{ color: "#F88000" }} />
                       ) : (
                         <CancelIcon className="text-red-500" />
                       )}
-                      <span className={detail.solution_status === "ผ่าน" ? "text-green-600 font-medium" : "text-red-600 font-medium"}>{detail.solution_status}</span>
+                      <span className={
+                        detail.solution_status === "ผ่าน" 
+                          ? "text-green-600 font-medium" 
+                          : detail.solution_status === "รอประเมิน"
+                          ? "font-medium"
+                          : "text-red-600 font-medium"
+                      } style={detail.solution_status === "รอประเมิน" ? { color: "#F88000" } : {}}>{detail.solution_status}</span>
                     </div>
                   </div>
                   
