@@ -104,8 +104,19 @@ const ContactNurseInfo: React.FC = () => {
                   
                   <div className="space-y-2">
                     {detail.Histories.map((history, index) => (
-                      <div key={history.H_id} className="text-base font-medium text-neutral05">
-                        {index + 1}. {history.quiz.question}
+                      <div key={history.H_id} className="border-l-4 border-gray-200 pl-4 py-2">
+                        <div className="text-base font-medium text-neutral05 mb-1">
+                          {index + 1}. {history.quiz.question}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          ประเมิน: {history.done_times} ครั้ง
+                          {history.answer == true && (
+                            <span className="ml-2 text-green-600">✓ เสร็จสิ้น</span>
+                          )  }
+                          {history.answer == false && (
+                            <span className="ml-2 text-red-600">✗ ไม่เสร็จสิ้น</span>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

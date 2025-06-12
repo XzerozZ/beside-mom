@@ -559,7 +559,7 @@ export default function EditMomInfo() {
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                          <FormLabel>อายุครรภ์ตอนคลอด</FormLabel>
+                          <FormLabel>อายุครรภ์ตอนคลอด (สัปดาห์)</FormLabel>
                           <TextField
                             fullWidth
                             size="small"
@@ -637,7 +637,7 @@ export default function EditMomInfo() {
                             <MenuItem value="">เลือก Rh</MenuItem>
                             <MenuItem value="Positive">Positive</MenuItem>
                             <MenuItem value="Negative">Negative</MenuItem>
-                            <MenuItem value="-">-</MenuItem>
+                            <MenuItem value="ยังไม่ระบุ">ยังไม่ระบุ</MenuItem>
                           </Select>
                         </Grid>
                       </Grid>
