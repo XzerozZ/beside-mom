@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { ChatMessage } from "@/app/interface";
+import { useGlobalState } from "@/app/context/GlobalState";
 
 interface ChatbotProps {
   showChat: boolean;
@@ -9,10 +10,13 @@ interface ChatbotProps {
 }
 
 const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
-  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
+  // Use global state instead of local state
+  const { chatMessages, setChatMessages, addChatMessage, isLoading, setIsLoading } = useGlobalState();
   const [newMessage, setNewMessage] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
   const [isInitialized, setIsInitialized] = React.useState(false);
+  
+  // Create ref for messages container to enable auto-scroll
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
   // Helper function to get current time
   const getCurrentTime = React.useCallback(() => {
@@ -20,17 +24,33 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
     return `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
   }, []);
 
+  // Auto-scroll to bottom of messages
+  const scrollToBottom = React.useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'end'
+    });
+  }, []);
+
+  // Scroll to bottom when messages change
+  React.useEffect(() => {
+    if (chatMessages.length > 0) {
+      // Small delay to ensure DOM is updated
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [chatMessages, scrollToBottom]);
+
   // Initialize chat with default messages
   const initializeChat = React.useCallback(() => {
-    if (!isInitialized) {
+    if (!isInitialized && chatMessages.length === 0) {
       const time = getCurrentTime();
-      setMessages([
+      setChatMessages([
         { id: 1, response: "สวัสดีค่ะ ยินดีต้อนรับสู่ระบบแชทของพยาบาล", sender: "nurse", sent_at: time },
         { id: 2, response: "มีอะไรให้พยาบาลช่วยเหลือไหมคะ?", sender: "nurse", sent_at: time }
       ]);
       setIsInitialized(true);
     }
-  }, [isInitialized, getCurrentTime]);
+  }, [isInitialized, chatMessages.length, getCurrentTime, setChatMessages]);
 
   // Fetch existing chat messages
   const fetchChatHistory = React.useCallback(async () => {
@@ -48,7 +68,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
       if (response.ok) {
         const data = await response.json();
         if (data.result && Array.isArray(data.result) && data.result.length > 0) {
-          setMessages(data.result);
+          setChatMessages(data.result);
           setIsInitialized(true);
         } else {
           initializeChat();
@@ -84,7 +104,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
       sent_at: currentTime
     };
     
-    setMessages(prev => [...prev, userMessage]);
+    addChatMessage(userMessage);
     setNewMessage(""); // Clear input immediately
 
     try {
@@ -117,8 +137,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
       // Update messages with nurse response
       console.log("Nurse response:", responseData);
   
-     
-      setMessages(prev => [...prev, nurseMessage]);
+      addChatMessage(nurseMessage);
       
     } catch (error) {
       console.error("Error sending message:", error);
@@ -131,7 +150,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
         sent_at: getCurrentTime()
       };
       
-      setMessages(prev => [...prev, fallbackMessage]);
+      addChatMessage(fallbackMessage);
     } finally {
       setIsLoading(false);
     }
@@ -189,8 +208,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
           </div>
 
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((message) => (
+          <div className="flex-1 overflow-y-auto p-4 space-y-3" id="messages-container">
+            {chatMessages.map((message) => (
               <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] p-3 rounded-lg ${
                   message.sender === 'user' 
@@ -204,6 +223,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
                 </div>
               </div>
             ))}
+            {/* Invisible div to scroll to */}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Chat Input */}
