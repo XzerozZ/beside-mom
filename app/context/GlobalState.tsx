@@ -6,7 +6,7 @@ import { ChatMessage } from '../interface';
 // Define the global state type
 interface GlobalStateContextType {
   chatMessages: ChatMessage[];
-  setChatMessages: (messages: ChatMessage[]) => void;
+  setChatMessages: (messages: ChatMessage[] | ((prev: ChatMessage[]) => ChatMessage[])) => void;
   addChatMessage: (message: ChatMessage) => void;
   clearChatMessages: () => void;
   isLoading: boolean;

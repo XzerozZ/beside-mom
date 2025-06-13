@@ -23,17 +23,16 @@ const Page = () => {
       if (res.status === 200) {
         const data = await res.json();
         setCare(data.result);
-      }
-      else {
+      } else {
         console.error("Failed to fetch care data");
-         await Swal.fire({
-                  title: "Please login again your token is expired!",
-                  icon: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#B36868",
-                });
-                window.location.href = "/auth/login";
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#B36868",
+        });
+        window.location.href = "/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching care data:", error);
@@ -64,7 +63,7 @@ const Page = () => {
     };
 
     fetchData();
-  }, [token,param.id]);
+  }, [token, param.id]);
 
   if (loading) {
     return (
@@ -76,7 +75,7 @@ const Page = () => {
     return (
       <div className="">
         <div className="flex flex-col items-center gap-[30px]">
-          <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
+          <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] ">
             การดูแลทารก {" >> "} {care?.title}
           </h1>
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[358px] flex flex-col gap-[20px] ">
@@ -88,26 +87,36 @@ const Page = () => {
                     alt="care"
                     width={1000}
                     height={1000}
-                    className="object-cover w-2/4 "
+                    className="object-cover w-2/4 h-[400px] max-xl:h-[300px] "
                   />
                 </div>
               ))
             ) : care?.type === "video" ? (
               care.assets?.map((item: { link: string }, index: number) => (
                 <div key={index} className="flex justify-center">
-                  <video
-                    controls
+                  <iframe
+                    src={item?.link
+                      ?.replace("watch?v=", "embed/")
+                      .replace("youtu.be/", "youtube.com/embed/")}
                     className="object-cover w-2/4 h-[500px] max-xl:h-[300px] max-sm:h-[200px]"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    width={`100%`}
                   >
-                    <source src={item.link} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                    src=
+                    {item?.link
+                      ?.replace("watch?v=", "embed/")
+                      .replace("youtu.be/", "youtube.com/embed/")}
+                  </iframe>
                 </div>
               ))
             ) : (
               <div>
                 {!care ? (
-                  <p>Loading...</p>
+                  <div className="flex justify-center items-center h-screen mt-[-160px] max-sm:mt-[-112px]">
+                    <div className="loader"></div>
+                  </div>
                 ) : (
                   <p>No assets available for this care item.</p>
                 )}
@@ -116,11 +125,12 @@ const Page = () => {
             <div>
               <h2 className="font-bold text-[16px] text-left">{care?.title}</h2>
             </div>
-            <div>{care?.desc}</div>
+            <pre className="font-noto-sans-thai whitespace-pre-wrap">
+              {care?.desc}
+            </pre>
           </div>
         </div>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

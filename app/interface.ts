@@ -284,5 +284,6 @@ export  interface QuizCategory {
     response: string;
     sender: string;  // "user" or "assistant"
     sent_at: string;  // ISO 8601 date string
+    isLoading?: boolean;  // Optional property for loading state
   }
 

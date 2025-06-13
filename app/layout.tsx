@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Thai } from "next/font/google";
+import { GlobalStateProvider } from "./context/GlobalState";
 import "./globals.css";
-
 const notoSansThai = Noto_Sans_Thai({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin", "thai"],
@@ -26,7 +26,9 @@ export default function RootLayout({
       <body
         className={`${notoSansThai.variable} font-sans antialiased bg-white`}
       >
-        {children}
+        <GlobalStateProvider>
+          {children}
+        </GlobalStateProvider>
       </body>
     </html>
   );

@@ -183,7 +183,7 @@ const PageBabyId = () => {
                     type="radio"
                     name="gender"
                     value="male"
-                    checked={kidData?.sex === "ชาย"}
+                    checked={kidData?.sex === "male"}
                     readOnly
                     className="accent-[#B36868]"
                   />
@@ -194,7 +194,7 @@ const PageBabyId = () => {
                     type="radio"
                     name="gender"
                     value="female"
-                    checked={kidData?.sex === "หญิง"}
+                    checked={kidData?.sex === "female"}
                     readOnly
                     className="accent-[#B36868]"
                   />

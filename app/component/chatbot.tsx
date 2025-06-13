@@ -80,7 +80,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
       console.error("Failed to fetch chat history:", error);
       initializeChat();
     }
-  }, [initializeChat]);
+  }, [initializeChat, setChatMessages]);
 
   // Initialize chat when component opens
   React.useEffect(() => {
@@ -107,6 +107,17 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
     addChatMessage(userMessage);
     setNewMessage(""); // Clear input immediately
 
+    // Add loading message from nurse
+    const loadingMessage: ChatMessage = {
+      id: Date.now() + 1,
+      response: "กำลังพิมพ์...",
+      sender: "nurse",
+      sent_at: currentTime,
+      isLoading: true // Mark as loading message
+    };
+    
+    addChatMessage(loadingMessage);
+
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -127,34 +138,34 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
   
       const responseData = await response.json();
       
-      // Add nurse response
+      // Remove loading message and add actual nurse response
       const nurseMessage: ChatMessage = {
-        id: Date.now() + 1,
+        id: Date.now() + 2,
         response: responseData?.message?.response || "ขอบคุณสำหรับข้อความค่ะ พยาบาลจะตอบกลับในไม่ช้า",
         sender: "nurse",
-        sent_at: responseData?.sent_at || getCurrentTime()
+        sent_at: getCurrentTime()
       };
-      // Update messages with nurse response
-      console.log("Nurse response:", responseData);
-  
-      addChatMessage(nurseMessage);
+      
+      // Replace loading message with actual response
+      setChatMessages(prev => prev.filter(msg => msg.id !== loadingMessage.id).concat(nurseMessage));
       
     } catch (error) {
       console.error("Error sending message:", error);
       
-      // Add fallback nurse response
+      // Replace loading message with fallback response
       const fallbackMessage: ChatMessage = {
-        id: Date.now() + 1,
+        id: Date.now() + 2,
         response: "ขออภัยค่ะ เกิดข้อผิดพลาดในการส่งข้อความ กรุณาลองใหม่อีกครั้ง",
         sender: "nurse",
         sent_at: getCurrentTime()
       };
       
-      addChatMessage(fallbackMessage);
+      // Replace loading message with fallback
+      setChatMessages(prev => prev.filter(msg => msg.id !== loadingMessage.id).concat(fallbackMessage));
     } finally {
       setIsLoading(false);
     }
-  }, [newMessage, isLoading, getCurrentTime]);
+  }, [newMessage, isLoading, getCurrentTime, addChatMessage, setChatMessages, setIsLoading]);
 
   return (
     <>
@@ -162,7 +173,10 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
       <div className="fixed bottom-5 right-3 p-4 max-xl:bottom-[30px]">
         <div 
           className="rounded-full bg-[#fff] w-[80px] h-[80px] justify-center items-center flex shadow-lg shadow-[#cccccc] cursor-pointer hover:scale-105 transition-transform"
-          onClick={() => setShowChat(!showChat)}
+          onClick={() => {
+            setShowChat(!showChat);
+            scrollToBottom();
+          }}
         >
           <div className="rounded-full bg-[#B36868] w-[65px] h-[64px] justify-center items-center flex">
             <Image
@@ -216,10 +230,22 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
                     ? 'bg-[#B36868] text-white rounded-br-none' 
                     : 'bg-gray-100 text-gray-800 rounded-bl-none'
                 }`}>
-                  <p className="text-sm">{message.response}</p>
-                  <p className={`text-xs mt-1 ${message.sender === 'user' ? 'text-pink-100' : 'text-gray-500'}`}>
-                    {message.sent_at}
-                  </p>
+                  {message.isLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-sm">{message.response}</p>
+                      <p className={`text-xs mt-1 ${message.sender === 'user' ? 'text-pink-100' : 'text-gray-500'}`}>
+                        {message.sent_at}
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
@@ -239,17 +265,20 @@ const Chatbot: React.FC<ChatbotProps> = ({ showChat, setShowChat }) => {
                 disabled={isLoading}
                 className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-[#B36868] disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
-              <button
-                onClick={sendMessage}
+                <button
+                onClick={() => {
+                  sendMessage();
+                  scrollToBottom();
+                }}
                 disabled={isLoading || !newMessage.trim()}
                 className="bg-[#B36868] hover:bg-[#A05858]   text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
-              >
+                >
                 {isLoading ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <Image src="/send.svg" width={16} height={16} alt="send" className="filter brightness-0 invert" />
                 )}
-              </button>
+                </button>
             </div>
           </div>
         </div>
