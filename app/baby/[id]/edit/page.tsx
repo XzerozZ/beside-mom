@@ -1,15 +1,16 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 
 import { ButtonComponents, ButtonComponents4 } from "@/app/component/button";
 import { GrowthEdit } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Chatbot from "@/app/component/chatbot";
+import { useSearchParams } from "next/navigation";
 
 const PageBabyEdit = () => {
   const token = localStorage.getItem("token");
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = useSearchParams();
   const babyId = searchParams.get("babyid");
   const [showChat, setShowChat] = React.useState<boolean>(false);
   const currentDate = new Date(

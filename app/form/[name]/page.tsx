@@ -7,9 +7,11 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../../component/navbar";
 import Chatbot from "../../component/chatbot";
+import { useSearchParams } from 'next/navigation';
+
 
 const PageForm = () => {
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = useSearchParams();
   const babyId = searchParams.get("babyid");
   const token = localStorage.getItem("token");
   const { name } = useParams();
