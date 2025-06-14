@@ -7,13 +7,23 @@ import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "@/app/component/navbar";
 import ProgressBar from "@/app/component/progressbar"; // Adjust the path as necessary
+import Chatbot from "@/app/component/chatbot";
+import { useSearchParams } from "next/navigation";
 const PageFormPhase = () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const babyId = searchParams.get("babyid");
-  const token = localStorage.getItem("token");
   const { name } = useParams();
   const { phase } = useParams();
+  const [babyId, setBabyId] = React.useState<string | null>(null);
+  const [token, setToken] = React.useState<string | null>(null);
+  const [showChat, setShowChat] = React.useState<boolean>(false);
+  const searchParams = useSearchParams();
 
+  // Extract babyId and token safely in useEffect
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setBabyId(searchParams.get("babyid"));
+      setToken(localStorage.getItem("token"));
+    }
+  }, [searchParams]);
   // Decode the name parameter
   const getDecodedName = (name: string | undefined) => {
     const safeDecode = (text: string) => {
@@ -84,8 +94,11 @@ const PageFormPhase = () => {
   // console.log(resultArrayQuiz);
 
   const [loading, setLoading] = React.useState(true);
+  
   useEffect(() => {
     const fetchAllQuizzes = async () => {
+      if (!token) return;
+      
       const setters = [
         setQuizHistoryData,
         setQuizHistoryData2,
@@ -105,7 +118,20 @@ const PageFormPhase = () => {
             }
           );
           if (!response.ok) {
-            throw new Error(`Failed to fetch quiz data for category ${i}`);
+            if (response.status === 401) {
+              await Swal.fire({
+                title: "Please login again your token is expired!",
+                icon: "error",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+                confirmButtonColor: "#B36868",
+              });
+              if (typeof window !== 'undefined') {
+                window.location.href = "/auth/login";
+              }
+              return;
+            }
+            throw new Error(`Failed to fetch quiz data for category ${i}: ${response.status}`);
           }
           const data = await response.json();
           setters[i - 1](data.result); // Dynamically set the corresponding state
@@ -114,8 +140,8 @@ const PageFormPhase = () => {
         }
       }
     };
+
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token is missing. Please log in.");
         await Swal.fire({
@@ -123,20 +149,38 @@ const PageFormPhase = () => {
           icon: "error",
           showCancelButton: false,
           confirmButtonText: "OK",
+          confirmButtonColor: "#B36868",
         });
-        window.location.href = "/auth/login";
+        if (typeof window !== 'undefined') {
+          window.location.href = "/auth/login";
+        }
         return;
       }
-    };
-    fetchData();
-    if (token) {
-      fetchQuizData(token || "", babyId || "", Number(decodedPhase)); // Fetch quiz history
 
-      fetchAllQuizzes();
-    } else {
-      console.error("Invalid or missing parameter: id");
+      if (babyId && decodedPhase) {
+        try {
+          await fetchQuizData(token, babyId, Number(decodedPhase));
+          await fetchAllQuizzes();
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+      setLoading(false);
+    };
+
+    // Only fetch data when we have both token and babyId
+    if (token !== null && babyId !== null) {
+      if (token && babyId) {
+        fetchData();
+      } else {
+        // Either token or babyId is empty, handle accordingly
+        setLoading(false);
+        if (!token && typeof window !== 'undefined') {
+          window.location.href = "/auth/login";
+        }
+      }
     }
-    setLoading(false);
+    // If token or babyId is null, we're still waiting for them to load
   }, [token, babyId, decodedPhase]);
 
   if (loading) {
@@ -153,7 +197,7 @@ const PageFormPhase = () => {
         </header>
         <main className="mt-[112px] max-sm:mt-[112px]">
           <div className="">
-            <div className="flex flex-col items-center gap-[30px z-0">
+            <div className="flex flex-col items-center gap-[30px] z-0">
               <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
                 การตรวจตามนัด {">>"} {decodedName} {">>"}{" "}
                 {decodedPhase === "1"
@@ -209,6 +253,8 @@ const PageFormPhase = () => {
             </div>
           </div>
         </main>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

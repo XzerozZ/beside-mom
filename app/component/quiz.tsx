@@ -5,6 +5,7 @@ import { ButtonComponents6Size, ButtonComponents5Size } from "./button";
 import { Quiz } from "@/app/interface";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import Swal from "sweetalert2";
 
 const QuizForm: React.FC<{
   props: Quiz[];
@@ -12,10 +13,10 @@ const QuizForm: React.FC<{
   history: Quiz[];
   index: number;
   babyId: string;
-}> = ({ props, navigate, index ,babyId}) => {
-
+}> = ({ props, navigate, index, babyId }) => {
   const useParam = useParams();
-  const quizIds: number[] = props.map(item => item.quiz_id);
+  console.log("useParam", useParam);
+  const quizIds: number[] = props.map((item) => item.quiz_id);
 
   // Store quizIds in localStorage with key 'No{phase}+{category}'
   React.useEffect(() => {
@@ -25,7 +26,7 @@ const QuizForm: React.FC<{
       localStorage.setItem(`No${phase}+${category}`, JSON.stringify(quizIds));
     }
   }, [quizIds, useParam.phase, useParam.category]);
-  
+
   // const isAnswered = history[Number(param)-1]?.answer;
 
   const [isAnswered, setIsAnswered] = React.useState<boolean | null>(null);
@@ -33,7 +34,12 @@ const QuizForm: React.FC<{
   const [quiz, setQuiz] = React.useState<Quiz>();
   // const [quizNex, setQuizNext] = React.useState<boolean>(false);
 
-  const fetchQuizById = async (id: number, token: string,phase:number,category:number) => {
+  const fetchQuizById = async (
+    id: number,
+    token: string,
+    phase: number,
+    category: number
+  ) => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_url}/quiz/period/${phase}/category/${category}/question/${id}`,
@@ -68,39 +74,60 @@ const QuizForm: React.FC<{
   //   } catch {}
   // };
 
-  const handleAnswer = (value: boolean,phase:number,category:number) => {
+  const handleAnswer = (value: boolean, phase: number, category: number) => {
     const storedAnswers = JSON.parse(
       localStorage.getItem(`quizAnswers${phase}+${category}`) || "[]"
     );
+
     const quizId = Number(quiz?.quiz_id);
+    const arrayInQuizString = localStorage.getItem(`No${phase}+${category}`);
+    const arrayInQuiz: number[] = arrayInQuizString
+      ? JSON.parse(arrayInQuizString)
+      : [];
 
-    // Ensure array has enough length
-    while (storedAnswers.length < quizId) storedAnswers.push(null);
+    // Get index of quizId in arrayInQuiz
+    const positionInArray = arrayInQuiz.indexOf(quizId);
 
-    storedAnswers[quizId - 1] = value;
-    localStorage.setItem(`quizAnswers${phase}+${category}`, JSON.stringify(storedAnswers));
+    // You can now use `positionInArray` as needed (e.g., to store answer)
+    // Make sure storedAnswers has enough length
+    while (storedAnswers.length <= positionInArray) storedAnswers.push(null);
+
+    if (positionInArray !== -1) {
+      storedAnswers[positionInArray] = value;
+    }
+
+    localStorage.setItem(
+      `quizAnswers${phase}+${category}`,
+      JSON.stringify(storedAnswers)
+    );
   };
 
-
-  const handleSubmit = async (phase:number,category:number,babyid:string) => {
+  const handleSubmit = async (
+    phase: number,
+    category: number,
+    babyid: string
+  ) => {
     const storedAnswers = JSON.parse(
       localStorage.getItem(`quizAnswers${phase}+${category}`) || "[]"
     );
     const token = localStorage.getItem("token");
-    const filteredAnswers = storedAnswers.filter((ans: boolean) => ans !== null);
+    const filteredAnswers = storedAnswers.filter(
+      (ans: boolean) => ans !== null
+    );
     const formData = new FormData();
     // filteredAnswers.forEach((answer: boolean) => {
     //   formData.append(`answer`, answer.toString());
     //   console.log("this is formData", Array.from(formData.entries()));
     // });
-    for (const answer of filteredAnswers) {
+    // for (const answer of filteredAnswers) {
+    //   formData.append("answer", answer);
+    // }
+    filteredAnswers.forEach((answer: string) => {
       formData.append("answer", answer);
-    }
+    });
 
-    
     if (token) {
       try {
-       
         if (!token) {
           throw new Error("Authorization token not found");
         }
@@ -113,7 +140,6 @@ const QuizForm: React.FC<{
             },
             body: formData,
           }
-         
         );
         console.log("this is response", response);
         if (!response.ok) {
@@ -123,12 +149,17 @@ const QuizForm: React.FC<{
         console.error("Error submitting answer:", error);
       }
     }
-  }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token && index) {
-      fetchQuizById(Number(index), token,Number(useParam.phase),Number(useParam.category));
+      fetchQuizById(
+        Number(index),
+        token,
+        Number(useParam.phase),
+        Number(useParam.category)
+      );
     } else {
       console.error("Token not found in local storage");
     }
@@ -145,7 +176,7 @@ const QuizForm: React.FC<{
     // } catch  {
     //   console.log("hello");
     // }
-  }, [useParam.phase,useParam.category,index]);
+  }, [useParam.phase, useParam.category, index]);
 
   // Determine if this is the last quiz in the sequence
   const isLastQuiz = React.useMemo(() => {
@@ -184,11 +215,12 @@ const QuizForm: React.FC<{
           <h1 className="font-bold text-[20px] text-[#4d4d4d]">
             {quiz?.question}
           </h1>
-          <h3 className="font-bold text-[16px] text-[#4d4d4d]">
-            {quiz?.desc}
-            ผลลัพธ์ที่ควรเกิดขึ้น: {quiz?.solution}
-            คำแนะน: {props[0].suggestion}
-          </h3>
+          <div className="text-[16px] text-[#4d4d4d]">
+            <div className="whitespace-pre-wrap font-sans">{quiz?.desc}</div>
+            <h3 className="font-bold">ผลลัพธ์ที่ควรเกิดขึ้น:</h3>{" "}
+            <h3 className="">{quiz?.solution}</h3>
+            {/* <h3 className="font-bold">คำแนะนำ:</h3> <h3 className="">{props[0].suggestion}</h3> */}
+          </div>
           <div className="flex gap-[10px]">
             <div>
               <div className="flex flex-col gap-[5px]">
@@ -238,9 +270,30 @@ const QuizForm: React.FC<{
             textSize="text-[16px]"
             boxSize="w-[180px] max-sm:w-full"
             onClick={() => {
-              handleAnswer(isAnswered as boolean, Number(useParam.phase), Number(useParam.category));
-              handleSubmit(Number(useParam.phase), Number(useParam.category), babyId);
-                window.location.href = `/form/${useParam.phase}?babyid=${babyId}`;
+              handleAnswer(
+                isAnswered as boolean,
+                Number(useParam.phase),
+                Number(useParam.category)
+              );
+              handleSubmit(
+                Number(useParam.phase),
+                Number(useParam.category),
+                babyId
+              );
+              if (isAnswered == false) {
+                Swal.fire({
+                  title: "คำแนะนำ",
+                  html: `<pre style="font-family: 'Noto Sans Thai', sans-serif; white-space: pre-wrap;">${props[0].suggestion}</pre>`,
+                  icon: "info",
+                  confirmButtonText: "ตกลง",
+                  confirmButtonColor: "#B36868",
+                }).then(() => {
+                  window.location.href = `/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`;
+                });
+                return;
+              } else {
+                  window.location.href = `/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`;
+              }
             }}
           />
         </div>
@@ -251,8 +304,14 @@ const QuizForm: React.FC<{
               title="ต่อไป"
               textSize="text-[16px]"
               boxSize="w-[180px] max-sm:w-full"
-              onClick={() => {
-                handleAnswer(isAnswered as boolean,Number(useParam.phase),Number(useParam.category));
+              onClick={async () => {
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                handleAnswer(
+                  isAnswered as boolean,
+                  Number(useParam.phase),
+                  Number(useParam.category)
+                );
               }}
             />
           </Link>
@@ -271,19 +330,48 @@ const QuizForm: React.FC<{
               title="ต่อไป"
               textSize="text-[16px]"
               boxSize="w-[180px] max-sm:w-full"
-              onClick={() => {
-                handleAnswer(isAnswered as boolean, Number(useParam.phase), Number(useParam.category));
+              onClick={async () => {
+                handleAnswer(
+                  isAnswered as boolean,
+                  Number(useParam.phase),
+                  Number(useParam.category)
+                );
                 // Get quizIds from localStorage and go to next quiz
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+
                 const phase = useParam.phase;
                 const category = useParam.category;
-                const quizIdsStr = localStorage.getItem(`No${phase}+${category}`);
+                const quizIdsStr = localStorage.getItem(
+                  `No${phase}+${category}`
+                );
                 if (quizIdsStr) {
                   const quizIds = JSON.parse(quizIdsStr);
                   const currentQuizId = quiz?.quiz_id;
-                  const currentIndex = quizIds.findIndex((id: number) => id === currentQuizId);
-                  if (currentIndex !== -1 && currentIndex + 1 < quizIds.length) {
+                  const currentIndex = quizIds.findIndex(
+                    (id: number) => id === currentQuizId
+                  );
+                  if (
+                    currentIndex !== -1 &&
+                    currentIndex + 1 < quizIds.length
+                  ) {
                     const nextQuizId = quizIds[currentIndex + 1];
-                    window.location.href = `/form/${navigate}/${nextQuizId}?babyid=${babyId}`;
+                    if (isAnswered == false) {
+                      window.location.href = `/form/${navigate}/${nextQuizId}?babyid=${babyId}`;
+                    }
+                    if (isAnswered == false) {
+                      Swal.fire({
+                        title: "คำแนะนำ",
+                        html: `<pre style="font-family: 'Noto Sans Thai', sans-serif; white-space: pre-wrap;">${props[0].suggestion}</pre>`,
+                        icon: "info",
+                        confirmButtonText: "ตกลง",
+                        confirmButtonColor: "#B36868",
+                      }).then(() => {
+                        window.location.href = `/form/${navigate}/${nextQuizId}?babyid=${babyId}`;
+                      });
+                      return;
+                    } else {
+                      window.location.href = `/form/${navigate}/${nextQuizId}?babyid=${babyId}`;
+                    }
                   }
                 }
               }}

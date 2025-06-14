@@ -5,12 +5,14 @@ import { CardCare } from "../component/card";
 import { CareItem } from "@/app/interface";
 import "@/app/component/css/loader.css";
 import Swal from "sweetalert2";
+import Chatbot from "../component/chatbot";
 
 const PageCare = () => {
   const [token, setToken] = React.useState<string | null>(null);
   const [care, setCare] = React.useState<CareItem[]>();
   const [random, setRandom] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [showChat, setShowChat] = React.useState<boolean>(false);
 
   // Fetch token from localStorage on client only
   React.useEffect(() => {
@@ -132,6 +134,8 @@ const PageCare = () => {
             </div>
           </div>
         </div>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

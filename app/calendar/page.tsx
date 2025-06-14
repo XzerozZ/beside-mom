@@ -5,11 +5,13 @@ import { Appointment } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import { ButtonComponents } from "../component/button";
+import Chatbot from "../component/chatbot";
 
 const PageCalendar = () => {
   const [calendar, setCalendar] = React.useState<Appointment[]>();
   const [token, setToken] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [showChat, setShowChat] = React.useState<boolean>(false);
 
   // Fetch token from localStorage on client only
   React.useEffect(() => {
@@ -107,6 +109,8 @@ const PageCalendar = () => {
             </div>
           </div>
         </div>
+              <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
       </div>
     );
   }

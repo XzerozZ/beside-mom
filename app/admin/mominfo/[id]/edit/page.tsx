@@ -723,7 +723,7 @@ export default function EditMomInfo() {
                     <Box>
                       <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
-                          <FormLabel>น้ำหนักแรกเกิด (กก.)</FormLabel>
+                          <FormLabel>น้ำหนักแรกเกิด (กรัม)</FormLabel>
                           <TextField
                             fullWidth
                             size="small"
@@ -805,7 +805,7 @@ export default function EditMomInfo() {
                           />
                           <YAxis
                             label={{
-                              value: "กก.",
+                              value: "กรัม",
                               angle: -90,
                               position: "insideLeft",
                             }}
@@ -815,7 +815,7 @@ export default function EditMomInfo() {
                           <Line
                             type="monotone"
                             dataKey="weight"
-                            name="น้ำหนัก (กก.)"
+                            name="น้ำหนัก (กรัม)"
                             stroke="#B36868"
                             activeDot={{ r: 8 }}
                           />
@@ -917,7 +917,7 @@ export default function EditMomInfo() {
                         />
                       </Grid>
                       <Grid item xs={12} sm={4}>
-                        <FormLabel>น้ำหนัก (กก.)</FormLabel>
+                        <FormLabel>น้ำหนัก (กรัม)</FormLabel>
                         <TextField
                           fullWidth
                           size="small"
@@ -952,7 +952,7 @@ export default function EditMomInfo() {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <FormLabel>น้ำหนัก (กก.)</FormLabel>
+                  <FormLabel>น้ำหนัก (กรัม)</FormLabel>
                   <TextField
                     fullWidth
                     size="small"

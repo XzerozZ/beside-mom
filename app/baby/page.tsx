@@ -7,6 +7,7 @@ import { IoPencilSharp } from "react-icons/io5";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Navbar from "../component/navbar";
+import Chatbot from "../component/chatbot";
 
 const PageBaby = () => {
   const [token, setToken] = useState<string | null>(null);
@@ -16,6 +17,7 @@ const PageBaby = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [showChat, setShowChat] = useState<boolean>(false);
 
   // Fetch token and uid from localStorage on client only
   useEffect(() => {
@@ -242,6 +244,8 @@ const PageBaby = () => {
               )}
             </div>
           </main>
+                <Chatbot showChat={showChat} setShowChat={setShowChat} />
+
         </div>
       </>
     );
