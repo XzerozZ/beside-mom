@@ -8,6 +8,7 @@ import {
 import Sidebar from "../../../../../components/SideBarAdmin";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { EvaluateDataAPI, EvaluatePeriods } from "@/app/admin/types";
 
 const periodMap: Record<number, string> = {
@@ -42,8 +43,10 @@ const ContactNurseInfo: React.FC = () => {
         Authorization: `Bearer ${token}`,
         },
       });
+
       if (!res.ok) throw new Error("ไม่สามารถดึงข้อมูลได้");
       const data = await res.json();
+      console.log(data.result);
       setEvaluateData(data.result);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -76,20 +79,51 @@ const ContactNurseInfo: React.FC = () => {
               const lastPeriodKey = periodKeys.length > 0 ? periodKeys[periodKeys.length - 1] : undefined;
               if (!lastPeriodKey) return null;
               const detail = periods[lastPeriodKey];
-              const lastHistory = detail.Histories[detail.Histories.length - 1];
+              
               return (
-                <div key={category} className="border rounded-xl p-6 flex items-center justify-between bg-white">
-                  <div>
-                    <div className="font-bold text-lg mb-2 text-neutral05">{category}</div>
-                    <div className="text-base font-medium mb-1 text-neutral05">1. {lastHistory.quiz.question}</div>
+                <div key={category} className="border rounded-xl p-6 bg-white">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="font-bold text-lg text-neutral05">{category}</div>
+                    <div className="flex items-center gap-2 min-w-[80px] justify-end">
+                      {detail.solution_status === "ผ่าน" ? (
+                        <CheckCircleIcon className="text-green-500" />
+                      ) : detail.solution_status === "รอประเมิน" ? (
+                        <InfoOutlinedIcon style={{ color: "#F88000" }} />
+                      ) : (
+                        <CancelIcon className="text-red-500" />
+                      )}
+                      <span className={
+                        detail.solution_status === "ผ่าน" 
+                          ? "text-green-600 font-medium" 
+                          : detail.solution_status === "รอประเมิน"
+                          ? "font-medium"
+                          : "text-red-600 font-medium"
+                      } style={detail.solution_status === "รอประเมิน" ? { color: "#F88000" } : {}}>{detail.solution_status}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 min-w-[80px] justify-end">
-                    {detail.solution_status === "ผ่าน" ? (
-                      <CheckCircleIcon className="text-green-500" />
-                    ) : (
-                      <CancelIcon className="text-red-500" />
-                    )}
-                    <span className={detail.solution_status === "ผ่าน" ? "text-green-600 font-medium" : "text-red-600 font-medium"}>{detail.solution_status}</span>
+                  
+                  <div className="space-y-2">
+                    {detail.Histories.map((history, index) => (
+                      <div key={history.H_id} className="border-l-4 border-gray-200 pl-4 py-2">
+                        <div className="text-base font-medium text-neutral05 mb-1">
+                          {index + 1}. {history.quiz.question}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          ประเมิน: {history.done_times} ครั้ง
+                          {history.answer == true && (
+                            <span className="ml-2 text-green-600">✓ เสร็จสิ้น</span>
+                            
+                          )  }
+
+                          {history.answer == false && (
+                            <span className="ml-2 text-red-600">✗ ไม่เสร็จสิ้น</span>
+                          )}
+                           <span className="ml-2 text-green-600">
+                            {history.updated_at ? `(${new Date(history.updated_at).toLocaleDateString('th-TH')})` : ""}
+                           </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               );
