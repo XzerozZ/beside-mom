@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, {useEffect } from "react";
 
 import { ButtonComponents, ButtonComponents4 } from "@/app/component/button";
 import { GrowthEdit } from "@/app/interface";

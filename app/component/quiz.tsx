@@ -288,11 +288,11 @@ const QuizForm: React.FC<{
                   confirmButtonText: "ตกลง",
                   confirmButtonColor: "#B36868",
                 }).then(() => {
-                  // window.location.href = `/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`;
+                  window.location.href = `/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`;
                 });
                 return;
               } else {
-                // window.location.href = `/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`;
+                  window.location.href = `/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`;
               }
             }}
           />
