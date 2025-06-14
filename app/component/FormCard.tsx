@@ -43,23 +43,19 @@ const FormCard: React.FC<QuizResult> = (quizData) => {
         <div>
         <div className="flex flex-col gap-[5px]">
           <div className="flex gap-[5px]">
-          <Image
-            src={
-            (() => {
+            <div
+            className={`w-5 h-5 rounded-full ${
+              (() => {
               switch (quizData?.solution_status) {
-              case "ผ่าน":
-              return "/correct.svg";
-              case "ไม่ผ่าน":
-              return "/dontpass.svg";
-              default:
-              return "/time.svg";
+                case "ผ่าน":
+                return "bg-[#409261]";
+                case "ไม่ผ่าน":
+                return "bg-[#F88000]";
+               
               }
-            })()
-            }
-            alt="status-icon"
-            width={20}
-            height={20}
-          ></Image>
+              })()
+            }`}
+            ></div>
           <h2 className=" text-[16px]  max-sm:text-[12px]">
             {(() => {
             switch (quizData?.solution_status) {
@@ -74,24 +70,21 @@ const FormCard: React.FC<QuizResult> = (quizData) => {
           </h2>
           </div>
           <div className="flex gap-[5px]">
-          <Image
-            src={
+          <div
+            className={`w-5 h-5 rounded-full ${
             (() => {
             switch (quizData?.solution_status) {
-            case "ผ่าน":
-              return "/correct.svg";
-            case "ไม่ผ่าน":
-              return "/dontpass.svg";
-            default:
-              return "/time.svg";
+              case "ผ่าน":
+              return "bg-[#409261]";
+              case "ไม่ผ่าน":
+              return "bg-[#D60000]";
+              default:
+              return "bg-[#F88000]";
             }
             })()
-            }
-            alt="status-icon"
-            width={20}
-            height={20}
-          ></Image>
-          <h2 className=" text-[16px]"></h2>
+            }`}
+          ></div>
+        
           <h2 className=" text-[16px]  max-sm:text-[12px]">
             {quizData?.solution_status}
           </h2>
