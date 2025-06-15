@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { ButtonComponents6Size, ButtonComponents5Size } from "./button";
 import { Quiz } from "@/app/interface";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
