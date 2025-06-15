@@ -150,7 +150,7 @@ const PageBaby = () => {
                     <div className="flex flex-row justify-between max-md:flex-col max-md:gap-6">
                       <div className="w-1/2">
                         <h3 className="font-bold text-[18px]">ID</h3>
-                        <h4>{momData?.u_id}</h4>
+                        <h4>{momData?.u_pid}</h4>
                       </div>
                       <div className="w-1/2">
                         <h3 className="font-bold text-[18px]">อีเมล</h3>
