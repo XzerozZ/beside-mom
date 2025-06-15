@@ -51,6 +51,7 @@ export interface Kid {
   
 export interface User {
     u_id: string;
+    u_pid: string;
     fname: string;
     lname: string;
     email: string;
