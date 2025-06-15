@@ -333,11 +333,11 @@ const QuizForm: React.FC<{
               textSize="text-[16px]"
               boxSize="w-[180px] max-sm:w-full"
               onClick={async () => {
-                // handleAnswer(
-                //   isAnswered as boolean,
-                //   Number(useParam.phase),
-                //   Number(useParam.category)
-                // );
+                handleAnswer(
+                  isAnswered as boolean,
+                  Number(useParam.phase),
+                  Number(useParam.category)
+                );
                 // Get quizIds from localStorage and go to next quiz
                 await new Promise((resolve) => setTimeout(resolve, 1000));
 
