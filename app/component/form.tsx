@@ -71,6 +71,8 @@ const convertDateToThaiFormat = (dateString: string) => {
                     ? "/dontpass.svg"
                     : props.solution_status === "รอประเมิน"
                     ? "/time.svg"
+                    : props.solution_status === "กำลังประเมิน"
+                    ? "/working.svg"
                     : "/correct.svg"
                   }
                   alt="status"
