@@ -212,7 +212,7 @@ export default function Faq() {
                         </div>
                       </div>
                       <Typography variant="body1" sx={{ mt: 1 }}>
-                        A: {faq.answer}
+                        <pre className="font-noto-sans-thai whitespace-pre-wrap">A: {faq.answer}</pre>
                       </Typography>
                     </CardContent>
                   </Card>

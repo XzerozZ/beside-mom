@@ -246,7 +246,7 @@ function AppointmentPageContent() {
                       </span>
                       </div>
                     </TableCell>
-                    <TableCell className="font-bold text-center">เวลา</TableCell>
+                    <TableCell><h1 className="font-bold text-center flex justify-center">เวลา</h1></TableCell>
                     <TableCell
                       className="font-bold text-center cursor-pointer relative overflow-visible"
                       onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
@@ -307,7 +307,7 @@ function AppointmentPageContent() {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="font-bold text-center">สถานะ</TableCell>
+                    <TableCell><h1 className="font-bold text-center flex justify-center">สถานะ</h1></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
