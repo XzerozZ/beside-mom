@@ -32,7 +32,9 @@ const Qabox: FC<QuestionAnswer> = (props:QuestionAnswer) => {
         }`}
       >
         <p className="text-gray-700 text-sm">
-          A: {props.answer}
+          A: <pre className="whitespace-pre-wrap font-noto-sans-thai">
+            {props.answer}
+          </pre>
         </p>
       </div>
     </div>
