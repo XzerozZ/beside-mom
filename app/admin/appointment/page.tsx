@@ -12,6 +12,7 @@ import {
   
   CircularProgress,
   Alert,
+  Typography,
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -318,19 +319,38 @@ function AppointmentPageContent() {
                       className="cursor-pointer"
                     >
                       <TableCell className="text-center">
-                        {appointment.user_id}
+                        <Typography className="text-center">
+                          {appointment.user_id}
+                        </Typography>
+      
                       </TableCell>
                       <TableCell className="text-center">
-                        {appointment.name}
+                        <Typography className="text-center">
+                         {appointment.name}
+                        </Typography>
+                        
                       </TableCell>
                       <TableCell className="text-center">
-                        {appointment.date}
+                         <Typography className="text-center">
+                         {appointment.date}
+                        </Typography>
+                        
+                       
                       </TableCell>
                       <TableCell className="text-center">
-                        {appointment.time}
+                         <Typography className="text-center">
+                         {appointment.time}
+                        </Typography>
+                        
+                       
                       </TableCell>
                       <TableCell className="text-center">
-                        {appointment.doctor}
+                        <Typography className="text-center">
+                         {appointment.doctor}
+                        </Typography>
+                        
+                        
+                        
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2 items-center justify-center">
