@@ -5,6 +5,7 @@ import { QuestionAnswer } from "@/app/interface";
 import Swal from "sweetalert2";
 import "@/app/component/css/loader.css";
 import Chatbot from "../component/chatbot";
+import { apiGet } from "../utils/apiHelper";
 
 const PageQuestion = () => {
   const [question, setQuestion] = React.useState<QuestionAnswer[]>();
@@ -21,11 +22,7 @@ const PageQuestion = () => {
 
   const fetchQA = async (token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/question`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await apiGet('/question', token);
       if (res.status === 200) {
         const data = await res.json();
         setQuestion(data.result);

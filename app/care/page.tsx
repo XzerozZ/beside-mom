@@ -6,6 +6,7 @@ import { CareItem } from "@/app/interface";
 import "@/app/component/css/loader.css";
 import Swal from "sweetalert2";
 import Chatbot from "../component/chatbot";
+import { apiGet } from "../utils/apiHelper";
 
 const PageCare = () => {
   const [token, setToken] = React.useState<string | null>(null);
@@ -23,11 +24,7 @@ const PageCare = () => {
 
   const fetchCare = async (token: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_url}/care`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiGet('/care', token);
       if (!response.ok) {
          await Swal.fire({
                   title: "Please login again your token is expired!",
