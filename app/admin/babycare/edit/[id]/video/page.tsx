@@ -442,7 +442,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                 sx={{
                   width: "100%",
                   height: bannerPreview ? "auto" : "120px",
-                  backgroundColor: "#f0f0f0",
+               
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

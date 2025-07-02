@@ -37,6 +37,10 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
     banners: null as string | null,
   });
 
+  
+  const [originalAssets, setOriginalAssets] = useState<{asset_id: string, link: string}[]>([]);
+  const [deletedAssetIds, setDeletedAssetIds] = useState<string[]>([]);
+
   // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
@@ -75,6 +79,9 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
         }
 
         const result: BabyCareData = data.result;
+        
+        
+        setOriginalAssets(result.assets);
         
         // Map API response to form data
         setFormData({
@@ -134,6 +141,16 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
   };
 
   const handleRemoveImage = (index: number) => {
+    const imageUrl = formData.pictureurl[index];
+    
+    // Check if this is an original asset (not a new upload)
+    const originalAsset = originalAssets.find(asset => asset.link === imageUrl);
+    if (originalAsset) {
+      // Add to deleted assets list
+      setDeletedAssetIds(prev => [...prev, originalAsset.asset_id]);
+    }
+    
+    // Remove from current images
     setFormData(prev => ({
       ...prev,
       pictureurl: prev.pictureurl.filter((_, i) => i !== index)
@@ -187,10 +204,6 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
           const response = await fetch(imageUrl);
           const blob = await response.blob();
           apiData.append('link', blob, `image${i}.jpg`);
-        } else {
-          // For existing images, we might need to pass their URLs or IDs
-          // Depending on how the API expects updates
-          apiData.append('existingAssets', imageUrl);
         }
       }
       
@@ -200,6 +213,13 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
         const bannerBlob = await bannerResponse.blob();
         apiData.append('banners', bannerBlob, 'banner.jpg');
       }
+      
+      
+      if (deletedAssetIds.length > 0) {
+        deletedAssetIds.forEach(assetId => {
+          apiData.append('delete_assets', assetId);
+        });
+      } 
       
       // Make the API call
       const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${params.id}`;
