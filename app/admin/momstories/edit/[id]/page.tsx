@@ -47,7 +47,7 @@ const EditMomStoryPage: React.FC = () => {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_momstory}/${params.id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${params.id}`;
         const response = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -174,7 +174,7 @@ const EditMomStoryPage: React.FC = () => {
     }
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_api_momstory}/${params.id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${params.id}`;
       const response = await fetch(apiUrl, {
         method: "PUT",
         headers: {
