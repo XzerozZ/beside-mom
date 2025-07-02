@@ -269,7 +269,7 @@ const EditMomStoryPage: React.FC = () => {
                   sx={{
                     width: "100%",
                     height: formData.videoUrl ? "auto" : "200px",
-                    backgroundColor: "#f0f0f0",
+                   
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -357,7 +357,7 @@ const EditMomStoryPage: React.FC = () => {
                   sx={{
                     width: "100%",
                     height: formData.bannerPreview ? "auto" : "200px",
-                    backgroundColor: "#f0f0f0",
+                   
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
