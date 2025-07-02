@@ -47,7 +47,7 @@ const EditMomStoryPage: React.FC = () => {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_api_momstory}/${params.id}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${params.id}`;
         const response = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -269,7 +269,7 @@ const EditMomStoryPage: React.FC = () => {
                   sx={{
                     width: "100%",
                     height: formData.videoUrl ? "auto" : "200px",
-                    backgroundColor: "#f0f0f0",
+                   
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -357,7 +357,7 @@ const EditMomStoryPage: React.FC = () => {
                   sx={{
                     width: "100%",
                     height: formData.bannerPreview ? "auto" : "200px",
-                    backgroundColor: "#f0f0f0",
+                   
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",

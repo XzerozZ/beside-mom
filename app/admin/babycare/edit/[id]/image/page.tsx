@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
 import {
   Container,
   Typography,
@@ -9,7 +10,6 @@ import {
   Button,
   Box,
   Grid,
-
   FormLabel,
   CircularProgress,
   Alert,
@@ -27,6 +27,8 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     title: "",
@@ -81,6 +83,11 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
           pictureurl: result.assets.map(asset => asset.link),
           banners: result.banner,
         });
+        
+        // Set banner preview if banner exists
+        if (result.banner) {
+          setBannerPreview(result.banner);
+        }
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err instanceof Error ? err.message : "An unknown error occurred");
@@ -133,6 +140,22 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
     }));
   };
 
+  const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setFormData(prev => ({
+        ...prev,
+        banners: result
+      }));
+      setBannerPreview(result);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -163,7 +186,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
         if (imageUrl.startsWith('data:image')) {
           const response = await fetch(imageUrl);
           const blob = await response.blob();
-          apiData.append('assets', blob, `image${i}.jpg`);
+          apiData.append('link', blob, `image${i}.jpg`);
         } else {
           // For existing images, we might need to pass their URLs or IDs
           // Depending on how the API expects updates
@@ -175,7 +198,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
       if (formData.banners && formData.banners.startsWith('data:image')) {
         const bannerResponse = await fetch(formData.banners);
         const bannerBlob = await bannerResponse.blob();
-        apiData.append('banner', bannerBlob, 'banner.jpg');
+        apiData.append('banners', bannerBlob, 'banner.jpg');
       }
       
       // Make the API call
@@ -232,7 +255,71 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
           <Grid container spacing={3}>
+            
             <Grid item xs={12} sm={6}>
+               <Typography variant="body2" color="textSecondary" className="mt-4">
+                              ภาพปกวิดีโอ
+                            </Typography>
+                            
+                            {bannerPreview && (
+                              <Box sx={{ width: "100%", mt: 2, mb: 2, position: "relative", height: "200px" }}>
+                                <Image 
+                                  src={bannerPreview} 
+                                  alt="Banner preview" 
+                                  fill
+                                  style={{ objectFit: "contain" }}
+                                />
+                              </Box>
+                            )}
+                            
+                            <Box
+                              sx={{
+                                width: "100%",
+                                height: bannerPreview ? "auto" : "120px",
+                               
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                mt: 2,
+                                mb: 2,
+                              }}
+                            >
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleBannerUpload}
+                                ref={bannerInputRef}
+                                style={{ display: "none" }}
+                              />
+                              <Button
+                                variant="contained"
+                                sx={{
+                                  bgcolor: "#999999",
+                                  "&:hover": { bgcolor: "#777777" },
+                                }}
+                                onClick={() => {
+                                  if (bannerInputRef.current) {
+                                    bannerInputRef.current.click();
+                                  }
+                                }}
+                              >
+                                {bannerPreview ? 'เปลี่ยนภาพปก' : 'อัปโหลดภาพปก'}
+                              </Button>
+                              {bannerPreview && (
+                                <Button
+                                  variant="outlined"
+                                  sx={{ ml: 2 }}
+                                  onClick={() => {
+                                    setFormData(prev => ({...prev, banners: null}));
+                                    setBannerPreview(null);
+                                  }}
+                                >
+                                  ลบภาพปก
+                                </Button>
+                              )}
+                            </Box>
+
+            
               <Typography
                 variant="h6"
                 component="div"
