@@ -75,7 +75,7 @@ const Page = () => {
     return (
       <div className="">
         <div className="flex flex-col items-center gap-[30px]">
-          <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] ">
+          <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
             การดูแลทารก {" >> "} {care?.title}
           </h1>
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[358px] flex flex-col gap-[20px] ">
@@ -85,9 +85,9 @@ const Page = () => {
                   <Image
                     src={item.link}
                     alt="care"
-                    width={1000}
-                    height={1000}
-                    className="object-cover w-2/4 h-[400px] max-xl:h-[300px] "
+                    width={600}
+                    height={400}
+                    className="object-contain w-[80%] h-auto "
                   />
                 </div>
               ))

@@ -20,7 +20,7 @@ const PageProfile = () => {
   }, []);
 
   const fetchMomData = async (id: string, key: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/info/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user/info/${id}`, {
       headers: {
         Authorization: `Bearer ${key}`,
       },
