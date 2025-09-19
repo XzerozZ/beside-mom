@@ -1,0 +1,13 @@
+  .git
+   1   .gitignore
+   2   .github
+   3   node_modules
+   4   .next
+   5   dist
+   6   coverage
+   7   *.log
+   8   Dockerfile*
+   9   docker-compose*.yml
+  10   .env.local
+  11   .env.development
+  12   .env.test
