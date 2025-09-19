@@ -60,4 +60,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            NODE_ENV=production
+            NEXT_PUBLIC_url=https://api.besidemom.com

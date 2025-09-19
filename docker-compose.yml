@@ -1,0 +1,10 @@
+services:
+  portal:
+    container_name: beside-mom-portal-dev
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_url: https://api.besidemom.com
