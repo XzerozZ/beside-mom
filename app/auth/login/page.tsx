@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
@@ -13,7 +15,7 @@ const Loginpage = () => {
       return;
     }
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_url}/auth/login`, {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +46,6 @@ const Loginpage = () => {
           router.push("/admin/mominfo");
         }
       } else {
-       
         Swal.fire({
           title: "เข้าสู่ระบบไม่สำเร็จ",
           text: data.message || "กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่านของคุณ",
@@ -63,11 +64,8 @@ const Loginpage = () => {
     }
   };
 
-
-
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-
 
   return (
     <div className="bg-[#FFF4F4] flex justify-center h-screen items-center max-xl:bg-white">
@@ -135,12 +133,10 @@ const Loginpage = () => {
                 </div>
 
                 <Link href="/auth/forgetpassword">
-                <h6 className="text-[12px] text-[#999999] text-right mx-[10px] my-[5px]  underline-offset-1 cursor-pointer">
-                  ลืมรหัสผ่าน?
+                  <h6 className="text-[12px] text-[#999999] text-right mx-[10px] my-[5px]  underline-offset-1 cursor-pointer">
+                    ลืมรหัสผ่าน?
                   </h6>
-                  </Link>
-                
-               
+                </Link>
               </div>
             </div>
             <div className="button">
@@ -157,7 +153,7 @@ const Loginpage = () => {
         </div>
       </div>
       <div className="xl:hidden">
-      <div className="md:w-[848px] w-[390px] bg-[#FFFFFF] rounded-r-[40px] justify-center flex flex-col ">
+        <div className="md:w-[848px] w-[390px] bg-[#FFFFFF] rounded-r-[40px] justify-center flex flex-col ">
           <div className="flex flex-col gap-[48px] m-[24px] md:m-[60px]">
             <div className="text">
               <h1 className="text-bold text-[36px] text-[#B36868]">
@@ -175,7 +171,7 @@ const Loginpage = () => {
                     onChange={(e) => setUsername(e.target.value)}
                     type="text"
                     id="username"
-                    className="peer h-[44px] w-full px-[15px] py-[10px] border-2 rounded-md outline-none text-lg border-text-[#999999 focus:border-[#B36868] text-black " 
+                    className="peer h-[44px] w-full px-[15px] py-[10px] border-2 rounded-md outline-none text-lg border-text-[#999999 focus:border-[#B36868] text-black "
                     placeholder="xxxxxxx"
                   />
                   <label
@@ -204,17 +200,17 @@ const Loginpage = () => {
                   </label>
                 </div>
                 <Link href="/auth/forgetpassword">
-                <h6 className="text-[12px] text-[#999999] text-right mx-[10px] my-[5px]  underline-offset-1 cursor-pointer">
-                  ลืมรหัสผ่าน?
-                </h6>
-                  </Link>
+                  <h6 className="text-[12px] text-[#999999] text-right mx-[10px] my-[5px]  underline-offset-1 cursor-pointer">
+                    ลืมรหัสผ่าน?
+                  </h6>
+                </Link>
               </div>
             </div>
             <div className="button">
               {/* <button className=" bg-[#B36868] rounded-[4px] h-[44px] text-white text-bold text-[15px] w-full" >
                 เข้าสู่ระบบ
               </button> */}
-               <ButtonComponents
+              <ButtonComponents
                 title="เข้าสู่ระบบ"
                 textSize="text-[15px] text-bold"
                 onClick={handleLogin}

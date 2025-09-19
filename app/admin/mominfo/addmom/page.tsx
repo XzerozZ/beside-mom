@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -123,7 +124,7 @@ export default function EditMomInfo() {
       return;
     }
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/user` as string;
+      const apiUrl = `${API_URL}/user` as string;
       const formData = new FormData();
       // Mom info
       formData.append("firstname", momInfo.firstName || "");
@@ -358,47 +359,46 @@ export default function EditMomInfo() {
                 </IconButton>
               </div>
 
-             <div className="grid grid-cols-2  col-span-2">
-               <div className="flex flex-row gap-4 col-span-2 ">
-               <div className="flex flex-col w-1/2">
-                  <FormLabel>ชื่อ</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="firstName"
-                  value={babyInfo[0]?.firstName ?? ""}
-                  onChange={handleChangeBaby}
-                />
-               </div>
-                <div className="flex flex-col w-1/2">
-                 <FormLabel>นามสกุล</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="lastName"
-                  value={babyInfo[0]?.lastName ?? ""}
-                  onChange={handleChangeBaby}
-                />
-               </div>
+              <div className="grid grid-cols-2  col-span-2">
+                <div className="flex flex-row gap-4 col-span-2 ">
+                  <div className="flex flex-col w-1/2">
+                    <FormLabel>ชื่อ</FormLabel>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      name="firstName"
+                      value={babyInfo[0]?.firstName ?? ""}
+                      onChange={handleChangeBaby}
+                    />
+                  </div>
+                  <div className="flex flex-col w-1/2">
+                    <FormLabel>นามสกุล</FormLabel>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      name="lastName"
+                      value={babyInfo[0]?.lastName ?? ""}
+                      onChange={handleChangeBaby}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 col-span-2">
+                  <FormLabel>ชื่อเล่น</FormLabel>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    name="nickname"
+                    value={babyInfo[0]?.nickname ?? ""}
+                    onChange={handleChangeBaby}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap-2 col-span-2">
-             
-                 <FormLabel>ชื่อเล่น</FormLabel>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="nickname"
-                  value={babyInfo[0]?.nickname ?? ""}
-                  onChange={handleChangeBaby}
-                />
-              </div>
-             </div>
             </div>
           </Box>
           <Box>
             <Grid container spacing={3} sx={{ mb: 3 }}>
               <Grid item xs={12} sm={6}>
-                  <FormLabel>วันเกิด</FormLabel>
+                <FormLabel>วันเกิด</FormLabel>
                 <TextField
                   fullWidth
                   size="small"
@@ -409,7 +409,7 @@ export default function EditMomInfo() {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                  <FormLabel>อายุครรภ์ตอนคลอด (สัปดาห์)</FormLabel>
+                <FormLabel>อายุครรภ์ตอนคลอด (สัปดาห์)</FormLabel>
                 <TextField
                   fullWidth
                   size="small"

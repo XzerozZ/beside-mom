@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Sidebar from "../../../components/SideBarAdmin";
@@ -19,10 +21,16 @@ import {
 
 const categoryOptions = [
   { value: "1", label: "ด้านการเคลื่อนไหว Gross Motor (GM)" },
-  { value: "2", label: "ด้านการใช้กล้ามเนื้อมัดเล็ก และสติปัญญา Fine Motor (FM)" },
+  {
+    value: "2",
+    label: "ด้านการใช้กล้ามเนื้อมัดเล็ก และสติปัญญา Fine Motor (FM)",
+  },
   { value: "3", label: "ด้านการเข้าใจภาษา Receptive Language (RL)" },
   { value: "4", label: "ด้านการใช้ภาษา Expression Language (EL)" },
-  { value: "5", label: "ด้านการช่วยเหลือตนเองและสังคม Personal and Social (PS)" },
+  {
+    value: "5",
+    label: "ด้านการช่วยเหลือตนเองและสังคม Personal and Social (PS)",
+  },
 ];
 
 const periodOptions = [
@@ -63,15 +71,19 @@ export default function EditDevelopmentQuiz() {
       setError("");
       try {
         const token = localStorage.getItem("token");
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz/${id}`;
+        const apiUrl = `${API_URL}/quiz/${id}`;
         const res = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("ไม่พบข้อมูล");
         const data = await res.json();
         const quiz = data.result;
-        setCategoryid(quiz.categoryid?.toString() || quiz.category?.ID?.toString() || "");
-        setPeriodID(quiz.periodID?.toString() || quiz.period?.ID?.toString() || "");
+        setCategoryid(
+          quiz.categoryid?.toString() || quiz.category?.ID?.toString() || ""
+        );
+        setPeriodID(
+          quiz.periodID?.toString() || quiz.period?.ID?.toString() || ""
+        );
         setQuestion(quiz.question || "");
         setDescription(quiz.description || quiz.desc || "");
         setSolution(quiz.solution || "");
@@ -111,7 +123,7 @@ export default function EditDevelopmentQuiz() {
         formData.append("banners", banners);
       }
       const token = localStorage.getItem("token");
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz/${id}`;
+      const apiUrl = `${API_URL}/quiz/${id}`;
       const res = await fetch(apiUrl, {
         method: "PUT",
         headers: {
@@ -138,12 +150,18 @@ export default function EditDevelopmentQuiz() {
       <Sidebar selectedItem="7" />
       <div className="flex-1 p-4">
         <Container maxWidth="lg">
-         
           <div className="text-neutral05 font-bold ">
-          แก้ไขคำถามแบบประเมินพัฒนาการ
-            </div>
+            แก้ไขคำถามแบบประเมินพัฒนาการ
+          </div>
           {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: 300,
+              }}
+            >
               <CircularProgress />
             </Box>
           ) : (
@@ -156,7 +174,9 @@ export default function EditDevelopmentQuiz() {
                       width: "100%",
                       height: "200px",
                       backgroundColor: "#f0f0f0",
-                      backgroundImage: bannerPreview ? `url(${bannerPreview})` : undefined,
+                      backgroundImage: bannerPreview
+                        ? `url(${bannerPreview})`
+                        : undefined,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       display: "flex",
@@ -188,7 +208,6 @@ export default function EditDevelopmentQuiz() {
                       </Button>
                     </label>
                   </Box>
-                  
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormLabel>หัวข้อ</FormLabel>
@@ -196,15 +215,17 @@ export default function EditDevelopmentQuiz() {
                     fullWidth
                     size="small"
                     value={categoryid}
-                    onChange={e => setCategoryid(e.target.value)}
+                    onChange={(e) => setCategoryid(e.target.value)}
                     displayEmpty
                     required
                     sx={{ mt: 1, mb: 2 }}
                     disabled={saving}
                   >
                     <MenuItem value="">เลือกหัวข้อ</MenuItem>
-                    {categoryOptions.map(opt => (
-                      <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+                    {categoryOptions.map((opt) => (
+                      <MenuItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </MenuItem>
                     ))}
                   </Select>
                   <FormLabel>ช่วงอายุ</FormLabel>
@@ -212,15 +233,17 @@ export default function EditDevelopmentQuiz() {
                     fullWidth
                     size="small"
                     value={periodID}
-                    onChange={e => setPeriodID(e.target.value)}
+                    onChange={(e) => setPeriodID(e.target.value)}
                     displayEmpty
                     required
                     sx={{ mt: 1, mb: 2 }}
                     disabled={saving}
                   >
                     <MenuItem value="">เลือกช่วงอายุ</MenuItem>
-                    {periodOptions.map(opt => (
-                      <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+                    {periodOptions.map((opt) => (
+                      <MenuItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </MenuItem>
                     ))}
                   </Select>
                   <FormLabel>ทักษะ</FormLabel>
@@ -228,57 +251,70 @@ export default function EditDevelopmentQuiz() {
                     fullWidth
                     size="small"
                     value={question}
-                    onChange={e => setQuestion(e.target.value)}
+                    onChange={(e) => setQuestion(e.target.value)}
                     required
                     sx={{ mt: 1, mb: 2 }}
                     disabled={saving}
                   />
                 </Grid>
-     
-                  <FormLabel>วิธีการประเมิน</FormLabel>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={description}
-                    onChange={e => setDescription(e.target.value)}
-                    required
-                    multiline
-                    rows={2}
-                    sx={{ mt: 1, mb: 2 }}
-                    disabled={saving}
-                  />
-               
-                
-                  <FormLabel>ผลลัพธ์ที่ควรเกิดขึ้น</FormLabel>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={solution}
-                    onChange={e => setSolution(e.target.value)}
-                    required
-                    multiline
-                    rows={2}
-                    sx={{ mt: 1, mb: 2 }}
-                    disabled={saving}
-                  />
-          
-                  <FormLabel>การส่งเสริมพัฒนาการ (กรณีไม่ผ่าน)</FormLabel>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={suggestion}
-                    onChange={e => setSuggestion(e.target.value)}
-                    required
-                    multiline
-                    rows={2}
-                    sx={{ mt: 1, mb: 2 }}
-                    disabled={saving}
-                  />
-              
+
+                <FormLabel>วิธีการประเมิน</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                  multiline
+                  rows={2}
+                  sx={{ mt: 1, mb: 2 }}
+                  disabled={saving}
+                />
+
+                <FormLabel>ผลลัพธ์ที่ควรเกิดขึ้น</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={solution}
+                  onChange={(e) => setSolution(e.target.value)}
+                  required
+                  multiline
+                  rows={2}
+                  sx={{ mt: 1, mb: 2 }}
+                  disabled={saving}
+                />
+
+                <FormLabel>การส่งเสริมพัฒนาการ (กรณีไม่ผ่าน)</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={suggestion}
+                  onChange={(e) => setSuggestion(e.target.value)}
+                  required
+                  multiline
+                  rows={2}
+                  sx={{ mt: 1, mb: 2 }}
+                  disabled={saving}
+                />
               </Grid>
-              {error && <Alert severity="error" sx={{ mt: 3 }}>{error}</Alert>}
-              {success && <Alert severity="success" sx={{ mt: 3 }}>{success}</Alert>}
-              <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
+              {error && (
+                <Alert severity="error" sx={{ mt: 3 }}>
+                  {error}
+                </Alert>
+              )}
+              {success && (
+                <Alert severity="success" sx={{ mt: 3 }}>
+                  {success}
+                </Alert>
+              )}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 2,
+                  mt: 4,
+                }}
+              >
                 <Button
                   variant="outlined"
                   color="error"
@@ -290,17 +326,21 @@ export default function EditDevelopmentQuiz() {
                 <Button
                   type="submit"
                   variant="contained"
-                  sx={{ 
-                    bgcolor: "#B37C6B", 
-                    minWidth: 120, 
-                    fontWeight: 500, 
-                    fontSize: 16, 
-                    boxShadow: "none", 
-                    '&:hover': { bgcolor: "#a06b5c" },
-                    '&:disabled': { bgcolor: "#999999" }
+                  sx={{
+                    bgcolor: "#B37C6B",
+                    minWidth: 120,
+                    fontWeight: 500,
+                    fontSize: 16,
+                    boxShadow: "none",
+                    "&:hover": { bgcolor: "#a06b5c" },
+                    "&:disabled": { bgcolor: "#999999" },
                   }}
                   disabled={saving}
-                  startIcon={saving ? <CircularProgress size={20} color="inherit" /> : null}
+                  startIcon={
+                    saving ? (
+                      <CircularProgress size={20} color="inherit" />
+                    ) : null
+                  }
                 >
                   {saving ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
                 </Button>

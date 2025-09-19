@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useEffect } from "react";
 import { useParams } from "next/navigation";
 import FormCard from "@/app/component/FormCard";
@@ -19,7 +21,7 @@ const PageFormPhase = () => {
 
   // Extract babyId and token safely in useEffect
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       setBabyId(searchParams.get("babyid"));
       setToken(localStorage.getItem("token"));
     }
@@ -57,7 +59,7 @@ const PageFormPhase = () => {
   ) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/history/result/evaluate/${phase}/kid/${babyid}`,
+        `${API_URL}/history/result/evaluate/${phase}/kid/${babyid}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -94,11 +96,11 @@ const PageFormPhase = () => {
   // console.log(resultArrayQuiz);
 
   const [loading, setLoading] = React.useState(true);
-  
+
   useEffect(() => {
     const fetchAllQuizzes = async () => {
       if (!token) return;
-      
+
       const setters = [
         setQuizHistoryData,
         setQuizHistoryData2,
@@ -110,7 +112,7 @@ const PageFormPhase = () => {
       for (let i = 1; i <= 5; i++) {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_url}/quiz/period/${decodedPhase}/category/${i}/`,
+            `${API_URL}/quiz/period/${decodedPhase}/category/${i}/`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -126,12 +128,14 @@ const PageFormPhase = () => {
                 confirmButtonText: "OK",
                 confirmButtonColor: "#B36868",
               });
-              if (typeof window !== 'undefined') {
+              if (typeof window !== "undefined") {
                 window.location.href = "/auth/login";
               }
               return;
             }
-            throw new Error(`Failed to fetch quiz data for category ${i}: ${response.status}`);
+            throw new Error(
+              `Failed to fetch quiz data for category ${i}: ${response.status}`
+            );
           }
           const data = await response.json();
           setters[i - 1](data.result); // Dynamically set the corresponding state
@@ -151,7 +155,7 @@ const PageFormPhase = () => {
           confirmButtonText: "OK",
           confirmButtonColor: "#B36868",
         });
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           window.location.href = "/auth/login";
         }
         return;
@@ -175,7 +179,7 @@ const PageFormPhase = () => {
       } else {
         // Either token or babyId is empty, handle accordingly
         setLoading(false);
-        if (!token && typeof window !== 'undefined') {
+        if (!token && typeof window !== "undefined") {
           window.location.href = "/auth/login";
         }
       }
@@ -253,8 +257,7 @@ const PageFormPhase = () => {
             </div>
           </div>
         </main>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

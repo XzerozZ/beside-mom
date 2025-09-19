@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
@@ -12,7 +14,7 @@ const PageCP = () => {
     formData.append("newpassword", password);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/auth/forgotpassword/changepassword`,
+        `${API_URL}/auth/forgotpassword/changepassword`,
         {
           method: "PUT",
 
@@ -25,7 +27,7 @@ const PageCP = () => {
           icon: "success",
           timer: 3000,
         });
-           window.location.href = "/auth/login";
+        window.location.href = "/auth/login";
       } else {
         Swal.fire({
           title: "Failed to change password",
@@ -92,7 +94,6 @@ const PageCP = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleChangePassword();
-                
                 }}
               />
             </div>
@@ -136,7 +137,6 @@ const PageCP = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleChangePassword();
-               
                 }}
               />
             </div>

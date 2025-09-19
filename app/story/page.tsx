@@ -1,5 +1,7 @@
 "use client";
-import React  from "react";
+import { API_URL } from "@/config/config";
+
+import React from "react";
 import { Card } from "../component/card";
 import { VideoClip } from "@/app/interface";
 import Swal from "sweetalert2";
@@ -22,7 +24,7 @@ const PageStory = () => {
 
   const fetchVideo = async (token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video`, {
+      const res = await fetch(`${API_URL}/video`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,25 +70,24 @@ const PageStory = () => {
   } else {
     return (
       <div className="flex flex-col">
-      <header className="fixed top-0 left-0 w-full z-10">
-        <Navbar />
-      </header>
-      <main className="mt-[112px] max-sm:mt-[112px] z-0">
-      <div className="flex flex-col items-center gap-[30px]">
-        <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
-          เรื่องเล่าของคุณแม่
-        </h1>
-        <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px]">
-          <div className="grid grid-cols-4 max-xl:grid-cols-3 max-sm:grid-cols-1 justify-center gap-y-[20px] gap-x-[80px]">
-            {videos.map((video: VideoClip, index: number) => (
-              <Card key={index} {...video} />
-            ))}
+        <header className="fixed top-0 left-0 w-full z-10">
+          <Navbar />
+        </header>
+        <main className="mt-[112px] max-sm:mt-[112px] z-0">
+          <div className="flex flex-col items-center gap-[30px]">
+            <h1 className="font-bold w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px]">
+              เรื่องเล่าของคุณแม่
+            </h1>
+            <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[324px]">
+              <div className="grid grid-cols-4 max-xl:grid-cols-3 max-sm:grid-cols-1 justify-center gap-y-[20px] gap-x-[80px]">
+                {videos.map((video: VideoClip, index: number) => (
+                  <Card key={index} {...video} />
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      </main>
-            <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        </main>
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

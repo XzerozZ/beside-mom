@@ -1,4 +1,5 @@
 "use client";
+
 import React, { FC, useState } from "react";
 import Image from "next/image";
 import { QuestionAnswer } from "@/app/interface";

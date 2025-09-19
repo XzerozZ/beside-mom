@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { BabyCard } from "../component/babycard";
@@ -28,8 +30,7 @@ const PageBaby = () => {
   }, []);
 
   const fetchMomData = async (id: string, key: string) => {
-   
-    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user/info/${id}`, {
+    const res = await fetch(`${API_URL}/user/info/${id}`, {
       headers: {
         Authorization: `Bearer ${key}`,
       },
@@ -64,7 +65,7 @@ const PageBaby = () => {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user`, {
+      const res = await fetch(`${API_URL}/user`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -215,7 +216,9 @@ const PageBaby = () => {
                           </h3>
                           <h3 className="text-[16px]">or drag and drop</h3>
                         </div>
-                        <div className="text-[16px]">(Max. File size: 25 MB)</div>
+                        <div className="text-[16px]">
+                          (Max. File size: 25 MB)
+                        </div>
                         {fileName && (
                           <p className="mt-2 text-center text-sm text-gray-600">
                             Selected file:{" "}
@@ -244,8 +247,7 @@ const PageBaby = () => {
               )}
             </div>
           </main>
-                <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+          <Chatbot showChat={showChat} setShowChat={setShowChat} />
         </div>
       </>
     );

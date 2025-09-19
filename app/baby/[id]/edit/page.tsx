@@ -1,5 +1,7 @@
 "use client";
-import React, {useEffect } from "react";
+import { API_URL } from "@/config/config";
+
+import React, { useEffect } from "react";
 
 import { ButtonComponents, ButtonComponents4 } from "@/app/component/button";
 import { GrowthEdit } from "@/app/interface";
@@ -25,14 +27,11 @@ const PageBabyEdit = () => {
 
   const fetchBabyData = async (token: string, babyid: string) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/growth/kid/${babyid}/all`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/growth/kid/${babyid}/all`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch baby data");
       }
@@ -60,17 +59,14 @@ const PageBabyEdit = () => {
     }
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/growth/kid/${babyid}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`${API_URL}/growth/kid/${babyid}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
 
-          body: formData,
-        }
-      );
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error("Failed to add baby data");
@@ -234,8 +230,7 @@ const PageBabyEdit = () => {
             </div>
           )}
         </div>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

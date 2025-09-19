@@ -1,5 +1,5 @@
-
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -11,7 +11,6 @@ import {
   Button,
   Box,
   Grid,
-
   FormLabel,
   CircularProgress,
   Alert,
@@ -29,7 +28,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -41,7 +40,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
 
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
-  const [videoMethod, setVideoMethod] = useState<'file' | 'link' | null>(null);
+  const [videoMethod, setVideoMethod] = useState<"file" | "link" | null>(null);
 
   // Fetch data from API
   useEffect(() => {
@@ -49,25 +48,25 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Get token from localStorage
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (!token) {
           setError("No authentication token found");
           showError("กรุณาเข้าสู่ระบบใหม่");
-          router.push('/auth/login');
+          router.push("/auth/login");
           return;
         }
 
         // Get the ID from params
         const id = params.id as string;
-        
+
         // Fetch data from API
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${id}`;
+        const apiUrl = `${API_URL}/care/${id}`;
         const response = await fetch(apiUrl, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
@@ -75,17 +74,17 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
         }
 
         const data = await response.json();
-        
+
         if (data.status !== "Success") {
           throw new Error(data.message || "Failed to fetch data");
         }
 
         const result: BabyCareData = data.result;
-        
-        if (result.type !== 'video') {
+
+        if (result.type !== "video") {
           throw new Error("Invalid content type: Expected video");
         }
-        
+
         // Map API response to form data
         setFormData({
           title: result.title,
@@ -95,20 +94,21 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
           type: "video",
           banners: result.banner,
         });
-        
+
         // Set previews
         if (result.banner) {
           setBannerPreview(result.banner);
         }
-        
+
         if (result.assets.length > 0) {
           setVideoPreview(result.assets[0].link);
-          setVideoMethod('link');
+          setVideoMethod("link");
         }
-        
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(err instanceof Error ? err.message : "An unknown error occurred");
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
       } finally {
         setLoading(false);
       }
@@ -119,42 +119,42 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
+
     // If changing link and we already have a video file
-    if (name === 'videoUrl' && value && formData.videoFile) {
-      setFormData(prev => ({
+    if (name === "videoUrl" && value && formData.videoFile) {
+      setFormData((prev) => ({
         ...prev,
         videoFile: null,
         [name]: value,
       }));
-      setVideoMethod('link');
+      setVideoMethod("link");
       setVideoPreview(value);
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
       }));
-      
-      if (name === 'videoUrl' && value) {
-        setVideoMethod('link');
+
+      if (name === "videoUrl" && value) {
+        setVideoMethod("link");
         setVideoPreview(value);
       }
     }
   };
-  
+
   const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     // Check if file is an image
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file for the banner');
+    if (!file.type.startsWith("image/")) {
+      setError("Please upload an image file for the banner");
       return;
     }
-    
+
     const reader = new FileReader();
     reader.onloadend = () => {
-      setFormData(prev => ({...prev, banners: reader.result as string}));
+      setFormData((prev) => ({ ...prev, banners: reader.result as string }));
       setBannerPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
@@ -163,29 +163,29 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     // Check if file is a video
-    if (!file.type.startsWith('video/')) {
-      setError('Please upload a video file');
+    if (!file.type.startsWith("video/")) {
+      setError("Please upload a video file");
       return;
     }
-    
+
     // If there's a link, clear it
     if (formData.videoUrl) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         videoFile: file,
-        videoUrl: '',
+        videoUrl: "",
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         videoFile: file,
       }));
     }
-    
-    setVideoMethod('file');
-    
+
+    setVideoMethod("file");
+
     // Create a preview URL
     const videoURL = URL.createObjectURL(file);
     setVideoPreview(videoURL);
@@ -193,56 +193,56 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title) {
       setError("Title is required");
       return;
     }
-    
+
     if (!formData.videoFile && !formData.videoUrl) {
       setError("Please provide either a video file or URL");
       return;
     }
-    
+
     try {
       setLoading(true);
       setError(null);
-      
+
       // Get token from localStorage
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
         setError("No authentication token found");
         showError("กรุณาเข้าสู่ระบบใหม่");
-        router.push('/auth/login');
+        router.push("/auth/login");
         return;
       }
-      
+
       // Create FormData object
       const apiData = new FormData();
-      apiData.append('title', formData.title);
-      apiData.append('desc', formData.description);
-      apiData.append('type', 'video');
-      
+      apiData.append("title", formData.title);
+      apiData.append("desc", formData.description);
+      apiData.append("type", "video");
+
       // Add either video file or link
       if (formData.videoFile) {
-        apiData.append('videoFile', formData.videoFile);
+        apiData.append("videoFile", formData.videoFile);
       } else if (formData.videoUrl) {
-        apiData.append('link', formData.videoUrl);
+        apiData.append("link", formData.videoUrl);
       }
-      
+
       // Add banner if changed
-      if (formData.banners && formData.banners.startsWith('data:image')) {
+      if (formData.banners && formData.banners.startsWith("data:image")) {
         const bannerResponse = await fetch(formData.banners);
         const bannerBlob = await bannerResponse.blob();
-        apiData.append('banner', bannerBlob, 'banner.jpg');
+        apiData.append("banner", bannerBlob, "banner.jpg");
       }
-      
+
       // Make the API call
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${params.id}`;
+      const apiUrl = `${API_URL}/care/${params.id}`;
       const response = await fetch(apiUrl, {
-        method: 'PUT', // Use PUT for updates
+        method: "PUT", // Use PUT for updates
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: apiData,
       });
@@ -258,7 +258,9 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
       router.push("/admin/babycare");
     } catch (err) {
       console.error("Error updating data:", err);
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
     } finally {
       setLoading(false);
     }
@@ -274,9 +276,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
 
   return (
     <div className="flex bg-white">
-      <Sidebar 
-      selectedItem="3"
-      />
+      <Sidebar selectedItem="3" />
       <div className="flex-1 p-6">
         <Container maxWidth="lg">
           <Typography
@@ -289,7 +289,11 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
             แก้ไขข้อมูล &gt;&gt; วิดีโอ
           </Typography>
 
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
@@ -305,43 +309,42 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                   (กรุณาเลือกเพียงอย่างใดอย่างหนึ่ง)
                 </span>
               </Typography>
-              
-              <Typography variant="body2" color="textSecondary" className="mt-4">
+
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                className="mt-4"
+              >
                 วิดิโอ
               </Typography>
-              
-              {videoPreview && videoMethod === 'file' && (
+
+              {videoPreview && videoMethod === "file" && (
                 <Box sx={{ width: "100%", mt: 2, mb: 2 }}>
-                  <video 
-                    width="100%" 
-                    height="200" 
-                    controls 
-                    src={videoPreview}
-                  >
+                  <video width="100%" height="200" controls src={videoPreview}>
                     Your browser does not support the video tag.
                   </video>
                 </Box>
               )}
-              
+
               {/* Only show video embed if it's from a link */}
-              {videoMethod === 'link' && videoPreview && (
+              {videoMethod === "link" && videoPreview && (
                 <Box sx={{ width: "100%", mt: 2, mb: 2 }}>
                   {/* If it's a YouTube link, we'd need to embed it differently */}
-                  {videoPreview.includes('youtube.com') ? (
-                    <iframe 
-                      width="100%" 
-                      height="200" 
-                      src={videoPreview.replace('watch?v=', 'embed/')} 
-                      title="Video" 
-                      frameBorder="0" 
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  {videoPreview.includes("youtube.com") ? (
+                    <iframe
+                      width="100%"
+                      height="200"
+                      src={videoPreview.replace("watch?v=", "embed/")}
+                      title="Video"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
                   ) : (
-                    <video 
-                      width="100%" 
-                      height="200" 
-                      controls 
+                    <video
+                      width="100%"
+                      height="200"
+                      controls
                       src={videoPreview}
                     >
                       Your browser does not support the video tag.
@@ -349,7 +352,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                   )}
                 </Box>
               )}
-              
+
               <Box
                 sx={{
                   width: "100%",
@@ -379,16 +382,16 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                       videoInputRef.current.click();
                     }
                   }}
-                  disabled={videoMethod === 'link'}
+                  disabled={videoMethod === "link"}
                 >
-                  {videoMethod === 'file' ? 'เปลี่ยนวิดีโอ' : 'อัปโหลดวิดีโอ'}
+                  {videoMethod === "file" ? "เปลี่ยนวิดีโอ" : "อัปโหลดวิดีโอ"}
                 </Button>
-                {videoMethod === 'file' && (
+                {videoMethod === "file" && (
                   <Button
                     variant="outlined"
                     sx={{ ml: 2 }}
                     onClick={() => {
-                      setFormData(prev => ({...prev, videoFile: null}));
+                      setFormData((prev) => ({ ...prev, videoFile: null }));
                       setVideoPreview(null);
                       setVideoMethod(null);
                     }}
@@ -397,7 +400,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                   </Button>
                 )}
               </Box>
-              
+
               <FormLabel>ลิงก์คลิปวิดีโอ</FormLabel>
               <TextField
                 fullWidth
@@ -405,16 +408,16 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                 value={formData.videoUrl}
                 onChange={handleChange}
                 sx={{ mb: 2 }}
-                disabled={videoMethod === 'file'}
+                disabled={videoMethod === "file"}
                 placeholder="https://www.youtube.com/watch?v=..."
               />
-              
-              {videoMethod === 'link' && (
+
+              {videoMethod === "link" && (
                 <Button
                   variant="outlined"
                   sx={{ mb: 2 }}
                   onClick={() => {
-                    setFormData(prev => ({...prev, videoUrl: ''}));
+                    setFormData((prev) => ({ ...prev, videoUrl: "" }));
                     setVideoPreview(null);
                     setVideoMethod(null);
                   }}
@@ -422,27 +425,39 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                   ลบลิงก์
                 </Button>
               )}
-              
-              <Typography variant="body2" color="textSecondary" className="mt-4">
+
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                className="mt-4"
+              >
                 ภาพปกวิดีโอ
               </Typography>
-              
+
               {bannerPreview && (
-                <Box sx={{ width: "100%", mt: 2, mb: 2, position: "relative", height: "200px" }}>
-                  <Image 
-                    src={bannerPreview} 
-                    alt="Banner preview" 
+                <Box
+                  sx={{
+                    width: "100%",
+                    mt: 2,
+                    mb: 2,
+                    position: "relative",
+                    height: "200px",
+                  }}
+                >
+                  <Image
+                    src={bannerPreview}
+                    alt="Banner preview"
                     fill
                     style={{ objectFit: "contain" }}
                   />
                 </Box>
               )}
-              
+
               <Box
                 sx={{
                   width: "100%",
                   height: bannerPreview ? "auto" : "120px",
-               
+
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -469,14 +484,14 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                     }
                   }}
                 >
-                  {bannerPreview ? 'เปลี่ยนภาพปก' : 'อัปโหลดภาพปก'}
+                  {bannerPreview ? "เปลี่ยนภาพปก" : "อัปโหลดภาพปก"}
                 </Button>
                 {bannerPreview && (
                   <Button
                     variant="outlined"
                     sx={{ ml: 2 }}
                     onClick={() => {
-                      setFormData(prev => ({...prev, banners: null}));
+                      setFormData((prev) => ({ ...prev, banners: null }));
                       setBannerPreview(null);
                     }}
                   >
@@ -485,7 +500,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
                 )}
               </Box>
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <Typography
                 variant="h6"
@@ -517,7 +532,7 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
               />
             </Grid>
           </Grid>
-          
+
           <Box
             sx={{
               mt: 3,
@@ -544,7 +559,11 @@ const EditBabyCareInfoVideoPage: React.FC = () => {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : "บันทึกข้อมูล"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "บันทึกข้อมูล"
+              )}
             </Button>
           </Box>
         </Container>

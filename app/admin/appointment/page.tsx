@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import { useState, useEffect, Suspense } from "react";
 import {
@@ -9,7 +10,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  
   CircularProgress,
   Alert,
   Typography,
@@ -20,8 +20,7 @@ import TopBarSection from "../components/Topbar";
 import { doctors } from "../types";
 type AppointmentStatus = "สำเร็จ" | "ยกเลิก" | "เลื่อน" | "นัดแล้ว";
 
-import { AppointmentApiData_id ,Appointmentpage} from "../types";
-
+import { AppointmentApiData_id, Appointmentpage } from "../types";
 
 const statusMap: Record<number, AppointmentStatus> = {
   1: "นัดแล้ว",
@@ -44,8 +43,6 @@ const statusDots = {
   นัดแล้ว: "bg-primary5",
 };
 
-
-
 function AppointmentPageContent() {
   const searchParams = useSearchParams();
   const initialSearchTerm = searchParams.get("search") || "";
@@ -61,8 +58,6 @@ function AppointmentPageContent() {
     direction: "asc" | "desc";
   } | null>(null);
 
-
-
   const router = useRouter();
 
   // Fetch appointments from API
@@ -77,7 +72,7 @@ function AppointmentPageContent() {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint`;
+        const apiUrl = `${API_URL}/appoint`;
         if (!apiUrl) throw new Error("API URL not defined");
 
         const response = await fetch(apiUrl, {
@@ -90,17 +85,24 @@ function AppointmentPageContent() {
         if (data.status !== "Success") throw new Error(data.message || "Error");
 
         // Map API data to Appointment[]
-        const mapped: Appointmentpage[] = (data.result || []).map((item: AppointmentApiData_id) => ({
-          a_id: item.id,
-          user_id: item.user_id,
-          name: item.name,
-          date: item.date ? new Date(item.date).toLocaleDateString("th-TH") : "",
-          time: item.start_time
-            ? new Date(item.start_time).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })
-            : "",
-          doctor: item.doctor,
-          status: statusMap[item.status as number] || "นัดแล้ว",
-        }));
+        const mapped: Appointmentpage[] = (data.result || []).map(
+          (item: AppointmentApiData_id) => ({
+            a_id: item.id,
+            user_id: item.user_id,
+            name: item.name,
+            date: item.date
+              ? new Date(item.date).toLocaleDateString("th-TH")
+              : "",
+            time: item.start_time
+              ? new Date(item.start_time).toLocaleTimeString("th-TH", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "",
+            doctor: item.doctor,
+            status: statusMap[item.status as number] || "นัดแล้ว",
+          })
+        );
         setAppointments(mapped);
       } catch (err) {
         console.error("Error fetching appointments:", err);
@@ -151,8 +153,7 @@ function AppointmentPageContent() {
 
   return (
     <div className="flex bg-white min-h-screen">
-      <Sidebar selectedItem="5"
-      />
+      <Sidebar selectedItem="5" />
       <div className="flex-1 p-6">
         <Container>
           <TopBarSection
@@ -162,7 +163,11 @@ function AppointmentPageContent() {
             onAddClick={() => console.log("Add appointment clicked")}
           />
 
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <CircularProgress />
@@ -179,22 +184,22 @@ function AppointmentPageContent() {
                       <div className="flex items-center justify-center gap-1">
                         ID
                         <span className="w-4 h-4 inline-flex">
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
-                            stroke="#4D4D4D"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
+                          <svg
+                            width="21"
+                            height="20"
+                            viewBox="0 0 21 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                              stroke="#4D4D4D"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell
@@ -204,22 +209,22 @@ function AppointmentPageContent() {
                       <div className="flex items-center justify-center gap-1">
                         ชื่อ นามสกุล
                         <span className="w-4 h-4 inline-flex">
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
-                            stroke="#4D4D4D"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
+                          <svg
+                            width="21"
+                            height="20"
+                            viewBox="0 0 21 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                              stroke="#4D4D4D"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell
@@ -229,25 +234,29 @@ function AppointmentPageContent() {
                       <div className="flex items-center justify-center gap-1">
                         วันที่
                         <span className="w-4 h-4 inline-flex">
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
-                            stroke="#4D4D4D"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
+                          <svg
+                            width="21"
+                            height="20"
+                            viewBox="0 0 21 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                              stroke="#4D4D4D"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
                       </div>
                     </TableCell>
-                    <TableCell><h1 className="font-bold text-center flex justify-center">เวลา</h1></TableCell>
+                    <TableCell>
+                      <h1 className="font-bold text-center flex justify-center">
+                        เวลา
+                      </h1>
+                    </TableCell>
                     <TableCell
                       className="font-bold text-center cursor-pointer relative overflow-visible"
                       onClick={() => setDoctorDropdownOpen(!doctorDropdownOpen)}
@@ -255,22 +264,22 @@ function AppointmentPageContent() {
                       <div className="flex items-center justify-center gap-1">
                         แพทย์
                         <span className="w-4 h-4 inline-flex">
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
-                            stroke="#4D4D4D"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
+                          <svg
+                            width="21"
+                            height="20"
+                            viewBox="0 0 21 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M6.83301 12.4998L10.1663 15.8332L13.4997 12.4998M13.4997 7.49984L10.1663 4.1665L6.83301 7.49984"
+                              stroke="#4D4D4D"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
                       </div>
                       {doctorDropdownOpen && (
                         <div className="absolute z-10 mt-2 right-0 min-w-[150px] bg-white shadow-lg rounded-md border border-gray-200">
@@ -308,7 +317,11 @@ function AppointmentPageContent() {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell><h1 className="font-bold text-center flex justify-center">สถานะ</h1></TableCell>
+                    <TableCell>
+                      <h1 className="font-bold text-center flex justify-center">
+                        สถานะ
+                      </h1>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -322,35 +335,26 @@ function AppointmentPageContent() {
                         <Typography className="text-center">
                           {appointment.user_id}
                         </Typography>
-      
                       </TableCell>
                       <TableCell className="text-center">
                         <Typography className="text-center">
-                         {appointment.name}
+                          {appointment.name}
                         </Typography>
-                        
-                      </TableCell>
-                      <TableCell className="text-center">
-                         <Typography className="text-center">
-                         {appointment.date}
-                        </Typography>
-                        
-                       
-                      </TableCell>
-                      <TableCell className="text-center">
-                         <Typography className="text-center">
-                         {appointment.time}
-                        </Typography>
-                        
-                       
                       </TableCell>
                       <TableCell className="text-center">
                         <Typography className="text-center">
-                         {appointment.doctor}
+                          {appointment.date}
                         </Typography>
-                        
-                        
-                        
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Typography className="text-center">
+                          {appointment.time}
+                        </Typography>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Typography className="text-center">
+                          {appointment.doctor}
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2 items-center justify-center">
@@ -378,7 +382,13 @@ function AppointmentPageContent() {
 
 export default function AppointmentPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center items-center h-64"><CircularProgress /></div>}>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-64">
+          <CircularProgress />
+        </div>
+      }
+    >
       <AppointmentPageContent />
     </Suspense>
   );

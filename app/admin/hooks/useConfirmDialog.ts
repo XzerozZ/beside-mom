@@ -31,29 +31,32 @@ export const useConfirmDialog = () => {
     onConfirm: () => {},
   });
 
-  const showConfirm = useCallback((
-    message: string,
-    onConfirmCallback: () => void,
-    options: ConfirmOptions = {}
-  ) => {
-    setConfirmState({
-      open: true,
-      title: options.title || "ยืนยันการดำเนินการ",
-      message,
-      confirmText: options.confirmText || "ยืนยัน",
-      cancelText: options.cancelText || "ยกเลิก",
-      severity: options.severity || "warning",
-      onConfirm: onConfirmCallback,
-    });
-  }, []);
+  const showConfirm = useCallback(
+    (
+      message: string,
+      onConfirmCallback: () => void,
+      options: ConfirmOptions = {}
+    ) => {
+      setConfirmState({
+        open: true,
+        title: options.title || "ยืนยันการดำเนินการ",
+        message,
+        confirmText: options.confirmText || "ยืนยัน",
+        cancelText: options.cancelText || "ยกเลิก",
+        severity: options.severity || "warning",
+        onConfirm: onConfirmCallback,
+      });
+    },
+    []
+  );
 
   const handleConfirm = useCallback(() => {
     confirmState.onConfirm();
-    setConfirmState(prev => ({ ...prev, open: false }));
+    setConfirmState((prev) => ({ ...prev, open: false }));
   }, [confirmState]);
 
   const handleCancel = useCallback(() => {
-    setConfirmState(prev => ({ ...prev, open: false }));
+    setConfirmState((prev) => ({ ...prev, open: false }));
   }, []);
 
   return {

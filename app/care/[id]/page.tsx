@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -15,7 +17,7 @@ const Page = () => {
 
   const fetchCare = async (id: string, token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/care/${id}`, {
+      const res = await fetch(`${API_URL}/care/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

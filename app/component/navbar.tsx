@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React from "react";
 import Image from "next/image";
 import Swal from "sweetalert2";
@@ -17,7 +19,7 @@ const Navbar = () => {
   };
 
   const fetchMomData = async (id: string, key: string) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user/info/${id}`, {
+    const res = await fetch(`${API_URL}/user/info/${id}`, {
       headers: {
         Authorization: `Bearer ${key}`,
       },
@@ -276,8 +278,8 @@ const Navbar = () => {
             >
               <Link href="/profile">โปรไฟล์</Link>
             </li>
-           <li>
-               <button
+            <li>
+              <button
                 className="font-bold text-[20px] text-[#B36868] text-center w-full py-2"
                 onClick={async () => {
                   const result = await Swal.fire({
@@ -302,11 +304,8 @@ const Navbar = () => {
               >
                 ออกจากระบบ
               </button>
-           
-           </li>
+            </li>
           </ul>
-          
-           
         </div>
       )}
     </nav>

@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -18,7 +19,7 @@ import { useAlert } from "../../../../hooks/useAlert";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import AutorenewIcon from '@mui/icons-material/Autorenew';
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { EvaluateData } from "@/app/admin/types";
 
 const periodMap: Record<number, string> = {
@@ -34,18 +35,23 @@ const periodMap: Record<number, string> = {
 
 const statusChip = (status: boolean) =>
   status ? (
-    <Chip label="ประเมินแล้ว" color="success" size="small" icon={<CheckCircleIcon />} />
+    <Chip
+      label="ประเมินแล้ว"
+      color="success"
+      size="small"
+      icon={<CheckCircleIcon />}
+    />
   ) : (
-    <Chip 
-      label="รอการประเมิน" 
-      size="small" 
-      icon={<InfoOutlinedIcon />} 
-      sx={{ 
+    <Chip
+      label="รอการประเมิน"
+      size="small"
+      icon={<InfoOutlinedIcon />}
+      sx={{
         backgroundColor: "#F88000",
         color: "white",
         "& .MuiChip-icon": {
-          color: "white"
-        }
+          color: "white",
+        },
       }}
     />
   );
@@ -62,7 +68,10 @@ const solutionChip = (solution_status: string) => {
       />
     );
   }
-  if (solution_status === "ไม่ผ่าน" || solution_status === "ไม่ผ่านเกณฑ์การประเมิน") {
+  if (
+    solution_status === "ไม่ผ่าน" ||
+    solution_status === "ไม่ผ่านเกณฑ์การประเมิน"
+  ) {
     return (
       <Chip
         label="ไม่ผ่านเกณฑ์การประเมิน"
@@ -79,13 +88,13 @@ const solutionChip = (solution_status: string) => {
         label="กำลังประเมิน"
         size="small"
         icon={<AutorenewIcon />}
-        sx={{ 
+        sx={{
           ml: 1,
           backgroundColor: "#2196F3",
           color: "white",
           "& .MuiChip-icon": {
-            color: "white"
-          }
+            color: "white",
+          },
         }}
       />
     );
@@ -95,13 +104,13 @@ const solutionChip = (solution_status: string) => {
       label="รอการประเมิน"
       size="small"
       icon={<InfoOutlinedIcon />}
-      sx={{ 
+      sx={{
         ml: 1,
         backgroundColor: "#F88000",
         color: "white",
         "& .MuiChip-icon": {
-          color: "white"
-        }
+          color: "white",
+        },
       }}
     />
   );
@@ -131,7 +140,7 @@ const EvaluateList: React.FC = () => {
       setError("");
       try {
         const token = localStorage.getItem("token");
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/evaluate/all/${kid_id}`;
+        const apiUrl = `${API_URL}/evaluate/all/${kid_id}`;
         const res = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -153,11 +162,15 @@ const EvaluateList: React.FC = () => {
       <Sidebar selectedItem="1" />
       <div className="flex-1 p-6">
         <Container>
-        
           <h1 className="text-neutral05 font-bold mb-5">แบบประเมินพัฒนาการ</h1>
 
           {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              minHeight={200}
+            >
               <CircularProgress />
             </Box>
           ) : error ? (
@@ -178,7 +191,7 @@ const EvaluateList: React.FC = () => {
                         boxShadow: "none",
                         cursor: "pointer",
                         transition: "box-shadow 0.2s",
-                        '&:hover': { boxShadow: 2, borderColor: '#B36868' },
+                        "&:hover": { boxShadow: 2, borderColor: "#B36868" },
                       }}
                     >
                       <Box>

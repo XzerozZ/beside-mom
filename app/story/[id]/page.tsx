@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useEffect } from "react";
 import { Card } from "../../component/card";
 import { useParams } from "next/navigation";
@@ -17,10 +19,10 @@ const PageStoryId = () => {
   const [videos, setVideos] = React.useState<VideoClip[]>([]);
   const token = localStorage.getItem("token");
   const [showChat, setShowChat] = React.useState<boolean>(false);
- 
+
   const fetchVideos = async (token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video`, {
+      const res = await fetch(`${API_URL}/video`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,7 +40,7 @@ const PageStoryId = () => {
 
   const fetchVideo = async (id: string, token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/video/${id}`, {
+      const res = await fetch(`${API_URL}/video/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -80,7 +82,7 @@ const PageStoryId = () => {
   //     const formData = new FormData();
   //     formData.append("videoid", id.toString());
 
-  //     const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like`, {
+  //     const res = await fetch(`${API_URL}/like`, {
   //       method: "POST",
   //       headers: {
   //         Authorization: `Bearer ${token}`,
@@ -99,7 +101,7 @@ const PageStoryId = () => {
 
   // const deleteLike = async (id: string, token: string) => {
   //   try {
-  //     const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
+  //     const res = await fetch(`${API_URL}/like/${id}`, {
   //       method: "DELETE",
   //       headers: {
   //         Authorization: `Bearer ${token}`,
@@ -116,7 +118,7 @@ const PageStoryId = () => {
 
   const checkLike = async (id: string, token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/like/${id}`, {
+      const res = await fetch(`${API_URL}/like/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -125,13 +127,10 @@ const PageStoryId = () => {
         const data = await res.json();
         if (data.result == "true") {
           setLike(true);
-        }
-        else if (data.result == "false") {
+        } else if (data.result == "false") {
           setLike(false);
         }
-       
       } else {
-       
         return false;
       }
     } catch (error) {
@@ -146,8 +145,6 @@ const PageStoryId = () => {
       checkLike(video.id, token);
     }
   }, [video?.id, token, like]);
-  
-
 
   const [loading, setLoading] = React.useState<boolean>(true);
 
@@ -205,7 +202,9 @@ const PageStoryId = () => {
                     <iframe
                       className="relative -z-10 rounded-[16px] h-[563px] max-xl:h-[527px] max-sm:h-[226px] border-0"
                       width="100%"
-                      src={video?.link?.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                      src={video?.link
+                        ?.replace("watch?v=", "embed/")
+                        .replace("youtu.be/", "youtube.com/embed/")}
                       title="YouTube video player"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
@@ -295,8 +294,7 @@ const PageStoryId = () => {
             `}</style>
           </div>
         </main>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

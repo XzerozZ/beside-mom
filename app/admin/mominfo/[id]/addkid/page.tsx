@@ -169,67 +169,67 @@ export default function AddKid() {
                 </IconButton>
               </div>
 
-             <div className="grid grid-cols-2  col-span-2">
-                        <div className="flex flex-row gap-4 col-span-2 ">
-                          <div className="flex flex-col w-1/2">
-                            <FormLabel>ชื่อ</FormLabel>
-                            <TextField
-                              fullWidth
-                              size="small"
-                              name="firstName"
-                              value={kid?.firstName ?? ""}
-                              onChange={handleChange}
-                            />
-                          </div>
-                          <div className="flex flex-col w-1/2">
-                            <FormLabel>นามสกุล</FormLabel>
-                            <TextField
-                              fullWidth
-                              size="small"
-                              name="lastName"
-                              value={kid?.lastName ?? ""}
-                              onChange={handleChange}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-2">
-                          <FormLabel>ชื่อเล่น</FormLabel>
-                          <TextField
-                            fullWidth
-                            size="small"
-                            name="username"
-                            value={kid?.username ?? ""}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <Box>
-                      <Grid container spacing={3} sx={{ mb: 3 }}>
-                        <Grid item xs={12} sm={6}>
-                          <FormLabel>วันเกิด</FormLabel>
-                          <TextField
-                            fullWidth
-                            size="small"
-                            name="birthDate"
-                            value={kid?.birthDate ?? ""}
-                            onChange={handleChange}
-                            type="date"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <FormLabel>อายุครรภ์ตอนคลอด (สัปดาห์)</FormLabel>
-                          <TextField
-                            fullWidth
-                            size="small"
-                            name="beforebirth"
-                            value={kid.beforebirth ?? ""}
-                            onChange={handleChange}
-                            type="number"
-                          />
-                        </Grid>
-                      </Grid>
-                    </Box>
+              <div className="grid grid-cols-2  col-span-2">
+                <div className="flex flex-row gap-4 col-span-2 ">
+                  <div className="flex flex-col w-1/2">
+                    <FormLabel>ชื่อ</FormLabel>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      name="firstName"
+                      value={kid?.firstName ?? ""}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="flex flex-col w-1/2">
+                    <FormLabel>นามสกุล</FormLabel>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      name="lastName"
+                      value={kid?.lastName ?? ""}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 col-span-2">
+                  <FormLabel>ชื่อเล่น</FormLabel>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    name="username"
+                    value={kid?.username ?? ""}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </div>
+            <Box>
+              <Grid container spacing={3} sx={{ mb: 3 }}>
+                <Grid item xs={12} sm={6}>
+                  <FormLabel>วันเกิด</FormLabel>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    name="birthDate"
+                    value={kid?.birthDate ?? ""}
+                    onChange={handleChange}
+                    type="date"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormLabel>อายุครรภ์ตอนคลอด (สัปดาห์)</FormLabel>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    name="beforebirth"
+                    value={kid.beforebirth ?? ""}
+                    onChange={handleChange}
+                    type="number"
+                  />
+                </Grid>
+              </Grid>
+            </Box>
             <Box>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={0.7}>
@@ -289,7 +289,13 @@ export default function AddKid() {
                 </Grid>
                 <Grid item xs={12} sm={4.775}>
                   <FormLabel>Rh</FormLabel>
-                  <Select fullWidth size="small" name="rh_type" value={kid.rh_type} onChange={handleChange}>
+                  <Select
+                    fullWidth
+                    size="small"
+                    name="rh_type"
+                    value={kid.rh_type}
+                    onChange={handleChange}
+                  >
                     <MenuItem value="">เลือก Rh</MenuItem>
                     <MenuItem value="Positive">Positive</MenuItem>
                     <MenuItem value="Negative">Negative</MenuItem>

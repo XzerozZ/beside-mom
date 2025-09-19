@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useEffect } from "react";
 import CalendarCard from "../../../component/calendarcard";
 import { Appointment } from "@/app/interface";
@@ -14,7 +16,7 @@ const PageCalendarHistoryId = () => {
   const [showChat, setShowChat] = React.useState<boolean>(false);
   const fetchCalendar = async (id: string, token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/appoint/${id}`, {
+      const res = await fetch(`${API_URL}/appoint/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -24,14 +26,14 @@ const PageCalendarHistoryId = () => {
         setCalendar(data.result);
       } else {
         console.error("Failed to fetch kid data");
-         await Swal.fire({
-                  title: "Please login again your token is expired!",
-                  icon: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#B36868",
-                });
-                window.location.href = "/auth/login";
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#B36868",
+        });
+        window.location.href = "/auth/login";
       }
     } catch (error) {
       console.error("An error occurred while fetching kid data:", error);
@@ -64,9 +66,7 @@ const PageCalendarHistoryId = () => {
       console.error("Invalid or missing parameter: id");
     }
     setLoading(false);
-
-    
-  }, [token,param.id]);
+  }, [token, param.id]);
 
   if (loading) {
     return (
@@ -85,8 +85,7 @@ const PageCalendarHistoryId = () => {
             {calendar && <CalendarCard {...calendar} />}
           </div>
         </div>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

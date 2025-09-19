@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -10,10 +11,7 @@ import {
   Typography,
   Grid,
   Paper,
-
   FormLabel,
-
-
 } from "@mui/material";
 import Sidebar from "@/app/admin/components/SideBarAdmin";
 import StyledAlert from "@/app/admin/components/StyledAlert";
@@ -26,7 +24,9 @@ export default function AppointmentAdd() {
   const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const [searchTermName, setSearchTermName] = useState("");
   const [searchTermID, setSearchTermID] = useState("");
-  const [allmomInfo, setAllMomInfo] = useState<{ id: string; momname: string }[]>([]);
+  const [allmomInfo, setAllMomInfo] = useState<
+    { id: string; momname: string }[]
+  >([]);
   const [appointmentmomInfo, setAppointmentmomInfo] = useState({
     id: "",
     momname: "",
@@ -48,7 +48,7 @@ export default function AppointmentAdd() {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/user`;
+        const apiUrl = `${API_URL}/user`;
         const response = await fetch(apiUrl as string, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -101,14 +101,13 @@ export default function AppointmentAdd() {
       return;
     }
     try {
-      
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${appointmentmomInfo.id}`;
+      const apiUrl = `${API_URL}/appoint/${appointmentmomInfo.id}`;
       const formData = new FormData();
       formData.append("title", appointmentmomInfo.subject);
       const formattedDate = appointmentmomInfo.date
-      ? appointmentmomInfo.date.replace(/\//g, "-")
-      : "";
-    formData.append("date", formattedDate);
+        ? appointmentmomInfo.date.replace(/\//g, "-")
+        : "";
+      formData.append("date", formattedDate);
       formData.append("start_time", appointmentmomInfo.time);
       formData.append("building", appointmentmomInfo.location);
       formData.append("doctor", appointmentmomInfo.doctor);
@@ -133,10 +132,7 @@ export default function AppointmentAdd() {
 
   return (
     <div className="flex bg-white">
-      <Sidebar 
-      selectedItem="5"
-       
-      />
+      <Sidebar selectedItem="5" />
       <div className="flex-1 p-6 w-full ">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
           <Typography
@@ -316,21 +312,20 @@ export default function AppointmentAdd() {
           </Box>
           <Box className="mt-5">
             <FormLabel>แพทย์</FormLabel>
-           <TextField
-                fullWidth
-                size="small"
-                name="doctor"
-                type="text"
-                placeholder="ex. นพ.สมชาย ใจดี"
-                value={appointmentmomInfo.doctor}
-                 onChange={(e) =>
+            <TextField
+              fullWidth
+              size="small"
+              name="doctor"
+              type="text"
+              placeholder="ex. นพ.สมชาย ใจดี"
+              value={appointmentmomInfo.doctor}
+              onChange={(e) =>
                 setAppointmentmomInfo({
                   ...appointmentmomInfo,
                   location: e.target.value,
                 })
               }
-              />
-            
+            />
           </Box>
 
           <Box className="mt-5">

@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -44,7 +45,7 @@ export default function Babygraphs() {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${id}`;
+        const apiUrl = `${API_URL}/appoint/${id}`;
         const response = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -89,7 +90,7 @@ export default function Babygraphs() {
       return;
     }
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${id}`;
+      const apiUrl = `${API_URL}/appoint/${id}`;
       const formData = new FormData();
       const formattedDate = appointmentmomInfo.date
         ? appointmentmomInfo.date.replace(/\//g, "-")

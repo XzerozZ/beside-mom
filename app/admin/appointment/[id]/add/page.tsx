@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -21,8 +22,6 @@ export default function Babygraphs() {
   const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
- 
-
   const [appointmentmomInfo, setAppointmentmomInfo] = useState({
     id: id,
     momname: "",
@@ -44,7 +43,7 @@ export default function Babygraphs() {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/user/info/${id}`;
+        const apiUrl = `${API_URL}/user/info/${id}`;
         const response = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -70,15 +69,14 @@ export default function Babygraphs() {
     });
   };
 
-
   // Submit appointment
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (isSubmitting) return; // ป้องกันการกดซ้ำ
-    
+
     setIsSubmitting(true);
-    
+
     const token = localStorage.getItem("token");
     if (!token) {
       showError("กรุณาเข้าสู่ระบบใหม่");
@@ -87,7 +85,7 @@ export default function Babygraphs() {
       return;
     }
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${id}`;
+      const apiUrl = `${API_URL}/appoint/${id}`;
       const formData = new FormData();
       // Ensure date is in yyyy-mm-dd format
       const formattedDate = appointmentmomInfo.date
@@ -122,9 +120,7 @@ export default function Babygraphs() {
 
   return (
     <div className="flex bg-white">
-     <Sidebar 
-       selectedItem="5"
-      />
+      <Sidebar selectedItem="5" />
       <div className="flex-1 p-6 w-full ">
         <Container maxWidth="lg" sx={{ mb: 4 }}>
           <StyledAlert
@@ -133,7 +129,10 @@ export default function Babygraphs() {
             severity={alertState.severity}
             onClose={hideAlert}
           />
-          <Typography gutterBottom className="mt-7 font-bold text-2x text-neutral05">
+          <Typography
+            gutterBottom
+            className="mt-7 font-bold text-2x text-neutral05"
+          >
             การเพิ่มข้อมูลการนัดหมาย
           </Typography>
           <form onSubmit={handleSubmit}>
@@ -214,7 +213,7 @@ export default function Babygraphs() {
             </Box>
             <Box className="mt-5">
               <FormLabel>แพทย์</FormLabel>
-               <TextField
+              <TextField
                 fullWidth
                 size="small"
                 name="doctor"
@@ -223,7 +222,6 @@ export default function Babygraphs() {
                 value={appointmentmomInfo.doctor}
                 onChange={handleChange}
               />
-            
             </Box>
             <Box className="mt-5">
               <FormLabel>การเตรียมตัว</FormLabel>
@@ -262,7 +260,11 @@ export default function Babygraphs() {
                   "&:disabled": { bgcolor: "#999999" },
                 }}
                 className="w-40"
-                startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
+                startIcon={
+                  isSubmitting ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : null
+                }
               >
                 {isSubmitting ? "กำลังบันทึก..." : "บันทึก"}
               </Button>

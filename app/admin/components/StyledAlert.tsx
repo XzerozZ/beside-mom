@@ -25,15 +25,15 @@ const StyledAlert: React.FC<StyledAlertProps> = ({
       onClose={onClose}
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
     >
-      <Alert 
-        onClose={onClose} 
-        severity={severity} 
-        sx={{ 
+      <Alert
+        onClose={onClose}
+        severity={severity}
+        sx={{
           width: "100%",
           fontFamily: "inherit",
           "& .MuiAlert-message": {
             fontWeight: 500,
-          }
+          },
         }}
       >
         {message}

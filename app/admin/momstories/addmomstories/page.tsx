@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -31,7 +32,7 @@ const AddMomStoryPage: React.FC = () => {
     videoFile: null as File | null,
     bannerFile: null as File | null,
   });
-  const [videoMethod, setVideoMethod] = useState<'file' | 'link' | null>(null);
+  const [videoMethod, setVideoMethod] = useState<"file" | "link" | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -97,16 +98,19 @@ const AddMomStoryPage: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
 
     const newErrors: { [key: string]: string } = {};
     if (!formData.title) newErrors.title = "กรุณากรอกหัวข้อ";
     if (!formData.description) newErrors.description = "กรุณากรอกรายละเอียด";
-    if (!formData.videoFile && !formData.videoUrl) newErrors.video = "กรุณาอัปโหลดวิดีโอหรือใส่ลิงก์วิดีโอ";
-    if (formData.videoFile && formData.videoUrl) newErrors.video = "เลือกได้เพียงไฟล์วิดีโอหรือใส่ลิงก์วิดีโออย่างใดอย่างหนึ่งเท่านั้น";
+    if (!formData.videoFile && !formData.videoUrl)
+      newErrors.video = "กรุณาอัปโหลดวิดีโอหรือใส่ลิงก์วิดีโอ";
+    if (formData.videoFile && formData.videoUrl)
+      newErrors.video =
+        "เลือกได้เพียงไฟล์วิดีโอหรือใส่ลิงก์วิดีโออย่างใดอย่างหนึ่งเท่านั้น";
     if (!formData.bannerFile) newErrors.bannerFile = "กรุณาอัปโหลดภาพปกวิดีโอ";
 
     if (Object.keys(newErrors).length > 0) {
@@ -136,7 +140,7 @@ const AddMomStoryPage: React.FC = () => {
     }
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/video`;
+      const apiUrl = `${API_URL}/video`;
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -157,9 +161,7 @@ const AddMomStoryPage: React.FC = () => {
 
   return (
     <div className="flex bg-white min-h-screen">
-      <Sidebar 
-      selectedItem="2"
-      />
+      <Sidebar selectedItem="2" />
       <div className="flex-1 p-6">
         <Container maxWidth="lg">
           <StyledAlert
@@ -193,18 +195,17 @@ const AddMomStoryPage: React.FC = () => {
                 </span>
               </Typography>
 
-              <Typography variant="body2" color="textSecondary" className="mt-4">
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                className="mt-4"
+              >
                 วิดิโอ
               </Typography>
 
               {videoPreview && (
                 <Box sx={{ width: "100%", mt: 2, mb: 2 }}>
-                  <video
-                    width="100%"
-                    height="200"
-                    controls
-                    src={videoPreview}
-                  >
+                  <video width="100%" height="200" controls src={videoPreview}>
                     Your browser does not support the video tag.
                   </video>
                 </Box>
@@ -278,14 +279,28 @@ const AddMomStoryPage: React.FC = () => {
                   ลบลิงก์
                 </Button>
               )}
-              {errors.video && <FormHelperText error>{errors.video}</FormHelperText>}
+              {errors.video && (
+                <FormHelperText error>{errors.video}</FormHelperText>
+              )}
 
-              <Typography variant="body2" color="textSecondary" className="mt-4">
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                className="mt-4"
+              >
                 ภาพปกวิดีโอ
               </Typography>
 
               {bannerPreview && (
-                <Box sx={{ width: "100%", mt: 2, mb: 2, position: "relative", height: "200px" }}>
+                <Box
+                  sx={{
+                    width: "100%",
+                    mt: 2,
+                    mb: 2,
+                    position: "relative",
+                    height: "200px",
+                  }}
+                >
                   <Image
                     src={bannerPreview}
                     alt="Banner preview"
@@ -337,7 +352,9 @@ const AddMomStoryPage: React.FC = () => {
                   </Button>
                 )}
               </Box>
-              {errors.bannerFile && <FormHelperText error>{errors.bannerFile}</FormHelperText>}
+              {errors.bannerFile && (
+                <FormHelperText error>{errors.bannerFile}</FormHelperText>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -401,7 +418,11 @@ const AddMomStoryPage: React.FC = () => {
                 "&:disabled": { bgcolor: "#999999" },
               }}
               onClick={handleSubmit}
-              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
+              startIcon={
+                isSubmitting ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : null
+              }
             >
               {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </Button>

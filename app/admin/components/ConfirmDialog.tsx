@@ -72,7 +72,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       >
         {title}
       </DialogTitle>
-      
+
       <DialogContent>
         <Typography
           variant="body1"
@@ -103,7 +103,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         >
           {cancelText}
         </Button>
-        
+
         <Button
           onClick={onConfirm}
           variant="contained"

@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -25,7 +26,8 @@ const MomstoryPage: React.FC = () => {
   const [data, setData] = useState<MomStory[]>([]);
   const [loading, setLoading] = useState(true);
   const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
-  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } =
+    useConfirmDialog();
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -37,7 +39,7 @@ const MomstoryPage: React.FC = () => {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/video`;
+        const apiUrl = `${API_URL}/video`;
         const response = await fetch(apiUrl as string, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,7 +70,10 @@ const MomstoryPage: React.FC = () => {
   const filteredData = data.filter(
     (item) =>
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.publish_at && new Date(item.publish_at).toLocaleDateString("th-TH").includes(searchTerm))
+      (item.publish_at &&
+        new Date(item.publish_at)
+          .toLocaleDateString("th-TH")
+          .includes(searchTerm))
   );
 
   async function handleDelete(id: string): Promise<void> {
@@ -81,7 +86,7 @@ const MomstoryPage: React.FC = () => {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${id}`;
+        const apiUrl = `${API_URL}/video/${id}`;
         const response = await fetch(apiUrl, {
           method: "DELETE",
           headers: {
@@ -90,7 +95,8 @@ const MomstoryPage: React.FC = () => {
         });
         if (!response.ok) throw new Error("API error");
         const result = await response.json();
-        if (result.status !== "Success") throw new Error(result.message || "Error");
+        if (result.status !== "Success")
+          throw new Error(result.message || "Error");
         setData((prev) => prev.filter((item) => item.id !== id));
         showSuccess("ลบเรื่องเล่าสำเร็จ");
       } catch (err) {
@@ -101,21 +107,15 @@ const MomstoryPage: React.FC = () => {
       }
     };
 
-    showConfirm(
-      "คุณต้องการลบเรื่องเล่านี้ใช่หรือไม่?",
-      performDelete,
-      {
-        title: "ยืนยันการลบ",
-        confirmText: "ลบ",
-        severity: "error"
-      }
-    );
+    showConfirm("คุณต้องการลบเรื่องเล่านี้ใช่หรือไม่?", performDelete, {
+      title: "ยืนยันการลบ",
+      confirmText: "ลบ",
+      severity: "error",
+    });
   }
   return (
     <div className="flex bg-white min-h-screen">
-     <Sidebar 
-       selectedItem="2"
-      />
+      <Sidebar selectedItem="2" />
       <div className="flex-1 p-6">
         <Container>
           <TopBarSection
@@ -132,43 +132,45 @@ const MomstoryPage: React.FC = () => {
                 <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                   <Card>
                     <Box
-                                  sx={{
-                                    width: "100%",
-                                    height: 140,
-                                    overflow: "hidden",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    backgroundColor: "#f5f5f5",
-                                  }}
-                                >
-                                  <CardMedia
-                                    component="img"
-                                    image={item.banner}
-                                    sx={{
-                                      width: "100%",
-                                      height: "100%",
-                                      objectFit: "cover",
-                                    }}
-                                  />
-                                </Box>      
+                      sx={{
+                        width: "100%",
+                        height: 140,
+                        overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        image={item.banner}
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Box>
                     <CardContent>
                       <Typography
                         variant="h6"
                         component="div"
                         className="text-base"
-                         sx={{ 
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                width: '100%'
-                              }}
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          width: "100%",
+                        }}
                       >
                         {item.title}
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
                         {item.publish_at
-                          ? new Date(item.publish_at).toLocaleDateString("th-TH")
+                          ? new Date(item.publish_at).toLocaleDateString(
+                              "th-TH"
+                            )
                           : ""}
                       </Typography>
                       <Box display="flex" justifyContent="space-between" mt={2}>

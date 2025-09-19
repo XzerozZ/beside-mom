@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React from "react";
 import Qabox from "../component/qabox";
 import { QuestionAnswer } from "@/app/interface";
@@ -21,7 +23,7 @@ const PageQuestion = () => {
 
   const fetchQA = async (token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/question`, {
+      const res = await fetch(`${API_URL}/question`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -85,8 +87,7 @@ const PageQuestion = () => {
             ))}
           </div>
         </div>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

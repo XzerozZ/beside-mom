@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { CardCare } from "../component/card";
@@ -23,21 +25,20 @@ const PageCare = () => {
 
   const fetchCare = async (token: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_url}/care`, {
+      const response = await fetch(`${API_URL}/care`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (!response.ok) {
-         await Swal.fire({
-                  title: "Please login again your token is expired!",
-                  icon: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#B36868",
-                });
-                window.location.href = "/auth/login";
-        
+        await Swal.fire({
+          title: "Please login again your token is expired!",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#B36868",
+        });
+        window.location.href = "/auth/login";
       }
       const data = await response.json();
       setCare(data.result);
@@ -69,8 +70,6 @@ const PageCare = () => {
 
   useEffect(() => {
     if (care && care.length > 0) {
-    
-   
       setRandom(Math.floor(Math.random() * care.length));
     }
   }, [care]);
@@ -91,37 +90,42 @@ const PageCare = () => {
           <div className="w-[1312px] max-xl:w-[770px] max-sm:w-[358px] flex flex-col gap-[40px]">
             {care && care.length > 0 && (
               <div className="flex flex-row gap-[20px] bg-[#FFF4F4] p-[67px] max-sm:hidden">
-              <div className="flex flex-col gap-[32px]  w-2/5 justify-center">
-                <h1 className="text-right font-bold text-[20px] text-[#B36868]">
-                แนะนำ
-                </h1>
-                <div className="flex flex-col gap-[20px]">
-                <h2 className="text-right font-bold text-[20px]">
-                  {care?.[random]?.title}
-                </h2>
-                <h3 className="text-right text-[16px] ">{care?.[0]?.desc}</h3>
-                <div className="flex flex-row justify-end gap-[5px]">
-                  <a href={`/care/${care?.[random]?.c_id}`} className="text-[14px] font-bold">
-                  ดูเพิ่มเติม
-                  </a>
+                <div className="flex flex-col gap-[32px]  w-2/5 justify-center">
+                  <h1 className="text-right font-bold text-[20px] text-[#B36868]">
+                    แนะนำ
+                  </h1>
+                  <div className="flex flex-col gap-[20px]">
+                    <h2 className="text-right font-bold text-[20px]">
+                      {care?.[random]?.title}
+                    </h2>
+                    <h3 className="text-right text-[16px] ">
+                      {care?.[0]?.desc}
+                    </h3>
+                    <div className="flex flex-row justify-end gap-[5px]">
+                      <a
+                        href={`/care/${care?.[random]?.c_id}`}
+                        className="text-[14px] font-bold"
+                      >
+                        ดูเพิ่มเติม
+                      </a>
+                      <Image
+                        src="/nexticon.svg"
+                        alt="next"
+                        width={8}
+                        height={20}
+                      ></Image>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-3/5 object-contain">
                   <Image
-                  src="/nexticon.svg"
-                  alt="next"
-                  width={8}
-                  height={20}
+                    src={care?.[random]?.banner || "/baby.png"}
+                    alt="baby"
+                    layout="responsive"
+                    width={500}
+                    height={500}
                   ></Image>
                 </div>
-                </div>
-              </div>
-              <div className="w-3/5 object-contain">
-                <Image
-                src={care?.[random]?.banner || "/baby.png"}
-                alt="baby"
-                layout="responsive"
-                width={500}
-                height={500}
-                ></Image>
-              </div>
               </div>
             )}
 
@@ -134,8 +138,7 @@ const PageCare = () => {
             </div>
           </div>
         </div>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

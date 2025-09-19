@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { ButtonComponents6Size, ButtonComponents5Size } from "./button";
@@ -42,7 +44,7 @@ const QuizForm: React.FC<{
   ) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/quiz/period/${phase}/category/${category}/question/${id}`,
+        `${API_URL}/quiz/period/${phase}/category/${category}/question/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,7 +63,7 @@ const QuizForm: React.FC<{
   // const fetchQuizByIdInNext = async (id: number, token: string,phase:number,category:number) => {
   //   try {
   //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_url}/quiz/period/${phase}/category/${category}/question/${id + 1}`,
+  //       `${API_URL}/quiz/period/${phase}/category/${category}/question/${id + 1}`,
   //       {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
@@ -132,7 +134,7 @@ const QuizForm: React.FC<{
           throw new Error("Authorization token not found");
         }
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_url}/history/evaluate/${phase}/category/${category}/kid/${babyid}`,
+          `${API_URL}/history/evaluate/${phase}/category/${category}/kid/${babyid}`,
           {
             method: "POST",
             headers: {
@@ -288,37 +290,40 @@ const QuizForm: React.FC<{
                   confirmButtonText: "ตกลง",
                   confirmButtonColor: "#B36868",
                 }).then(() => {
-                  router.push(`/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`);
+                  router.push(
+                    `/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`
+                  );
                 });
                 return;
               } else {
-                  router.push(`/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`);
+                router.push(
+                  `/form/${useParam.name}/${useParam.phase}/?babyid=${babyId}`
+                );
               }
             }}
           />
         </div>
-      ) 
-      // : quiz?.quiz_id === 1 ? (
-      //   <div className="flex flex-row gap-[16px] justify-end max-sm:gap-3 max-sm:flex-col-reverse">
-      //     <Link href={`${quiz?.quiz_id + 1}`}>
-      //       <ButtonComponents5Size
-      //         title="ต่อไป"
-      //         textSize="text-[16px]"
-      //         boxSize="w-[180px] max-sm:w-full"
-      //         onClick={async () => {
-      //           await new Promise((resolve) => setTimeout(resolve, 1000));
+      ) : (
+        // : quiz?.quiz_id === 1 ? (
+        //   <div className="flex flex-row gap-[16px] justify-end max-sm:gap-3 max-sm:flex-col-reverse">
+        //     <Link href={`${quiz?.quiz_id + 1}`}>
+        //       <ButtonComponents5Size
+        //         title="ต่อไป"
+        //         textSize="text-[16px]"
+        //         boxSize="w-[180px] max-sm:w-full"
+        //         onClick={async () => {
+        //           await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      //           handleAnswer(
-      //             isAnswered as boolean,
-      //             Number(useParam.phase),
-      //             Number(useParam.category)
-      //           );
-      //         }}
-      //       />
-      //     </Link>
-      //   </div>
-      // ) 
-      : (
+        //           handleAnswer(
+        //             isAnswered as boolean,
+        //             Number(useParam.phase),
+        //             Number(useParam.category)
+        //           );
+        //         }}
+        //       />
+        //     </Link>
+        //   </div>
+        // )
         <div className="flex flex-row gap-[16px] justify-between max-sm:gap-3 max-sm:flex-col-reverse">
           <ButtonComponents6Size
             title="ย้อนกลับ"
@@ -357,7 +362,7 @@ const QuizForm: React.FC<{
                     currentIndex + 1 < quizIds.length
                   ) {
                     const nextQuizId = quizIds[currentIndex + 1];
-                   
+
                     if (isAnswered == false) {
                       Swal.fire({
                         title: "คำแนะนำ",
@@ -373,7 +378,6 @@ const QuizForm: React.FC<{
                       console.log("nextQuizId", nextQuizId);
                       console.log("navi", navigate);
                       window.location.href = `/form/${useParam.name}/${useParam.phase}/${useParam.category}/${nextQuizId}?babyid=${babyId}`;
-
                     }
                   }
                 }

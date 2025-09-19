@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
@@ -12,21 +14,18 @@ const PageVerify = () => {
     formData.append("email", localStorage.getItem("email")!);
     formData.append("otp", otp);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/auth/forgotpassword/otp`,
-        {
-          method: "POST",
+      const response = await fetch(`${API_URL}/auth/forgotpassword/otp`, {
+        method: "POST",
 
-          body: formData,
-        }
-      );
+        body: formData,
+      });
       if (response.ok) {
         Swal.fire({
           title: "OTP verified successfully",
           icon: "success",
           timer: 1000,
         });
-         window.location.href = "/auth/changepassword";
+        window.location.href = "/auth/changepassword";
       } else {
         Swal.fire({
           title: "Failed to verify OTP",
@@ -96,7 +95,6 @@ const PageVerify = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleOTP();
-                
                 }}
               />
             </div>
@@ -143,7 +141,6 @@ const PageVerify = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleOTP();
-                 
                 }}
               />
             </div>

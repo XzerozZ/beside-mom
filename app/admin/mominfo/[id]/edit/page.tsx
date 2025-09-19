@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
@@ -69,7 +70,7 @@ export default function EditMomInfo() {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/user/info/${params.id}`;
+        const apiUrl = `${API_URL}/user/info/${params.id}`;
         const res = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -124,79 +125,76 @@ export default function EditMomInfo() {
     };
     fetchData();
   }, [params.id, showError]);
-   useEffect(() => {
-      const fetchBabyData = async () => {
-        if (babyalluid.length === 0) return;
-  
-        try {
-          // Fetch all babies if there are multiple
-          const fetchPromises = babyalluid.map(async (babyId) => {
-            const res = await fetch(
-              `${process.env.NEXT_PUBLIC_url}/kid/${babyId}`,
-              {
-                cache: "no-store",
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-                },
-              }
-            );
-            if (!res.ok) throw new Error(`Failed to fetch baby info for ${babyId}`);
-            const data = await res.json();
-            return data.result;
+  useEffect(() => {
+    const fetchBabyData = async () => {
+      if (babyalluid.length === 0) return;
+
+      try {
+        // Fetch all babies if there are multiple
+        const fetchPromises = babyalluid.map(async (babyId) => {
+          const res = await fetch(`${API_URL}/kid/${babyId}`, {
+            cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+            },
           });
-  
-          const allBabyResults = await Promise.all(fetchPromises);
-          console.log("All Baby Data:", allBabyResults);
-  
-          const babydata = allBabyResults.map((kid: KidApiWithDateData) => ({
-            id: kid.id,
-            img: kid.imagelink,
-            firstName: kid.firstname,
-            lastName: kid.lastname,
-            nickname: kid.username,
-            gender:
-              kid.sex === "ชาย"
-                ? "male"
-                : kid.sex === "หญิง"
-                ? "female"
-                : kid.sex,
-            birthDate: kid.birthdate?.slice(0, 10) || "",
-            bloodType: kid.blood,
-            rh_type: kid.rh,
-            birthWeight: kid.birthweight?.toString() || "",
-            birthHeight: kid.birthlength?.toString() || "",
-            note: kid.note,
-            growthData: (kid.growth || []).map((g: GrowthApiData) => ({
-              id: g.G_id,
-              date: g.created_at.slice(0, 10),
-              months: g.months,
-              weight: g.weight,
-              length: g.length,
-            })),
-            beforebirth: kid.beforebirth || 0,  
-            adjusted_days: kid.adjusted_days || 0,
-            adjusted_months: kid.adjusted_months || 0,
-            adjusted_years: kid.adjusted_years || 0,
-            real_days: kid.real_days || 0,
-            real_months: kid.real_months || 0,
-            real_years: kid.real_years || 0,
-          }));
-  
-          setBabyInfo(babydata);
-  
-          // Set the first baby as selected if no baby is currently selected
-          if (selectedBabyId === null && babydata.length > 0) {
-            setSelectedBabyId(babydata[0].id);
-          }
-        } catch (error) {
-          showError("เกิดข้อผิดพลาดในการโหลดข้อมูลทารก");
-          console.error("Error fetching baby info:", error);
+          if (!res.ok)
+            throw new Error(`Failed to fetch baby info for ${babyId}`);
+          const data = await res.json();
+          return data.result;
+        });
+
+        const allBabyResults = await Promise.all(fetchPromises);
+        console.log("All Baby Data:", allBabyResults);
+
+        const babydata = allBabyResults.map((kid: KidApiWithDateData) => ({
+          id: kid.id,
+          img: kid.imagelink,
+          firstName: kid.firstname,
+          lastName: kid.lastname,
+          nickname: kid.username,
+          gender:
+            kid.sex === "ชาย"
+              ? "male"
+              : kid.sex === "หญิง"
+              ? "female"
+              : kid.sex,
+          birthDate: kid.birthdate?.slice(0, 10) || "",
+          bloodType: kid.blood,
+          rh_type: kid.rh,
+          birthWeight: kid.birthweight?.toString() || "",
+          birthHeight: kid.birthlength?.toString() || "",
+          note: kid.note,
+          growthData: (kid.growth || []).map((g: GrowthApiData) => ({
+            id: g.G_id,
+            date: g.created_at.slice(0, 10),
+            months: g.months,
+            weight: g.weight,
+            length: g.length,
+          })),
+          beforebirth: kid.beforebirth || 0,
+          adjusted_days: kid.adjusted_days || 0,
+          adjusted_months: kid.adjusted_months || 0,
+          adjusted_years: kid.adjusted_years || 0,
+          real_days: kid.real_days || 0,
+          real_months: kid.real_months || 0,
+          real_years: kid.real_years || 0,
+        }));
+
+        setBabyInfo(babydata);
+
+        // Set the first baby as selected if no baby is currently selected
+        if (selectedBabyId === null && babydata.length > 0) {
+          setSelectedBabyId(babydata[0].id);
         }
-      };
-  
-      fetchBabyData();
-    }, [babyalluid, selectedBabyId, showError]);
-  
+      } catch (error) {
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูลทารก");
+        console.error("Error fetching baby info:", error);
+      }
+    };
+
+    fetchBabyData();
+  }, [babyalluid, selectedBabyId, showError]);
 
   const handleBabySelect = (id: string) => {
     setSelectedBabyId(id);
@@ -332,16 +330,13 @@ export default function EditMomInfo() {
       }
 
       // PUT ข้อมูลแม่
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/user/${momInfo.id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`${API_URL}/user/${momInfo.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
       if (!response.ok) throw new Error("API error");
 
       // PUT ข้อมูลลูกแต่ละคน
@@ -365,7 +360,7 @@ export default function EditMomInfo() {
         if (baby.img && baby.img.startsWith("data:image")) {
           kidFormData.append("images", dataURLtoBlob(baby.img), `baby.jpg`);
         }
-        await fetch(`${process.env.NEXT_PUBLIC_url}/kid/${baby.id}`, {
+        await fetch(`${API_URL}/kid/${baby.id}`, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -385,16 +380,13 @@ export default function EditMomInfo() {
             growthFormData.append("date", formattedDate);
             growthFormData.append("weight", growth.weight.toString());
             growthFormData.append("length", growth.length.toString());
-            await fetch(
-              `${process.env.NEXT_PUBLIC_url}/growth/kid/${baby.id}`,
-              {
-                method: "POST",
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-                body: growthFormData,
-              }
-            );
+            await fetch(`${API_URL}/growth/kid/${baby.id}`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: growthFormData,
+            });
           }
         }
       }
@@ -479,7 +471,6 @@ export default function EditMomInfo() {
                   name="u_pid"
                   value={momInfo.u_pid || ""}
                   onChange={handleChangemMom}
-                
                 />
                 <FormLabel>อีเมล</FormLabel>
                 <TextField
@@ -522,7 +513,7 @@ export default function EditMomInfo() {
                 ข้อมูลทารก
               </Typography>
 
-               {babyalluid.length > 1 && (
+              {babyalluid.length > 1 && (
                 <div className="flex gap-4">
                   {babyalluid.map((babyId, index) => (
                     <button

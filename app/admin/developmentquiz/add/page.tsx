@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useState, useRef } from "react";
 import Sidebar from "../../components/SideBarAdmin";
 import StyledAlert from "../../components/StyledAlert";
@@ -19,10 +21,16 @@ import { useRouter } from "next/navigation";
 
 const categoryOptions = [
   { value: "1", label: "ด้านการเคลื่อนไหว Gross Motor (GM)" },
-  { value: "2", label: "ด้านการใช้กล้ามเนื้อมัดเล็ก และสติปัญญา Fine Motor (FM)" },
+  {
+    value: "2",
+    label: "ด้านการใช้กล้ามเนื้อมัดเล็ก และสติปัญญา Fine Motor (FM)",
+  },
   { value: "3", label: "ด้านการเข้าใจภาษา Receptive Language (RL)" },
   { value: "4", label: "ด้านการใช้ภาษา Expression Language (EL)" },
-  { value: "5", label: "ด้านการช่วยเหลือตนเองและสังคม Personal and Social (PS)" },
+  {
+    value: "5",
+    label: "ด้านการช่วยเหลือตนเองและสังคม Personal and Social (PS)",
+  },
 ];
 
 const periodOptions = [
@@ -61,13 +69,13 @@ export default function AddDevelopmentQuiz() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
     setError("");
     setSuccess("");
-    
+
     try {
       const formData = new FormData();
       formData.append("categoryid", categoryid);
@@ -77,13 +85,14 @@ export default function AddDevelopmentQuiz() {
       formData.append("solution", solution);
       formData.append("suggestion", suggestion);
       if (banners) formData.append("banners", banners);
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : "";
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/quiz`;
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : "";
+      const apiUrl = `${API_URL}/quiz`;
       if (!apiUrl) throw new Error("API URL not defined");
       const res = await fetch(apiUrl, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -93,7 +102,7 @@ export default function AddDevelopmentQuiz() {
       }
       setSuccess("เพิ่มข้อมูลสำเร็จ");
       router.push("/admin/developmentquiz");
-     
+
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
       showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
@@ -108,178 +117,195 @@ export default function AddDevelopmentQuiz() {
       <Sidebar selectedItem="7" />
       <div className="flex-1 p-4">
         <Container maxWidth="lg">
-            <div className="text-neutral05 font-bold ">
+          <div className="text-neutral05 font-bold ">
             เพิ่มคำถามแบบประเมินพัฒนาการ
-            </div>
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
-                  <FormLabel>อัปโหลดรูป</FormLabel>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "200px",
-                      backgroundColor: "#f0f0f0",
-                      backgroundImage: bannerPreview ? `url(${bannerPreview})` : undefined,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mt: 2,
-                      borderRadius: 2,
-                    }}
-                  >
-                    <input
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      id="upload-banner"
-                      type="file"
-                      onChange={handleFileChange}
-                      ref={fileInputRef}
-                    />
-                    <label htmlFor="upload-banner">
-                      <Button
-                        variant="contained"
-                        component="span"
-                        sx={{
-                          bgcolor: "#999999",
-                          "&:hover": { bgcolor: "#777777" },
-                        }}
-                      >
-                        อัปโหลดปก
-                      </Button>
-                    </label>
-                  </Box>
-                  
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <FormLabel>หัวข้อ</FormLabel>
-                  <Select
-                    fullWidth
-                    size="small"
-                    value={categoryid}
-                    onChange={e => setCategoryid(e.target.value)}
-                    displayEmpty
-                    required
-                    sx={{ mt: 1, mb: 2 }}
-                  >
-                    <MenuItem value="">เลือกหัวข้อ</MenuItem>
-                    {categoryOptions.map(opt => (
-                      <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
-                    ))}
-                  </Select>
-                  <FormLabel>ช่วงอายุ</FormLabel>
-                  <Select
-                    fullWidth
-                    size="small"
-                    value={periodID}
-                    onChange={e => setPeriodID(e.target.value)}
-                    displayEmpty
-                    required
-                    sx={{ mt: 1, mb: 2 }}
-                  >
-                    <MenuItem value="">เลือกช่วงอายุ</MenuItem>
-                    {periodOptions.map(opt => (
-                      <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
-                    ))}
-                  </Select>
-                  <FormLabel>ทักษะ</FormLabel>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={question}
-                    onChange={e => setQuestion(e.target.value)}
-                    required
-                    sx={{ mt: 1, mb: 2 }}
+          </div>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <FormLabel>อัปโหลดรูป</FormLabel>
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "200px",
+                    backgroundColor: "#f0f0f0",
+                    backgroundImage: bannerPreview
+                      ? `url(${bannerPreview})`
+                      : undefined,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mt: 2,
+                    borderRadius: 2,
+                  }}
+                >
+                  <input
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    id="upload-banner"
+                    type="file"
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
                   />
-                </Grid>
-                
-                  <FormLabel>วิธีการประเมิน</FormLabel>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={description}
-                    onChange={e => setDescription(e.target.value)}
-                    required
-                    multiline
-                    rows={2}
-                    sx={{ mt: 1, mb: 2 }}
-                  />
-                
-                
-                  <FormLabel>ผลลัพธ์ที่ควรเกิดขึ้น</FormLabel>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={solution}
-                    onChange={e => setSolution(e.target.value)}
-                    required
-                    multiline
-                    rows={2}
-                    sx={{ mt: 1, mb: 2 }}
-                  />
-             
-           
-                  <FormLabel>การส่งเสริมพัฒนาการ (กรณีไม่ผ่าน)</FormLabel>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={suggestion}
-                    onChange={e => setSuggestion(e.target.value)}
-                    required
-                    multiline
-                    rows={2}
-                    sx={{ mt: 1, mb: 2 }}
-                  />
-              
+                  <label htmlFor="upload-banner">
+                    <Button
+                      variant="contained"
+                      component="span"
+                      sx={{
+                        bgcolor: "#999999",
+                        "&:hover": { bgcolor: "#777777" },
+                      }}
+                    >
+                      อัปโหลดปก
+                    </Button>
+                  </label>
+                </Box>
               </Grid>
-              {error && <Alert severity="error" sx={{ mt: 3 }}>{error}</Alert>}
-              {success && <Alert severity="success" sx={{ mt: 3 }}>{success}</Alert>}
-              <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => {
-                    setCategoryid("");
-                    setPeriodID("");
-                    setQuestion("");
-                    setDescription("");
-                    setSolution("");
-                    setSuggestion("");
-                    setBanners(null);
-                    setBannerPreview(null);
-                    setError("");
-                    setSuccess("");
-                    if (fileInputRef.current) fileInputRef.current.value = "";
-                    router.push("/admin/developmentquiz");
-                  }}
-
-                  
-
+              <Grid item xs={12} sm={6}>
+                <FormLabel>หัวข้อ</FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  value={categoryid}
+                  onChange={(e) => setCategoryid(e.target.value)}
+                  displayEmpty
+                  required
+                  sx={{ mt: 1, mb: 2 }}
                 >
-                  ยกเลิก
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={isSubmitting}
-                  sx={{ 
-                    bgcolor: "#B37C6B", 
-                    minWidth: 120, 
-                    fontWeight: 500, 
-                    fontSize: 16, 
-                    boxShadow: "none", 
-                    '&:hover': { bgcolor: "#a06b5c" },
-                    '&:disabled': { bgcolor: "#999999" }
-                  }}
-                  startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
+                  <MenuItem value="">เลือกหัวข้อ</MenuItem>
+                  {categoryOptions.map((opt) => (
+                    <MenuItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormLabel>ช่วงอายุ</FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  value={periodID}
+                  onChange={(e) => setPeriodID(e.target.value)}
+                  displayEmpty
+                  required
+                  sx={{ mt: 1, mb: 2 }}
                 >
-                  {isSubmitting ? "กำลังบันทึก..." : "เพิ่มข้อมูล"}
-                </Button>
-              </Box>
-            </form>
-  
+                  <MenuItem value="">เลือกช่วงอายุ</MenuItem>
+                  {periodOptions.map((opt) => (
+                    <MenuItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormLabel>ทักษะ</FormLabel>
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  required
+                  sx={{ mt: 1, mb: 2 }}
+                />
+              </Grid>
+
+              <FormLabel>วิธีการประเมิน</FormLabel>
+              <TextField
+                fullWidth
+                size="small"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+                multiline
+                rows={2}
+                sx={{ mt: 1, mb: 2 }}
+              />
+
+              <FormLabel>ผลลัพธ์ที่ควรเกิดขึ้น</FormLabel>
+              <TextField
+                fullWidth
+                size="small"
+                value={solution}
+                onChange={(e) => setSolution(e.target.value)}
+                required
+                multiline
+                rows={2}
+                sx={{ mt: 1, mb: 2 }}
+              />
+
+              <FormLabel>การส่งเสริมพัฒนาการ (กรณีไม่ผ่าน)</FormLabel>
+              <TextField
+                fullWidth
+                size="small"
+                value={suggestion}
+                onChange={(e) => setSuggestion(e.target.value)}
+                required
+                multiline
+                rows={2}
+                sx={{ mt: 1, mb: 2 }}
+              />
+            </Grid>
+            {error && (
+              <Alert severity="error" sx={{ mt: 3 }}>
+                {error}
+              </Alert>
+            )}
+            {success && (
+              <Alert severity="success" sx={{ mt: 3 }}>
+                {success}
+              </Alert>
+            )}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 2,
+                mt: 4,
+              }}
+            >
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => {
+                  setCategoryid("");
+                  setPeriodID("");
+                  setQuestion("");
+                  setDescription("");
+                  setSolution("");
+                  setSuggestion("");
+                  setBanners(null);
+                  setBannerPreview(null);
+                  setError("");
+                  setSuccess("");
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                  router.push("/admin/developmentquiz");
+                }}
+              >
+                ยกเลิก
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isSubmitting}
+                sx={{
+                  bgcolor: "#B37C6B",
+                  minWidth: 120,
+                  fontWeight: 500,
+                  fontSize: 16,
+                  boxShadow: "none",
+                  "&:hover": { bgcolor: "#a06b5c" },
+                  "&:disabled": { bgcolor: "#999999" },
+                }}
+                startIcon={
+                  isSubmitting ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : null
+                }
+              >
+                {isSubmitting ? "กำลังบันทึก..." : "เพิ่มข้อมูล"}
+              </Button>
+            </Box>
+          </form>
         </Container>
       </div>
       <StyledAlert

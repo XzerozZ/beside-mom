@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React from "react";
 import CalendarCard from "../component/calendarcard";
 import { Appointment } from "@/app/interface";
@@ -22,14 +24,11 @@ const PageCalendar = () => {
 
   const fetchCalendar = async (token: string) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/appoint/history/progress`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${API_URL}/appoint/history/progress`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.status === 200) {
         const data = await res.json();
         setCalendar(data.result);
@@ -109,8 +108,7 @@ const PageCalendar = () => {
             </div>
           </div>
         </div>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React, { useEffect } from "react";
 
 import Image from "next/image";
@@ -20,7 +22,7 @@ const PageBabyId = () => {
   const [showChat, setShowChat] = React.useState<boolean>(false);
   const fetchKidData = async (id: string, token: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_url}/kid/${id}`, {
+      const res = await fetch(`${API_URL}/kid/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,14 +47,11 @@ const PageBabyId = () => {
   };
   const fetchGraphKid = async (id: string, token: string) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/growth/kid/${id}/summary`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${API_URL}/growth/kid/${id}/summary`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.ok) {
         const data = await res.json();
         setGraphData(data.result);
@@ -174,55 +173,55 @@ const PageBabyId = () => {
             </div>
           </div>
           <div className="flex flex-row gap-[85px] max-sm:flex-col-reverse max-sm:gap-4">
-          <div className="flex flex-row gap-6">
-               <div className="flex flex-row gap-6 ">
-              <h3>เพศ</h3>
-              <div className="flex gap-4 flex-col">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="male"
-                    checked={kidData?.sex === "male"}
-                    readOnly
-                    className="accent-[#B36868]"
-                  />
-                  ชาย
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="female"
-                    checked={kidData?.sex === "female"}
-                    readOnly
-                    className="accent-[#B36868]"
-                  />
-                  หญิง
-                </label>
+            <div className="flex flex-row gap-6">
+              <div className="flex flex-row gap-6 ">
+                <h3>เพศ</h3>
+                <div className="flex gap-4 flex-col">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="male"
+                      checked={kidData?.sex === "male"}
+                      readOnly
+                      className="accent-[#B36868]"
+                    />
+                    ชาย
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="female"
+                      checked={kidData?.sex === "female"}
+                      readOnly
+                      className="accent-[#B36868]"
+                    />
+                    หญิง
+                  </label>
+                </div>
+              </div>
+              <div>
+                <h3 className="text-[16px]">โน๊ต</h3>
+                <h4 className="text-[20px]">{kidData?.note}</h4>
               </div>
             </div>
-            <div>
-              <h3 className="text-[16px]">โน๊ต</h3>
-              <h4 className="text-[20px]">{kidData?.note}</h4>
-            </div>
-          </div>
-          <div className="flex flex-row gap-10">
+            <div className="flex flex-row gap-10">
               <div className="flex flex-col">
-              <h3 className="font-bold text-[18px]">อายุวันเกิดจริง</h3>
-              <h4>
-                {kidData?.real_years} ปี {kidData?.real_months} เดือน{" "}
-                {kidData?.real_days} วัน
-              </h4>
+                <h3 className="font-bold text-[18px]">อายุวันเกิดจริง</h3>
+                <h4>
+                  {kidData?.real_years} ปี {kidData?.real_months} เดือน{" "}
+                  {kidData?.real_days} วัน
+                </h4>
+              </div>
+              <div>
+                <h3 className="font-bold text-[18px]">อายุวันเกิดปรับ</h3>
+                <h4>
+                  {kidData?.adjusted_years} ปี {kidData?.adjusted_months} เดือน{" "}
+                  {kidData?.adjusted_days} วัน
+                </h4>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-[18px]">อายุวันเกิดปรับ</h3>
-              <h4>
-                {kidData?.adjusted_years} ปี {kidData?.adjusted_months} เดือน{" "}
-                {kidData?.adjusted_days} วัน
-              </h4>
-            </div>
-          </div>
           </div>
           <hr className="" />
           <div className="w-[1312px] text-[20px] text-left max-xl:w-[770px] max-sm:w-[324px] flex justify-between">
@@ -254,8 +253,7 @@ const PageBabyId = () => {
             />
           </div>
         </div>
-              <Chatbot showChat={showChat} setShowChat={setShowChat} />
-
+        <Chatbot showChat={showChat} setShowChat={setShowChat} />
       </div>
     );
   }

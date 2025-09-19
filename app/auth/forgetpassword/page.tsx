@@ -1,4 +1,6 @@
 "use client";
+import { API_URL } from "@/config/config";
+
 import React from "react";
 import Image from "next/image";
 import { ButtonComponents } from "../../component/button";
@@ -11,21 +13,18 @@ const PageFP = () => {
     const formData = new FormData();
     formData.append("Email", email);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_url}/auth/forgotpassword`,
-        {
-          method: "POST",
+      const response = await fetch(`${API_URL}/auth/forgotpassword`, {
+        method: "POST",
 
-          body: formData,
-        }
-      );
+        body: formData,
+      });
       if (response.ok) {
         Swal.fire({
           title: "Password reset link sent to your email!",
           icon: "success",
           timer: 3000,
         });
-          window.location.href = "/auth/verify";
+        window.location.href = "/auth/verify";
       } else {
         Swal.fire({
           title: "Failed to send password reset link",
@@ -95,7 +94,6 @@ const PageFP = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleForgetPassword();
-                
                 }}
               />
             </div>
@@ -139,7 +137,6 @@ const PageFP = () => {
                 textSize="text-[15px] text-bold"
                 onClick={() => {
                   handleForgetPassword();
-                
                 }}
               />
             </div>

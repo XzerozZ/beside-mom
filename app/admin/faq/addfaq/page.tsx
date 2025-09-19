@@ -1,16 +1,10 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAlert } from "../../hooks/useAlert";
-import {
- 
-  Box,
-  Button,
-  TextField,
-
-  FormLabel,
-} from "@mui/material";
+import { Box, Button, TextField, FormLabel } from "@mui/material";
 import Sidebar from "../../components/SideBarAdmin";
 
 const AddFag: React.FC = () => {
@@ -20,10 +14,8 @@ const AddFag: React.FC = () => {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
 
-
-
   // Function to add Q&A to the list
- 
+
   const handleSubmit = async () => {
     if (question.trim() === "" || answer.trim() === "") return;
 
@@ -35,7 +27,7 @@ const AddFag: React.FC = () => {
     }
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/question`;
+      const apiUrl = `${API_URL}/question`;
       if (!apiUrl) throw new Error("API URL not defined");
 
       const formData = new FormData();
@@ -64,10 +56,8 @@ const AddFag: React.FC = () => {
 
   return (
     <div className="flex bg-white ">
-      <Sidebar 
-      selectedItem="4"
-      />
-     
+      <Sidebar selectedItem="4" />
+
       <div className="flex-1 p-6">
         <h1 className="text-neutral05 font-bold">เพิ่มข้อมูล</h1>
         <Box className="mt-8">

@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -31,7 +32,12 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { MomApiResponse, KidApiData, GrowthApiData, KidApiWithDateData} from "@/app/admin/types";
+import {
+  MomApiResponse,
+  KidApiData,
+  GrowthApiData,
+  KidApiWithDateData,
+} from "@/app/admin/types";
 
 export default function MomInfoId() {
   const params = useParams();
@@ -53,15 +59,12 @@ export default function MomInfoId() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_url}/user/info/${params.id}`,
-          {
-            cache: "no-store",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            },
-          }
-        );
+        const res = await fetch(`${API_URL}/user/info/${params.id}`, {
+          cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+        });
         if (!res.ok) throw new Error("Failed to fetch mom info");
         const data = await res.json();
         const mom: MomApiResponse = data.result;
@@ -91,16 +94,14 @@ export default function MomInfoId() {
       try {
         // Fetch all babies if there are multiple
         const fetchPromises = babyalluid.map(async (babyId) => {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_url}/kid/${babyId}`,
-            {
-              cache: "no-store",
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-              },
-            }
-          );
-          if (!res.ok) throw new Error(`Failed to fetch baby info for ${babyId}`);
+          const res = await fetch(`${API_URL}/kid/${babyId}`, {
+            cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+            },
+          });
+          if (!res.ok)
+            throw new Error(`Failed to fetch baby info for ${babyId}`);
           const data = await res.json();
           return data.result;
         });
@@ -133,7 +134,7 @@ export default function MomInfoId() {
             weight: g.weight,
             length: g.length,
           })),
-          beforebirth: kid.beforebirth || 0,  
+          beforebirth: kid.beforebirth || 0,
           adjusted_days: kid.adjusted_days || 0,
           adjusted_months: kid.adjusted_months || 0,
           adjusted_years: kid.adjusted_years || 0,
@@ -156,7 +157,6 @@ export default function MomInfoId() {
 
     fetchBabyData();
   }, [babyalluid, selectedBabyId, showError]);
-
 
   const handleBabySelect = (id: string) => {
     setSelectedBabyId(id);

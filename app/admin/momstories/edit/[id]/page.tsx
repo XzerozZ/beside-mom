@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -31,7 +32,7 @@ const EditMomStoryPage: React.FC = () => {
     videoFile: null as File | null,
     bannerFile: null as File | null,
     bannerPreview: "",
-    videoMethod: null as 'file' | 'link' | null,
+    videoMethod: null as "file" | "link" | null,
     videoPreview: "",
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -47,7 +48,7 @@ const EditMomStoryPage: React.FC = () => {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${params.id}`;
+        const apiUrl = `${API_URL}/video/${params.id}`;
         const response = await fetch(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -135,16 +136,19 @@ const EditMomStoryPage: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
 
     const newErrors: { [key: string]: string } = {};
     if (!formData.title) newErrors.title = "กรุณากรอกหัวข้อ";
     if (!formData.description) newErrors.description = "กรุณากรอกรายละเอียด";
-    if (!formData.videoFile && !formData.videoUrl) newErrors.video = "กรุณาอัปโหลดวิดีโอหรือใส่ลิงก์วิดีโอ";
-    if (formData.videoFile && formData.videoUrl) newErrors.video = "เลือกได้เพียงไฟล์วิดีโอหรือใส่ลิงก์วิดีโออย่างใดอย่างหนึ่งเท่านั้น";
+    if (!formData.videoFile && !formData.videoUrl)
+      newErrors.video = "กรุณาอัปโหลดวิดีโอหรือใส่ลิงก์วิดีโอ";
+    if (formData.videoFile && formData.videoUrl)
+      newErrors.video =
+        "เลือกได้เพียงไฟล์วิดีโอหรือใส่ลิงก์วิดีโออย่างใดอย่างหนึ่งเท่านั้น";
     // bannerFile is optional for edit, but you can require it if you want
 
     if (Object.keys(newErrors).length > 0) {
@@ -174,7 +178,7 @@ const EditMomStoryPage: React.FC = () => {
     }
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/video/${params.id}`;
+      const apiUrl = `${API_URL}/video/${params.id}`;
       const response = await fetch(apiUrl, {
         method: "PUT",
         headers: {
@@ -191,11 +195,10 @@ const EditMomStoryPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };  return (
+  };
+  return (
     <div className="flex bg-white min-h-screen">
-      <Sidebar 
-      selectedItem="2"
-      />
+      <Sidebar selectedItem="2" />
       <div className="flex-1 p-6">
         <Container maxWidth="lg">
           <Typography
@@ -233,9 +236,9 @@ const EditMomStoryPage: React.FC = () => {
                   วิดิโอ
                 </Typography>
                 {formData.videoUrl &&
-                  ((formData.videoUrl.includes("drive.google.com") ||
-                    formData.videoUrl.includes("youtube.com") ||
-                    formData.videoUrl.includes("youtu.be")) ? (
+                  (formData.videoUrl.includes("drive.google.com") ||
+                  formData.videoUrl.includes("youtube.com") ||
+                  formData.videoUrl.includes("youtu.be") ? (
                     <Box sx={{ width: "100%", mt: 2, mb: 2 }}>
                       <iframe
                         width="100%"
@@ -243,17 +246,25 @@ const EditMomStoryPage: React.FC = () => {
                         src={
                           formData.videoUrl.includes("drive.google.com")
                             ? formData.videoUrl.replace("/view", "/preview")
-                            : formData.videoUrl.includes("youtube.com") || formData.videoUrl.includes("youtu.be")
+                            : formData.videoUrl.includes("youtube.com") ||
+                              formData.videoUrl.includes("youtu.be")
                             ? (() => {
                                 // Handle both youtube.com and youtu.be
                                 let videoId = "";
                                 if (formData.videoUrl.includes("youtube.com")) {
                                   const url = new URL(formData.videoUrl);
                                   videoId = url.searchParams.get("v") || "";
-                                } else if (formData.videoUrl.includes("youtu.be")) {
-                                  videoId = formData.videoUrl.split("youtu.be/")[1]?.split(/[?&]/)[0] || "";
+                                } else if (
+                                  formData.videoUrl.includes("youtu.be")
+                                ) {
+                                  videoId =
+                                    formData.videoUrl
+                                      .split("youtu.be/")[1]
+                                      ?.split(/[?&]/)[0] || "";
                                 }
-                                return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
+                                return videoId
+                                  ? `https://www.youtube.com/embed/${videoId}`
+                                  : "";
                               })()
                             : ""
                         }
@@ -263,13 +274,12 @@ const EditMomStoryPage: React.FC = () => {
                         style={{ border: 0 }}
                       />
                     </Box>
-                  ) : null)
-                }
+                  ) : null)}
                 <Box
                   sx={{
                     width: "100%",
                     height: formData.videoUrl ? "auto" : "200px",
-                   
+
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -294,7 +304,9 @@ const EditMomStoryPage: React.FC = () => {
                     onClick={() => videoInputRef.current?.click()}
                     disabled={formData.videoMethod === "link"}
                   >
-                    {formData.videoMethod === "file" ? "เปลี่ยนวิดีโอ" : "อัปโหลดวิดีโอ"}
+                    {formData.videoMethod === "file"
+                      ? "เปลี่ยนวิดีโอ"
+                      : "อัปโหลดวิดีโอ"}
                   </Button>
                   {formData.videoMethod === "file" && (
                     <Button
@@ -338,13 +350,27 @@ const EditMomStoryPage: React.FC = () => {
                     ลบลิงก์
                   </Button>
                 )}
-                {errors.video && <FormHelperText error>{errors.video}</FormHelperText>}
+                {errors.video && (
+                  <FormHelperText error>{errors.video}</FormHelperText>
+                )}
 
-                <Typography variant="body2" color="textSecondary" className="mt-4">
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  className="mt-4"
+                >
                   ภาพปกวิดีโอ
                 </Typography>
                 {formData.bannerPreview && (
-                  <Box sx={{ width: "100%", mt: 2, mb: 2, position: "relative", height: "200px" }}>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      mt: 2,
+                      mb: 2,
+                      position: "relative",
+                      height: "200px",
+                    }}
+                  >
                     <Image
                       src={formData.bannerPreview}
                       alt="Banner preview"
@@ -357,7 +383,7 @@ const EditMomStoryPage: React.FC = () => {
                   sx={{
                     width: "100%",
                     height: formData.bannerPreview ? "auto" : "200px",
-                   
+
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -398,7 +424,9 @@ const EditMomStoryPage: React.FC = () => {
                     </Button>
                   )}
                 </Box>
-                {errors.bannerFile && <FormHelperText error>{errors.bannerFile}</FormHelperText>}
+                {errors.bannerFile && (
+                  <FormHelperText error>{errors.bannerFile}</FormHelperText>
+                )}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography
@@ -431,7 +459,6 @@ const EditMomStoryPage: React.FC = () => {
                   error={!!errors.description}
                   helperText={errors.description}
                 />
-               
               </Grid>
             </Grid>
             <Box
@@ -458,7 +485,11 @@ const EditMomStoryPage: React.FC = () => {
                   "&:hover": { bgcolor: "#934343" },
                   "&:disabled": { bgcolor: "#999999" },
                 }}
-                startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
+                startIcon={
+                  isSubmitting ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : null
+                }
               >
                 {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
               </Button>

@@ -1,5 +1,5 @@
-
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -10,10 +10,7 @@ import {
   FaNotesMedical,
   FaUserMd,
 } from "react-icons/fa";
-import {
-  Container,
-  Button,
-} from "@mui/material";
+import { Container, Button } from "@mui/material";
 import TopBarSection from "../../components/Topbar";
 import Sidebar from "../../components/SideBarAdmin";
 import StyledAlert from "../../components/StyledAlert";
@@ -21,8 +18,7 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 import { useAlert } from "../../hooks/useAlert";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 
-import { AppointmentApiData ,AppointmentAPI_id} from "../../types";
-
+import { AppointmentApiData, AppointmentAPI_id } from "../../types";
 
 type AppointmentStatus = "สำเร็จ" | "ยกเลิก" | "เลื่อน" | "นัดแล้ว";
 const statusMap: Record<number, AppointmentStatus> = {
@@ -46,28 +42,25 @@ const statusDots = {
   นัดแล้ว: "bg-primary5",
 };
 
-
-
 const AppointmentsPage: React.FC = () => {
   const router = useRouter();
   const { id } = useParams();
   const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
-  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } =
+    useConfirmDialog();
   const [searchTerm, setSearchTerm] = useState("");
   const [appointments, setAppointments] = useState<AppointmentAPI_id[]>([]);
-
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-     
         const token = localStorage.getItem("token");
         if (!token) {
           showError("กรุณาเข้าสู่ระบบใหม่");
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/history/mom/${id}`;
+        const apiUrl = `${API_URL}/appoint/history/mom/${id}`;
         const response = await fetch(apiUrl, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,36 +71,50 @@ const AppointmentsPage: React.FC = () => {
         if (data.status !== "Success") throw new Error(data.message || "Error");
 
         // Map API data to Appointment[]
-        const mapped: AppointmentAPI_id[] = (data.result || []).map((item: AppointmentApiData, idx: number) => ({
-          id: item.id,
-          momname: item.name,
-          topic: item.title || "-",
-          date: item.date
-            ? new Date(item.date).toLocaleDateString("th-TH", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-            : "",
-          day: item.date
-            ? new Date(item.date).toLocaleDateString("th-TH", { weekday: "long" })
-            : "",
-          daydate: item.date
-            ? new Date(item.date).toLocaleDateString("th-TH", { day: "2-digit" })  
-            : "",
-          doctor: item.doctor,
-          status: statusMap[item.status as number] || "นัดแล้ว",
-          number: (idx + 1).toString(),
-          time: item.start_time
-            ? item.start_time.includes('T') 
-              ? item.start_time.split('T')[1].substring(0, 5) // Extract HH:MM from ISO string
-              : item.start_time
-            : "",
-          location: item.building || "-",
-          info: item.requirement || "-",
-        }));
+        const mapped: AppointmentAPI_id[] = (data.result || []).map(
+          (item: AppointmentApiData, idx: number) => ({
+            id: item.id,
+            momname: item.name,
+            topic: item.title || "-",
+            date: item.date
+              ? new Date(item.date).toLocaleDateString("th-TH", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })
+              : "",
+            day: item.date
+              ? new Date(item.date).toLocaleDateString("th-TH", {
+                  weekday: "long",
+                })
+              : "",
+            daydate: item.date
+              ? new Date(item.date).toLocaleDateString("th-TH", {
+                  day: "2-digit",
+                })
+              : "",
+            doctor: item.doctor,
+            status: statusMap[item.status as number] || "นัดแล้ว",
+            number: (idx + 1).toString(),
+            time: item.start_time
+              ? item.start_time.includes("T")
+                ? item.start_time.split("T")[1].substring(0, 5) // Extract HH:MM from ISO string
+                : item.start_time
+              : "",
+            location: item.building || "-",
+            info: item.requirement || "-",
+          })
+        );
         setAppointments(mapped);
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการโหลดข้อมูลการนัดหมาย";
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "เกิดข้อผิดพลาดในการโหลดข้อมูลการนัดหมาย";
         showError(errorMessage);
         console.error(error);
-      } 
+      }
     };
     fetchAppointments();
   }, [id, router, showError]);
@@ -124,7 +131,6 @@ const AppointmentsPage: React.FC = () => {
 
   const handleEdit = (appointmentId: string) => {
     router.push(`/admin/appointment/${appointmentId}/edit`);
-    
   };
 
   async function handleDelete(appointmentId: string): Promise<void> {
@@ -136,7 +142,7 @@ const AppointmentsPage: React.FC = () => {
           router.push("/auth/login");
           return;
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/appoint/${appointmentId}`;
+        const apiUrl = `${API_URL}/appoint/${appointmentId}`;
         const response = await fetch(apiUrl, {
           method: "DELETE",
           headers: {
@@ -147,27 +153,24 @@ const AppointmentsPage: React.FC = () => {
         setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
         showSuccess("ลบการนัดสำเร็จ");
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลบการนัด";
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "เกิดข้อผิดพลาดในการลบการนัด";
         showError(errorMessage);
         console.error(error);
       }
     };
 
-    showConfirm(
-      "คุณต้องการลบการนัดนี้ใช่หรือไม่?",
-      performDelete,
-      {
-        title: "ยืนยันการลบ",
-        confirmText: "ลบ",
-        severity: "error"
-      }
-    );
+    showConfirm("คุณต้องการลบการนัดนี้ใช่หรือไม่?", performDelete, {
+      title: "ยืนยันการลบ",
+      confirmText: "ลบ",
+      severity: "error",
+    });
   }
   return (
     <div className="flex bg-white">
-     <Sidebar    
-      selectedItem="5"
-      />
+      <Sidebar selectedItem="5" />
       <div className="flex-1 p-6">
         <Container>
           <TopBarSection
@@ -176,8 +179,8 @@ const AppointmentsPage: React.FC = () => {
             onSearchChange={(value) => setSearchTerm(value)}
             onAddClick={() => {}}
           />
-            <div className="flex items-center mb-4 justify-end">
-              <Button
+          <div className="flex items-center mb-4 justify-end">
+            <Button
               variant="outlined"
               sx={{
                 minWidth: 0,
@@ -191,15 +194,15 @@ const AppointmentsPage: React.FC = () => {
                 fontSize: "1rem",
                 textTransform: "none",
                 "&:hover": {
-                backgroundColor: "#965757",
-                borderColor: "#965757",
+                  backgroundColor: "#965757",
+                  borderColor: "#965757",
                 },
               }}
               onClick={() => router.push(`/admin/appointment?search=${id}`)}
-              >
+            >
               ดูประวัติการนัด
-              </Button>
-            </div>
+            </Button>
+          </div>
           <div className="mt-4 space-y-4">
             {filteredAppointments.map((appointment) => (
               <div

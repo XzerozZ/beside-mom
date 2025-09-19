@@ -1,5 +1,7 @@
 "use client";
+import { API_URL } from "@/config/config";
 
+import { API_URL } from "@/config/config";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -19,13 +21,14 @@ import ConfirmDialog from "../components/ConfirmDialog";
 import { useAlert } from "../hooks/useAlert";
 import { useConfirmDialog } from "../hooks/useConfirmDialog";
 import { useEffect } from "react";
-import { ContentBabycareItem} from "../types";
+import { ContentBabycareItem } from "../types";
 
 const MomstoryPage: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const { alert: alertState, showSuccess, showError, hideAlert } = useAlert();
-  const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirmDialog();
+  const { confirmState, showConfirm, handleConfirm, handleCancel } =
+    useConfirmDialog();
   const handleAddClick = () => {
     console.log("Add button clicked");
   };
@@ -42,35 +45,34 @@ const MomstoryPage: React.FC = () => {
   };
   const [data, setData] = useState<BabyCareItem[]>([]);
   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${process.env.NEXT_PUBLIC_url}/care` as string, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          const data = await res.json();
-          if (Array.isArray(data.result)) {
-            const result: ContentBabycareItem[] = data.result;
-            const mapped: BabyCareItem[] = result.map(item => ({
-              id: item.c_id,
-              title: item.title,
-              date: item.updated_at,
-              type: item.type,
-              thumbnail: item.banner,
-            }));
-            setData(mapped);
-          }
-        } catch (error) {
-          console.log("Error fetching data:", error);
-          showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
-        } 
-      };
-      fetchData();
-    }, [showError]);
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`${API_URL}/care` as string, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (Array.isArray(data.result)) {
+          const result: ContentBabycareItem[] = data.result;
+          const mapped: BabyCareItem[] = result.map((item) => ({
+            id: item.c_id,
+            title: item.title,
+            date: item.updated_at,
+            type: item.type,
+            thumbnail: item.banner,
+          }));
+          setData(mapped);
+        }
+      } catch (error) {
+        console.log("Error fetching data:", error);
+        showError("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+      }
+    };
+    fetchData();
+  }, [showError]);
 
-  
   const filteredData = data.filter(
     (item) =>
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,52 +85,45 @@ const MomstoryPage: React.FC = () => {
         const token = localStorage.getItem("token");
         if (!token) {
           showError("กรุณาเข้าสู่ระบบใหม่");
-          router.push('/auth/login');
+          router.push("/auth/login");
           return;
         }
 
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${id}`;
+        const apiUrl = `${API_URL}/care/${id}`;
         const response = await fetch(apiUrl, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.status !== "Success") {
+          throw new Error(result.message || "Failed to delete item");
+        }
+
+        setData((prev) => prev.filter((item) => item.id.toString() !== id));
+        showSuccess("ลบข้อมูลสำเร็จ");
+      } catch (err) {
+        console.error("Error deleting item:", err);
+        showError("เกิดข้อผิดพลาดในการลบข้อมูล");
       }
-
-      const result = await response.json();
-
-      if (result.status !== "Success") {
-        throw new Error(result.message || "Failed to delete item");
-      }
-
-      setData(prev => prev.filter(item => item.id.toString() !== id));
-      showSuccess("ลบข้อมูลสำเร็จ");
-    } catch (err) {
-      console.error("Error deleting item:", err);
-      showError("เกิดข้อผิดพลาดในการลบข้อมูล");
-    }
     };
 
-    showConfirm(
-      "คุณต้องการลบข้อมูลนี้ใช่หรือไม่?",
-      performDelete,
-      {
-        title: "ยืนยันการลบ",
-        confirmText: "ลบ",
-        severity: "error"
-      }
-    );
+    showConfirm("คุณต้องการลบข้อมูลนี้ใช่หรือไม่?", performDelete, {
+      title: "ยืนยันการลบ",
+      confirmText: "ลบ",
+      severity: "error",
+    });
   };
   return (
     <div className="flex bg-white min-h-screen">
-      <Sidebar 
-      selectedItem="3"
-      
-      />
+      <Sidebar selectedItem="3" />
       <div className="flex-1 p-6">
         <Container>
           <StyledAlert
@@ -183,20 +178,19 @@ const MomstoryPage: React.FC = () => {
                       variant="h6"
                       component="div"
                       className="text-base"
-                      sx={{ 
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                width: '100%'
-                              }}
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        width: "100%",
+                      }}
                     >
                       {item.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                     
                       {item.date
-                          ? new Date(item.date).toLocaleDateString("th-TH")
-                          : ""}
+                        ? new Date(item.date).toLocaleDateString("th-TH")
+                        : ""}
                     </Typography>
                     <Box display="flex" justifyContent="space-between" mt={2}>
                       <Button
@@ -258,4 +252,3 @@ const MomstoryPage: React.FC = () => {
 };
 
 export default MomstoryPage;
-

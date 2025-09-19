@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Container,
-  Button,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
+import { Container, Button, TextField, CircularProgress } from "@mui/material";
 import Sidebar from "../components/SideBarAdmin";
 
 const ContactNurseInfo: React.FC = () => {
@@ -18,10 +13,10 @@ const ContactNurseInfo: React.FC = () => {
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    
+
     try {
       // Add your submit logic here
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulated API call
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulated API call
       console.log("บันทึกข้อมูลสำเร็จ");
     } catch {
       console.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
@@ -32,9 +27,7 @@ const ContactNurseInfo: React.FC = () => {
 
   return (
     <div className="flex bg-white min-h-screen">
-      <Sidebar 
-       selectedItem="6"
-      />
+      <Sidebar selectedItem="6" />
       <div className="flex-1 p-6">
         <Container>
           <h1 className="text-neutral05 font-bold">ข้อมูลติดต่อกับพยาบาล</h1>
@@ -91,7 +84,11 @@ const ContactNurseInfo: React.FC = () => {
               }}
               size="small"
               className="w-40"
-              startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
+              startIcon={
+                isSubmitting ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : null
+              }
             >
               {isSubmitting ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </Button>

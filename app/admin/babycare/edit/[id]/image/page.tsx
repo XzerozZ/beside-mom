@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -29,7 +30,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
-  
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -37,8 +38,9 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
     banners: null as string | null,
   });
 
-  
-  const [originalAssets, setOriginalAssets] = useState<{asset_id: string, link: string}[]>([]);
+  const [originalAssets, setOriginalAssets] = useState<
+    { asset_id: string; link: string }[]
+  >([]);
   const [deletedAssetIds, setDeletedAssetIds] = useState<string[]>([]);
 
   // Fetch data from API
@@ -47,25 +49,25 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Get token from localStorage
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (!token) {
           setError("No authentication token found");
           showError("กรุณาเข้าสู่ระบบใหม่");
-          router.push('/auth/login');
+          router.push("/auth/login");
           return;
         }
 
         // Get the ID from params
         const id = params.id as string;
-        
+
         // Fetch data from API
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${id}`;
+        const apiUrl = `${API_URL}/care/${id}`;
         const response = await fetch(apiUrl, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
@@ -73,31 +75,32 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
         }
 
         const data = await response.json();
-        
+
         if (data.status !== "Success") {
           throw new Error(data.message || "Failed to fetch data");
         }
 
         const result: BabyCareData = data.result;
-        
-        
+
         setOriginalAssets(result.assets);
-        
+
         // Map API response to form data
         setFormData({
           title: result.title,
           description: result.desc,
-          pictureurl: result.assets.map(asset => asset.link),
+          pictureurl: result.assets.map((asset) => asset.link),
           banners: result.banner,
         });
-        
+
         // Set banner preview if banner exists
         if (result.banner) {
           setBannerPreview(result.banner);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(err instanceof Error ? err.message : "An unknown error occurred");
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
       } finally {
         setLoading(false);
       }
@@ -117,56 +120,58 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    
+
     // Convert files to array of URLs
     const newImages: string[] = [];
-    
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
-      
+
       reader.onload = () => {
         newImages.push(reader.result as string);
-        
+
         if (newImages.length === files.length) {
-          setFormData(prev => ({
+          setFormData((prev) => ({
             ...prev,
-            pictureurl: [...prev.pictureurl, ...newImages]
+            pictureurl: [...prev.pictureurl, ...newImages],
           }));
         }
       };
-      
+
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveImage = (index: number) => {
     const imageUrl = formData.pictureurl[index];
-    
+
     // Check if this is an original asset (not a new upload)
-    const originalAsset = originalAssets.find(asset => asset.link === imageUrl);
+    const originalAsset = originalAssets.find(
+      (asset) => asset.link === imageUrl
+    );
     if (originalAsset) {
       // Add to deleted assets list
-      setDeletedAssetIds(prev => [...prev, originalAsset.asset_id]);
+      setDeletedAssetIds((prev) => [...prev, originalAsset.asset_id]);
     }
-    
+
     // Remove from current images
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      pictureurl: prev.pictureurl.filter((_, i) => i !== index)
+      pictureurl: prev.pictureurl.filter((_, i) => i !== index),
     }));
   };
 
   const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     const reader = new FileReader();
     reader.onload = () => {
       const result = reader.result as string;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        banners: result
+        banners: result,
       }));
       setBannerPreview(result);
     };
@@ -175,58 +180,57 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       setLoading(true);
       setError(null);
-      
+
       // Get token from localStorage
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
         setError("No authentication token found");
         showError("กรุณาเข้าสู่ระบบใหม่");
-        router.push('/auth/login');
+        router.push("/auth/login");
         return;
       }
-      
+
       // Create FormData object
       const apiData = new FormData();
-      apiData.append('title', formData.title);
-      apiData.append('desc', formData.description);
-      apiData.append('type', 'image');
-      
+      apiData.append("title", formData.title);
+      apiData.append("desc", formData.description);
+      apiData.append("type", "image");
+
       // Add new images
       for (let i = 0; i < formData.pictureurl.length; i++) {
         const imageUrl = formData.pictureurl[i];
-        
+
         // Only process new images (base64 format)
-        if (imageUrl.startsWith('data:image')) {
+        if (imageUrl.startsWith("data:image")) {
           const response = await fetch(imageUrl);
           const blob = await response.blob();
-          apiData.append('link', blob, `image${i}.jpg`);
+          apiData.append("link", blob, `image${i}.jpg`);
         }
       }
-      
+
       // Add banner if changed
-      if (formData.banners && formData.banners.startsWith('data:image')) {
+      if (formData.banners && formData.banners.startsWith("data:image")) {
         const bannerResponse = await fetch(formData.banners);
         const bannerBlob = await bannerResponse.blob();
-        apiData.append('banners', bannerBlob, 'banner.jpg');
+        apiData.append("banners", bannerBlob, "banner.jpg");
       }
-      
-      
+
       if (deletedAssetIds.length > 0) {
-        deletedAssetIds.forEach(assetId => {
-          apiData.append('delete_assets', assetId);
+        deletedAssetIds.forEach((assetId) => {
+          apiData.append("delete_assets", assetId);
         });
-      } 
-      
+      }
+
       // Make the API call
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/care/${params.id}`;
+      const apiUrl = `${API_URL}/care/${params.id}`;
       const response = await fetch(apiUrl, {
-        method: 'PUT', // Use PUT for updates
+        method: "PUT", // Use PUT for updates
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: apiData,
       });
@@ -242,7 +246,9 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
       router.push("/admin/babycare");
     } catch (err) {
       console.error("Error updating data:", err);
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
       showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
     } finally {
       setLoading(false);
@@ -259,9 +265,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
 
   return (
     <div className="flex bg-white min-h-screen">
-     <Sidebar 
-      selectedItem="3"
-      />
+      <Sidebar selectedItem="3" />
       <div className="flex-1 p-6">
         <Container maxWidth="lg">
           <Typography
@@ -272,74 +276,88 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
             แก้ไขข้อมูล &gt;&gt; ภาพ
           </Typography>
 
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
           <Grid container spacing={3}>
-            
             <Grid item xs={12} sm={6}>
-               <Typography variant="body2" color="textSecondary" className="mt-4">
-                              ภาพปกวิดีโอ
-                            </Typography>
-                            
-                            {bannerPreview && (
-                              <Box sx={{ width: "100%", mt: 2, mb: 2, position: "relative", height: "200px" }}>
-                                <Image 
-                                  src={bannerPreview} 
-                                  alt="Banner preview" 
-                                  fill
-                                  style={{ objectFit: "contain" }}
-                                />
-                              </Box>
-                            )}
-                            
-                            <Box
-                              sx={{
-                                width: "100%",
-                                height: bannerPreview ? "auto" : "120px",
-                               
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                mt: 2,
-                                mb: 2,
-                              }}
-                            >
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleBannerUpload}
-                                ref={bannerInputRef}
-                                style={{ display: "none" }}
-                              />
-                              <Button
-                                variant="contained"
-                                sx={{
-                                  bgcolor: "#999999",
-                                  "&:hover": { bgcolor: "#777777" },
-                                }}
-                                onClick={() => {
-                                  if (bannerInputRef.current) {
-                                    bannerInputRef.current.click();
-                                  }
-                                }}
-                              >
-                                {bannerPreview ? 'เปลี่ยนภาพปก' : 'อัปโหลดภาพปก'}
-                              </Button>
-                              {bannerPreview && (
-                                <Button
-                                  variant="outlined"
-                                  sx={{ ml: 2 }}
-                                  onClick={() => {
-                                    setFormData(prev => ({...prev, banners: null}));
-                                    setBannerPreview(null);
-                                  }}
-                                >
-                                  ลบภาพปก
-                                </Button>
-                              )}
-                            </Box>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                className="mt-4"
+              >
+                ภาพปกวิดีโอ
+              </Typography>
 
-            
+              {bannerPreview && (
+                <Box
+                  sx={{
+                    width: "100%",
+                    mt: 2,
+                    mb: 2,
+                    position: "relative",
+                    height: "200px",
+                  }}
+                >
+                  <Image
+                    src={bannerPreview}
+                    alt="Banner preview"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </Box>
+              )}
+
+              <Box
+                sx={{
+                  width: "100%",
+                  height: bannerPreview ? "auto" : "120px",
+
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mt: 2,
+                  mb: 2,
+                }}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBannerUpload}
+                  ref={bannerInputRef}
+                  style={{ display: "none" }}
+                />
+                <Button
+                  variant="contained"
+                  sx={{
+                    bgcolor: "#999999",
+                    "&:hover": { bgcolor: "#777777" },
+                  }}
+                  onClick={() => {
+                    if (bannerInputRef.current) {
+                      bannerInputRef.current.click();
+                    }
+                  }}
+                >
+                  {bannerPreview ? "เปลี่ยนภาพปก" : "อัปโหลดภาพปก"}
+                </Button>
+                {bannerPreview && (
+                  <Button
+                    variant="outlined"
+                    sx={{ ml: 2 }}
+                    onClick={() => {
+                      setFormData((prev) => ({ ...prev, banners: null }));
+                      setBannerPreview(null);
+                    }}
+                  >
+                    ลบภาพปก
+                  </Button>
+                )}
+              </Box>
+
               <Typography
                 variant="h6"
                 component="div"
@@ -366,7 +384,7 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
                     left: 0,
                     width: "100%",
                     height: "100%",
-                    backgroundImage: `url(${formData.pictureurl[0] || ''})`,
+                    backgroundImage: `url(${formData.pictureurl[0] || ""})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     filter: "blur(2px)", // Blur effect applied to the background
@@ -524,7 +542,11 @@ const EditBabyCareInfoPicturePage: React.FC = () => {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : "บันทึกข้อมูล"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "บันทึกข้อมูล"
+              )}
             </Button>
           </Box>
         </Container>

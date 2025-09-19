@@ -1,14 +1,10 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAlert } from "../../../hooks/useAlert";
-import {
-  Box,
-  Button,
-  TextField,
-  FormLabel,
-} from "@mui/material";
+import { Box, Button, TextField, FormLabel } from "@mui/material";
 import Sidebar from "../../../components/SideBarAdmin";
 
 const EditFaq: React.FC = () => {
@@ -31,7 +27,7 @@ const EditFaq: React.FC = () => {
         return;
       }
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_url}/question/${id}`;
+        const apiUrl = `${API_URL}/question/${id}`;
         const response = await fetch(apiUrl, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,7 +57,7 @@ const EditFaq: React.FC = () => {
       return;
     }
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_url}/question/${id}`;
+      const apiUrl = `${API_URL}/question/${id}`;
       const formData = new FormData();
       formData.append("question", question);
       formData.append("answer", answer);
@@ -84,9 +80,7 @@ const EditFaq: React.FC = () => {
 
   return (
     <div className="flex bg-white ">
-      <Sidebar 
-      selectedItem="4"
-      />
+      <Sidebar selectedItem="4" />
       <div className="flex-1 p-6">
         <h1 className="text-neutral05 font-bold">เเก้ไขข้อมูล</h1>
         <Box className="mt-8">
@@ -113,7 +107,7 @@ const EditFaq: React.FC = () => {
             disabled={loading}
           />
         </Box>
-        <div className="flex justify-end mt-4 gap-2"> 
+        <div className="flex justify-end mt-4 gap-2">
           <Button
             variant="outlined"
             sx={{

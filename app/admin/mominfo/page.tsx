@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/config/config";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,12 +12,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-
   Box,
   Button,
-
-
-
 } from "@mui/material";
 import TopBarSection from "../components/Topbar";
 import StyledAlert from "../components/StyledAlert";
@@ -25,9 +22,7 @@ import { useAlert } from "../hooks/useAlert";
 import { useConfirmDialog } from "../hooks/useConfirmDialog";
 import Sidebar from "../components/SideBarAdmin";
 import { useEffect } from "react";
-import { MomMappedItem, MomRawItem,MomData } from "../types";
-
-
+import { MomMappedItem, MomRawItem, MomData } from "../types";
 
 const AllMomInfoPage: React.FC = () => {
   const router = useRouter();
@@ -49,7 +44,7 @@ const AllMomInfoPage: React.FC = () => {
     const fetchMomData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`${process.env.NEXT_PUBLIC_url}/user` as string, {
+        const res = await fetch(`${API_URL}/user` as string, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -57,7 +52,7 @@ const AllMomInfoPage: React.FC = () => {
         const data = await res.json();
         if (Array.isArray(data.result)) {
           const result: MomRawItem[] = data.result;
-          const mapped: MomMappedItem[] = result.map(item => ({
+          const mapped: MomMappedItem[] = result.map((item) => ({
             id: item.u_id,
             email: item.email,
             name: `${item.fname} ${item.lname}`,
@@ -76,7 +71,6 @@ const AllMomInfoPage: React.FC = () => {
     fetchMomData();
   }, [showError]);
 
-  
   const handleAddClick = () => {
     console.log("Add new mom");
   };
@@ -125,31 +119,28 @@ const AllMomInfoPage: React.FC = () => {
   );
 
   return (
-    
     <div className="flex bg-white min-h-screen">
       {loading && (
-      <Box
-        sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          bgcolor: "rgba(255,255,255,0.7)",
-          zIndex: 9999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography variant="h6" color="primary">
-          กำลังโหลดข้อมูล...
-        </Typography>
-      </Box>
-    )}
-    <Sidebar 
-      selectedItem="1"
-      />
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            bgcolor: "rgba(255,255,255,0.7)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6" color="primary">
+            กำลังโหลดข้อมูล...
+          </Typography>
+        </Box>
+      )}
+      <Sidebar selectedItem="1" />
       <div className="flex-1 p-6">
         <Container>
           <TopBarSection
@@ -189,7 +180,7 @@ const AllMomInfoPage: React.FC = () => {
                       </span>
                     </div>
                   </TableCell>
-                    <TableCell
+                  <TableCell
                     className="font-bold text-center cursor-pointer"
                     onClick={() => handleSort("u_pid")}
                   >
@@ -268,7 +259,6 @@ const AllMomInfoPage: React.FC = () => {
                     <div className="flex items-center justify-center ">
                       การดำเนินการ
                     </div>
-                    
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -282,12 +272,12 @@ const AllMomInfoPage: React.FC = () => {
                     >
                       {mom.id}
                     </TableCell>
-                     <TableCell
+                    <TableCell
                       className="text-center"
                       onClick={() => handleClickMominfo(mom.id)}
                       style={{ cursor: "pointer" }}
                     >
-                      {mom.u_pid ? mom.u_pid : "ไม่มีข้อมูล"} 
+                      {mom.u_pid ? mom.u_pid : "ไม่มีข้อมูล"}
                     </TableCell>
                     <TableCell
                       className="text-center"
@@ -404,7 +394,6 @@ const AllMomInfoPage: React.FC = () => {
                         >
                           แก้ไข
                         </Button>
-                        
                       </Box>
                     </TableCell>
                   </TableRow>

@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 
 import Image from "next/image";
@@ -35,7 +36,8 @@ const Page = () => {
                   <div>
                     <h1 className="font-bold text-[16px]">ที่อยู่</h1>
                     <h2>
-                    1873 ถนนพระรามที่ 4 แขวงปทุมวัน เขตปทุมวัน กรุงเทพมหานคร 10330
+                      1873 ถนนพระรามที่ 4 แขวงปทุมวัน เขตปทุมวัน กรุงเทพมหานคร
+                      10330
                     </h2>
                   </div>
                 </div>
@@ -66,18 +68,23 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-                <div className="w-[180px]">
+              <div className="w-[180px]">
                 <ButtonComponents
                   title="ดูแผนที่ Google Maps"
                   textSize="text-[15px] text-bold"
-                  onClick={() => window.open('https://www.google.com/maps/search/1873+Rama+IV+Rd,+Chang+Wat+Bangkok,+Pathum+Wan,+%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94+%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3+10330/@13.7320577,100.5292663,17z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDYwMi4wIKXMDSoASAFQAw%3D%3D', '_blank')}
+                  onClick={() =>
+                    window.open(
+                      "https://www.google.com/maps/search/1873+Rama+IV+Rd,+Chang+Wat+Bangkok,+Pathum+Wan,+%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94+%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3+10330/@13.7320577,100.5292663,17z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDYwMi4wIKXMDSoASAFQAw%3D%3D",
+                      "_blank"
+                    )
+                  }
                 />
-                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      
+
       <Chatbot showChat={showChat} setShowChat={setShowChat} />
     </div>
   );
